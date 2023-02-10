@@ -1,51 +1,37 @@
 package interfaces;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import datos.temporalStorage;
 import disenos.centerTextInTable;
-import disenos.colores;
-import disenos.configEXTRAS;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
-import disenos.readRecordTableBackground;
-import java.awt.Color;
-import java.awt.Component;
+import helpers.crearOrdenes;
+import helpers.crearOrdenes.CallBackActividades;
+import helpers.crearOrdenes.CallBackPlantillas;
+import helpers.crearOrdenes.CallBackUsuarios;
 import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
-import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
-import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
-import obtenerDatos.plantillasCalidad;
-import obtenerDatos.users;
 
 public class crearTC extends configuracionVentana {
 
-    private String idioma, responsableTC, plantillaTC, user;
+    private String idioma, user;
     private DefaultTableModel modelo;
     private temporalStorage storage;
-    private boolean hasPrevious, loadFlag;
     private ArrayList<String> actividades, listaUsuarios, seleccion;
     private ArrayList<Integer> requisitos;
     private LinkedHashMap<String, ArrayList<String>> comentarios;
@@ -53,22 +39,15 @@ public class crearTC extends configuracionVentana {
     private int serie, priv;
     private boolean valido, cargado;
     private JFrame context;
+    private crearOrdenes co;
 
-    /*
-    actividades= getIntent().getExtras().getStringArrayList("actividades");
-        requisitos=getIntent().getExtras().getIntegerArrayList("requisitos");
-        listaUsuarios= getIntent().getExtras().getStringArrayList("listaUsuarios");
-     */
     public crearTC(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
         cargado = false;
+        co = new crearOrdenes();
 
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
         storage = new temporalStorage();
         //poner titulo
-        hasPrevious = false;
         seleccion = new ArrayList();
         context = this;
         this.valido = valido;
@@ -78,67 +57,48 @@ public class crearTC extends configuracionVentana {
         this.user = user;
         this.idioma = idioma;
 
-        loadFlag = false;
         this.setTitle(info.VERSION);
         //inicializacion de variables
         modelo = (DefaultTableModel) tblActividades.getModel();
-        this.responsableTC = storage.getResponsableTC();
-        this.plantillaTC = storage.getPlantillaTC();
         if (storage.getUbicacionTC().size() > 0) {
             this.actividades = new ArrayList<>();
             this.requisitos = new ArrayList<>();
             this.listaUsuarios = new ArrayList<>();
             this.comentarios = new LinkedHashMap<>();
             try {
-
                 this.actividades.addAll(storage.getUbicacionTC());
                 this.requisitos.addAll(storage.getRequisitosTC());
-                for (HashMap.Entry<String, ArrayList<String>> entry : storage.getComentariosTC().entrySet()) {
-                    this.comentarios.put(entry.getKey(),
-                            entry.getValue());
-                }
-                rellenar();
+                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(),1));
                 ponerRv();
+                if (storage.getComentariosTC().size() > 0) {
+                    for (HashMap.Entry<String, ArrayList<String>> entry : storage.getComentariosTC().entrySet()) {
+                        this.comentarios.put(entry.getKey(),
+                                entry.getValue());
+                    }
+                }
 
             } catch (Exception e) {
                 System.out.println("erorrrrrrrrrrrrrr: " + e);
             }
 
         } else {
-
             this.actividades = new ArrayList<>();
             this.requisitos = new ArrayList<>();
             this.listaUsuarios = new ArrayList<>();
             this.comentarios = new LinkedHashMap<>();
-            loadFlag = false;
-            if (storage.getListaUsuarios().size() > 0) {
-                rellenar();
+            if (storage.getPlantillasTC().size() > 0) {
+                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(),1));
                 getActividades(cmbPlantilla.getSelectedItem().toString());
             } else {
-                leerUsuarios();
+                if(storage.getListaUsuarios().size() == 0) leerUsuarios();
+                else listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(),0));
+                getPlantillas();
             }
 
         }
-        if (idioma.equals("English")) {
-            ingles();
-        } else {
-            esp();
-        }
+        mostrar();
         tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
         iniciarDiseno();
-    }
-
-    private void rellenar() {
-        cmbPlantilla.setEnabled(valido);
-        hasPrevious = true;
-
-        listaUsuarios.addAll(storage.getListaUsuarios());
-        for (String plan : storage.getPlantillas()) {
-            cmbPlantilla.addItem(plan);
-        }
-        for (String us : listaUsuarios) {
-            cmbResponsable.addItem(us);
-        }
     }
 
     public void iniciarDiseno() {//decorar los componentes del frame
@@ -454,7 +414,7 @@ public class crearTC extends configuracionVentana {
             storage.setRequisitosTC(requisitos);
             //volver
             new info().setXY(this.getX(), this.getY());
-            new vistaActividades(con, user, priv, idioma, serie, 2).setVisible(true);
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
             this.setCursor(new Cursor(DEFAULT_CURSOR));
@@ -468,7 +428,7 @@ public class crearTC extends configuracionVentana {
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
         new info().setXY(this.getX(), this.getY());
-        new vistaActividades(con, user, priv, idioma, serie, 2).setVisible(true);
+        new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
         this.setCursor(new Cursor(WAIT_CURSOR));
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
@@ -496,11 +456,8 @@ public class crearTC extends configuracionVentana {
             for (int i = 0; i < modelo.getRowCount(); i++) {
                 seleccion.set(i, modelo.getValueAt(i, 1).toString());
             }
-            responsableTC = cmbResponsable.getSelectedItem().toString();
-            plantillaTC = cmbPlantilla.getSelectedItem().toString();
-            new addComentarios(user, priv, idioma, 1, activi, comentarios).setVisible(true);
+            new addComentarios(user, priv, idioma, 1, activi, comentarios, this).setVisible(true);
         } catch (Exception e) {
-            System.out.println("E: " + e);
             if (idioma.equals("English")) {
                 JOptionPane.showMessageDialog(context, "Select an activity");
             } else {
@@ -513,217 +470,89 @@ public class crearTC extends configuracionVentana {
         // TODO add your handling code here:
         if (cargado) {
             // System.out.println("Aquasai");
-            if (!hasPrevious && !loadFlag) {
                 limpiarTabla();
                 getActividades(cmbPlantilla.getSelectedItem().toString());
-            }
+            
         }
     }//GEN-LAST:event_cmbPlantillaActionPerformed
 
-    private void limpiarTabla() {
-        int tam = modelo.getRowCount();
-        for (int i = 0; i < tam; i++) {
-            modelo.removeRow(0);
+    public void setComentarios(LinkedHashMap<String, ArrayList<String>> comentarios) {
+        this.comentarios = comentarios;
+    }
 
-        }
+    private void limpiarTabla() {
+        co.limpiarTabla(modelo);
         actividades.clear();
         requisitos.clear();
-        // listaUsuarios.clear();
         seleccion.clear();
         comentarios.clear();
     }
 
     private void ponerRv() {
-        //tabla
-        plantillaTC = cmbPlantilla.getSelectedItem().toString();
-        responsableTC = cmbResponsable.getSelectedItem().toString();
-
-        if (storage.getUsuariosTC().size() > 0) {
-            seleccion = storage.getUsuariosTC();
-        } else {
-            llenarBaraja();
-        }
-        JComboBox cmb = new JComboBox();
-        for (int i = 0; i < listaUsuarios.size(); i++) {
-            cmb.addItem(listaUsuarios.get(i));
-        }
-        new disenos().selector(cmb);
-        //agrega el como box a las filas
-        tblActividades.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(cmb));
-        for (int i = 0; i < seleccion.size(); i++) {
-            modelo.addRow(new Object[]{actividades.get(i), seleccion.get(i)});
-        }
+        seleccion.clear();
+        seleccion.addAll(co.ponerRv(storage.getUsuariosTC(), listaUsuarios, tblActividades, modelo, actividades));
         cargado = true;
     }
 
-    private void llenarBaraja() {
-        ArrayList cartas1 = new ArrayList();
-        int pos;
-        int nCartas = listaUsuarios.size();
-        int comp = (listaUsuarios.contains("dummy")) ? (nCartas - 1) : nCartas;
-        for (int i = 0; i < actividades.size(); i++) {//nCartas
-            pos = (int) Math.floor(Math.random() * nCartas);
-            if (cartas1.size() == comp) {
-                cartas1.clear();
-            }
-            boolean val = cartas1.contains(pos) || listaUsuarios.get(pos).equals("dummy");
-            while (val) {
-                pos = (int) Math.floor(Math.random() * nCartas);
-                val = cartas1.contains(pos) || listaUsuarios.get(pos).equals("dummy");
-            }
-
-            seleccion.add(listaUsuarios.get(pos));
-            // pCartas.add(pos);
-            cartas1.add(pos);
-        }
-    }
-
     private void getPlantillas() {
-
-        try {
-            ArrayList<String> plantillas = new ArrayList<>();
-
-            Query query = null;
-            query = con.child("plantillasCalidad");
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                            cmbPlantilla.addItem(user.getKey());
-                            plantillas.add(user.getKey());
-                        }
-                        storage.setPlantillas(plantillas);
-                        cmbPlantilla.setSelectedIndex(0);
-                        System.out.println("Index: " + cmbPlantilla.getItemCount());
-                        //   ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.light_background_item, plantillas);
-                        //   spnPlantillaTC.setAdapter(adapter);
-                        //   adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.light_background_item, listaUsuarios);
-                        //   spnResponsable.setAdapter(adapter);
-                        if (hasPrevious) {
-                            System.out.println("Aquiii");
-                            cmbResponsable.setSelectedItem(storage.getResponsableTC());
-                            cmbPlantilla.setSelectedItem(storage.getPlantillaTC());
-                            //ver como arreglar listaUsuarios
-                            //Si se agrega un nuevo usuario, se va a desmadrar todo no?
-                            //O al menos no lo va a reconocer
-
-                            hasPrevious = false;
-                        } else if (loadFlag) {
-                            System.out.println("Acaa");
-                            //cargar desde memoria
-
-                            cmbResponsable.setSelectedItem(responsableTC);
-                            cmbPlantilla.setSelectedItem(plantillaTC);
-                            loadFlag = false;
-                        }
-                        getActividades(cmbPlantilla.getSelectedItem().toString());
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-
-                }
-            });
-        } catch (Exception e) {
-
-        }
+        co.readPlantillas(new CallBackPlantillas() {
+            @Override
+            public void onCallback(ArrayList<String> plantillas) {
+                storage.setPlantillasTC(plantillas);
+                getActividades(cmbPlantilla.getSelectedItem().toString());
+            }
+        }, con, "plantillasCalidad", cmbResponsable, cmbPlantilla, storage.getResponsableTC(), storage.getPlantillaTC());
     }
 
     private void getActividades(String plantilla) {
-        try {
-            Query query = null;
-            query = con.child("plantillasCalidad").child(plantilla);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot info : snapshot.getChildren()) {
-                            plantillasCalidad datos = info.getValue(plantillasCalidad.class);
-                            actividades.add(datos.getUbicacion());
-                            requisitos.add(datos.getRequisito());
-                        }
-                        ponerRv();
-                    }
-                }
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-                }
-            });
-        } catch (Exception e) {
-
-        }
+        co.readActividades(new CallBackActividades() {
+            @Override
+            public void onCallback(crearOrdenes.Actividades c) {
+                actividades.addAll(c.getActividades());
+                requisitos.addAll(c.getRequisitos());
+                ponerRv();
+            }
+        }, con, "plantillasCalidad", plantilla, "ubicacion", "requisito");
     }
 
     private void leerUsuarios() {
-        System.out.println("Aquiiisera");
-        // if (listaUsuarios.size() == 0) {//!hasPrevious && !loadFlag
-        //  System.out.println("leyo");
-        Query query = con.child("usuarios").orderByChild("user");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
+        co.readUsuarios(new CallBackUsuarios() {
             @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot user : snapshot.getChildren()) {
-                        users log = user.getValue(users.class);
-                        try {
-                            int pr = log.getPriv();
-                            if (pr >= 2 && pr <= 4) {
-                                listaUsuarios.add(log.getUser());
-                                cmbResponsable.addItem(log.getUser());
-
-                            }
-                        } catch (Exception e) {
-
-                        }
-                    }
-                    storage.setListaUsuarios(listaUsuarios);
-                    //  cmbResponsable.setSelectedItem(listaUsuarios.get(0));
-                    cmbResponsable.setSelectedIndex(0);
-                    System.out.println("Aqui: " + cmbResponsable.getItemCount());
-                    getPlantillas();
+            public void onCallback(ArrayList<String> usuarios) {
+                for (String usuario : usuarios) {
+                    listaUsuarios.add(usuario);
                 }
             }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-        //  } else {
-        //   getPlantillas();
-        //  }
+        }, con, storage, cmbResponsable);
     }
 
-    private void ingles() {//poner la interfaz en ingles
-        lblTitulo.setText("CheckList");
-        JTableHeader tableHeader = tblActividades.getTableHeader();
-        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
-        TableColumn tableColumn = tableColumnModel.getColumn(0);
-        tableColumn.setHeaderValue("Activities");
-        tableColumn = tableColumnModel.getColumn(1);
-        tableColumn.setHeaderValue("User");
-        tableHeader.repaint();
-        lblResponsable.setText("Responsible");
-        lblPlantilla.setText("Template");
-        //   leerUsuarios();
+    private void mostrar() {
+        if (idioma.equals("english")) {
+            lblTitulo.setText("CheckList");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Activities");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("User");
+            tableHeader.repaint();
+            lblResponsable.setText("Responsible");
+            lblPlantilla.setText("Template");
+        } else {
+            lblTitulo.setText("CheckList");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Actividades");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("Usuario");
+            tableHeader.repaint();
+            lblResponsable.setText("Responsable");
+            lblPlantilla.setText("Plantilla");
+        }
     }
 
-    private void esp() {//poner la interfaz en espanol
-        lblTitulo.setText("CheckList");
-        JTableHeader tableHeader = tblActividades.getTableHeader();
-        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
-        TableColumn tableColumn = tableColumnModel.getColumn(0);
-        tableColumn.setHeaderValue("Actividades");
-        tableColumn = tableColumnModel.getColumn(1);
-        tableColumn.setHeaderValue("Usuario");
-        tableHeader.repaint();
-        lblResponsable.setText("Responsable");
-        lblPlantilla.setText("Plantilla");
-        //  leerUsuarios();
-    }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;

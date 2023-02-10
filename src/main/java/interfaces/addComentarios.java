@@ -7,8 +7,7 @@ package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
-import disenos.configEXTRAS;
-import disenos.configuracionExtras;
+import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Component;
@@ -32,19 +31,14 @@ public class addComentarios extends configEXTRAS {
     private String user, idioma, proceso;
     private int priv, interfaz;
     private DefaultTableModel modelo;
+    private crearTC creartc;
     private LinkedHashMap<String, ArrayList<String>> comentarios;
 
-    public addComentarios(String user, int priv, String idioma, int interfaz, String proceso,  LinkedHashMap<String, ArrayList<String>> comentarios) {
+    public addComentarios(String user, int priv, String idioma, int interfaz, String proceso, LinkedHashMap<String, ArrayList<String>> comentarios,
+            crearTC creartc) {
         initComponents();
-
+        this.creartc = creartc;
         modelo = (DefaultTableModel) tablaPermisos.getModel();
-
-        //se pone el icono de la aplicacion en la taskBar y en el titulo de la ventana
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //se pone el titulo de la ventana con la version
-        this.setTitle(info.VERSION);
         this.comentarios = comentarios;
         // this.listaUsuarios=listaUsuarios;
 
@@ -57,9 +51,10 @@ public class addComentarios extends configEXTRAS {
         this.proceso = proceso;
 
         //estilizar el frame
-        new configuracionExtras(this);
+        //  new configuracionExtras(this);
         //estilizar componentes del frame
         iniciarDiseno();
+        fill();
 
         //poner la interfaz en el idioma seleccionado
         if (idioma.equals("English")) {
@@ -293,8 +288,8 @@ public class addComentarios extends configEXTRAS {
             a++;
         }
         comentarios.put(proceso, comments);
-        System.out.println("Comentarios: " + comentarios);
-
+        creartc.setComentarios(comentarios);
+        System.out.println("Antes: " + comentarios);
         // eliminarArray();
         // if (llenarArray()) {
         new info().setXY(this.getX(), this.getY());
@@ -358,6 +353,14 @@ public class addComentarios extends configEXTRAS {
         // TODO add your handling code here:
 
     }//GEN-LAST:event_tablaPermisosKeyTyped
+
+    private void fill() {
+        if (comentarios.get(proceso) != null) {
+            for (String comentario : comentarios.get(proceso)) {
+                modelo.addRow(new Object[]{comentario});
+            }
+        }
+    }
 
     private void ingles() {//se pone la interfaz en ingles
 

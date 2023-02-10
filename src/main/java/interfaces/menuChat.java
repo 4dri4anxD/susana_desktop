@@ -1,9 +1,9 @@
 package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
-import configuracion.clasexml;
+import configuracion.xmlManagment;
 import configuracion.info;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Color;
@@ -34,10 +34,6 @@ public class menuChat extends configuracionVentana {//no esta en uso
 
     public menuChat(DatabaseReference con, String user, int priv, String idioma) {
         initComponents();
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        this.setTitle(info.VERSION);
         this.con = con;
         this.user = user;
         this.priv = priv;
@@ -59,7 +55,7 @@ public class menuChat extends configuracionVentana {//no esta en uso
         keys k = new keys("           aaaaa", "usuario");
         modelo.addElement(k);
 
-        idioma = new clasexml().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
+        idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
         if (idioma.equals("English")) {
             ingles();//cambia la interfaz a ingles
         } else {

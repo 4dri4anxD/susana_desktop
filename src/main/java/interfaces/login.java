@@ -5,11 +5,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import conexion.conectar;
-import configuracion.clasexml;
-import configuracion.configuracionLogin;
+import conexion.Connect;
+import configuracion.xmlManagment;
 import configuracion.info;
-import disenos.confiLogin;
+import disenos.ventanas.confiLogin;
 import disenos.disenos;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -68,16 +67,11 @@ public class login extends confiLogin {//frame con el login de la aplicacion
 
         ing = true;
 
-        //se pone el icono de la aplicacion
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //se le pone un titulo a la ventana
-        this.setTitle(info.VERSION);
+  
         //estilizacion de la ventana
-        new configuracionLogin(this);
+     //   new configuracionLogin(this);
 
-        idioma = new clasexml().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
+        idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
         if (idioma.equals("English")) {
             ingles();//cambia la interfaz a ingles
         } else {
@@ -85,7 +79,7 @@ public class login extends confiLogin {//frame con el login de la aplicacion
         }
         if (con == null) {//si no hay una conexion activa la crea y obtiene
             try {
-                this.con = new conectar().getCon();
+                this.con = new Connect().getCon();
             } catch (IOException ex) {
                 System.out.println("Ex: "+ex);
                 Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);

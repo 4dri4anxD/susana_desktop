@@ -7,7 +7,7 @@ import com.google.firebase.database.DatabaseReference.CompletionListener;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Color;
@@ -43,11 +43,6 @@ public class menuUsuarios extends configuracionVentana {//clase que muestra a lo
     public menuUsuarios(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
         //poner icono
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //poner titulo
-        this.setTitle(info.VERSION);
 
         //inicializacion de variables
         context = this;

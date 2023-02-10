@@ -2,7 +2,7 @@
 package interfaces;
 
 import configuracion.info;
-import disenos.configEXTRAS;
+import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Cursor;
@@ -30,11 +30,6 @@ public class listaActividades extends configEXTRAS {
     
     public listaActividades(String idioma, LinkedHashMap<String, String> act, LinkedHashMap<String, Integer> co, vistaActividades1 va, int tipo,int seleccion) {//LinkedHashMap<String, List<String>> hm, ArrayList<String> codProceso,ArrayList<String> procesos
         initComponents();
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //poner titulo
-        this.setTitle(info.VERSION);
         //inicializacion de variables
         modelo = (DefaultTableModel) tablaPermisos.getModel();
         this.idioma = idioma;

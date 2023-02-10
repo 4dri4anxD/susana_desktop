@@ -8,7 +8,7 @@ import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import datos.datos;
 import disenos.colores;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Color;
@@ -63,10 +63,6 @@ public class vistaPlantillas extends configuracionVentana {
     public vistaPlantillas(DatabaseReference con, String user, int priv, String idioma, String codigo, String plantilla) {
         initComponents();
 
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        this.setTitle(info.VERSION);
         listo = 0;
         new datos().inicializar();
         valido = true;

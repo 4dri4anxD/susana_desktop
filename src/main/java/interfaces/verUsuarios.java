@@ -2,7 +2,7 @@
 package interfaces;
 
 import configuracion.info;
-import disenos.configEXTRAS;
+import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Cursor;
@@ -30,10 +30,7 @@ public class verUsuarios extends configEXTRAS {
     public verUsuarios(String idioma, List<String> usuarios, String serie, int interfaz) {
         initComponents();
         
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        this.setTitle(info.VERSION);
+
         
         this.idioma = idioma;
         this.usuarios = usuarios;

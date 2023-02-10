@@ -7,7 +7,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import disenos.colorTabla;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Cursor;
@@ -60,10 +60,6 @@ public class vistaActividades1 extends configuracionVentana {
     public vistaActividades1(DatabaseReference con, String user, int priv, String idioma, int tipo, int serie, String plantilla) {
         initComponents();
 
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        this.setTitle(info.VERSION);
 
         //inicializacion de variables
         this.con = con;

@@ -2,7 +2,7 @@ package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Cursor;
@@ -25,11 +25,6 @@ public class opciones extends configuracionVentana {//clase para cambiar el idio
     public opciones(DatabaseReference con, String user, int priv, String idioma) {//constructores
         initComponents();
         //poner icono
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //poner titulo
-        this.setTitle(info.VERSION);
 
         //inicializacion de variables
         this.con = con;

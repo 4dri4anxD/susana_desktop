@@ -6,7 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Color;
@@ -41,12 +41,6 @@ public class menuActividades1 extends configuracionVentana {//clase para los tra
     public menuActividades1(DatabaseReference con, String user, int priv, String idioma, int tipo) {//constructor
         initComponents();
 
-        //poner icono
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //poner titulo
-        this.setTitle(info.VERSION);
         //inicializacion de variables
         this.con = con;
         this.priv = priv;

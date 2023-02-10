@@ -1,38 +1,105 @@
 package interfaces;
 
-import disenos.configuracionVentana;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.Query;
+import com.google.firebase.database.ValueEventListener;
+import configuracion.info;
+import datos.temporalStorage;
+import disenos.centerTextInTable;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.crearOrdenes;
+import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.Image;
+import java.util.ArrayList;
+import javax.swing.BorderFactory;
+import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
+import javax.swing.table.DefaultTableModel;
+import obtenerDatos.plantillasShipment;
+import obtenerDatos.tipoPaquete;
+import obtenerDatos.users;
 
 public class crearTS extends configuracionVentana {
 
-    /**
-     * Creates new form crearTS
-     */
-    public crearTS() {
+    private final String idioma, user;
+    private String  mensajeAdj, hintProducto;
+    private DefaultTableModel modelo;
+    private temporalStorage storage;
+    private boolean hasPrevious;
+    private ArrayList<String> actividades, listaUsuarios, seleccion;
+    private ArrayList<Integer> requisitos;
+    private final DatabaseReference con;
+    private final int serie, priv;
+    private JFrame context;
+    private final boolean valido;
+    private boolean cargado;
+    private crearOrdenes co;
+
+    public crearTS(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
-            this.setExtendedState(MAXIMIZED_BOTH);
-      //  Icon normal = new ImageIcon("img/checked.jpg");
-      //  Icon selected = new ImageIcon("img/unchecked.png");
-        ponerImgChk(chkAirTag,"img/checked.jpg","img/unchecked.png");
-        
-        
+        //Igualar parametros
+        this.con = con;
+        this.valido = valido;
+        this.user = user;
+        this.priv = priv;
+        this.idioma = idioma;
+        this.serie = serie;
 
-        
-      //  chkAirTag.setIcon(normal);
-     //   chkAirTag.setSelectedIcon(selected);
-
+        iniciarVariables();
         iniciarDiseno();
+        mostrar();
     }
 
-    public void iniciarDiseno() {//decorar los componentes del frame
+    private void iniciarVariables() {
+        hintProducto = "Aurelia X6 Std";
+        mensajeAdj = "";
+        hasPrevious = false;
+        context = this;
+        seleccion = new ArrayList();
+        storage = new temporalStorage();
+        modelo = (DefaultTableModel) tblActividades.getModel();
+        actividades = new ArrayList<>();
+        requisitos = new ArrayList<>();
+        listaUsuarios = new ArrayList<>();
+        co=new crearOrdenes();
+        try {
+            actividades.addAll(storage.getAccesoriosTS());
+            requisitos.addAll(storage.getRequisitosTS());
+            cmbPlantilla.setEnabled(valido);
+            if (actividades.size() > 0) {
+                //cargar desde memoria
+                hasPrevious = true;
+                mensajeAdj = storage.getMensajeTS();
+                chkAirTag.setSelected(storage.isAirtagTS());
+                txtProducto.setText(storage.getProductoTS());
+            }
+        } catch (Exception e) {
+            System.out.println("erorrrrrrrrrrrrrr: " + e);
+        }
+        
+        if (storage.getPlantillasTS().size() > 0) {
+            rellenar();
+            getActividades(cmbPlantilla.getSelectedItem().toString());
+        } else {
+            leerUsuarios();
+        }
+    }
+
+    private void iniciarDiseno() {//decorar los componentes del frame
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
         new disenos().botones(btnAdd, 3);
@@ -50,7 +117,6 @@ public class crearTS extends configuracionVentana {
         new disenos().titulo(lblSerie, 5);
         new disenos().titulo(lblResponsable, 6);
         new disenos().titulo(lblPlantilla, 6);
-        //  new disenos().titulo(lblAirTag, 6);
         new disenos().titulo(lblPaquete, 6);
         new disenos().titulo(lblProducto, 6);
         new disenos().titulo(lblCase, 6);
@@ -61,37 +127,37 @@ public class crearTS extends configuracionVentana {
         new disenos().selector(cmbPlantilla);
         new disenos().titulo(lblTitulo, 2);
 
-        // Set selected icon when checkbox state is selected
-        // chkAirTag.setSelectedIcon(new ImageIcon("selectedIcon.png"));
-        // Set disabled icon for checkbox
-        // chkAirTag.setDisabledIcon(new ImageIcon("disabledIcon.png"));
         chkAirTag.setFont(new Font("Lato", Font.BOLD, 20));
 
         ponerImg(btnAdd, "img/check1.png");
         ponerImg(btnAtras, "img/atras2.png");
         ponerImg(btnMsj, "img/adj1.png");
+        ponerImgChk(chkAirTag, "img/checked.jpg", "img/unchecked.png");
 
         new disenoTabla().cabecera(tblActividades);
+        tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
     }
 
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
+    private void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
         ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
         b.setIcon(icono);
     }
-    public void ponerImgChk(JCheckBox b, String ruta, String ruta2) {//poner imagenes a los botones
+
+    private void ponerImgChk(JCheckBox b, String ruta, String ruta2) {//poner imagenes a los botones
+        int w = 7, h = 3;
         ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth()/7,
-                b.getHeight()/3, Image.SCALE_SMOOTH);
+        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth() / w,
+                b.getHeight() / h, Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        ImageIcon imagen1 = new ImageIcon(ruta2);
-        Image imgEscalada1 = imagen1.getImage().getScaledInstance(b.getWidth()/7,
-                b.getHeight()/3, Image.SCALE_SMOOTH);
-        Icon icono1 = new ImageIcon(imgEscalada1);
         b.setIcon(icono);
-        b.setSelectedIcon(icono1);
+        imagen = new ImageIcon(ruta2);
+        imgEscalada = imagen.getImage().getScaledInstance(b.getWidth() / w,
+                b.getHeight() / h, Image.SCALE_SMOOTH);
+        icono = new ImageIcon(imgEscalada);
+        b.setSelectedIcon(icono);
     }
 
     /**
@@ -152,14 +218,14 @@ public class crearTS extends configuracionVentana {
 
         pnlDer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnMsj.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnMsj.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnMsj.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnMsjActionPerformed(evt);
@@ -187,7 +253,7 @@ public class crearTS extends configuracionVentana {
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -314,6 +380,20 @@ public class crearTS extends configuracionVentana {
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         pnlArriba.add(lblProducto, gridBagConstraints);
+
+        txtProducto.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                txtProductoFocusGained(evt);
+            }
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtProductoFocusLost(evt);
+            }
+        });
+        txtProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                txtProductoKeyTyped(evt);
+            }
+        });
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 1;
@@ -438,36 +518,42 @@ public class crearTS extends configuracionVentana {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-
-        /* try {
-            this.setCursor(new Cursor(WAIT_CURSOR));
-            for (int i = 0; i < modelo.getRowCount(); i++) {
-                seleccion.set(i, modelo.getValueAt(i, 1).toString());
+        try {//Guardar
+            if (!txtProducto.getText().equals(hintProducto)) {
+                this.setCursor(new Cursor(WAIT_CURSOR));
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    seleccion.set(i, modelo.getValueAt(i, 1).toString());
+                }
+                storage.setPlantillaTS(cmbPlantilla.getSelectedItem().toString());
+                storage.setResponsableTS(cmbResponsable.getSelectedItem().toString());
+                storage.setUsuariosTS(seleccion);
+                storage.setAccesoriosTS(actividades);
+                storage.setRequisitosTS(requisitos);
+                storage.setPaqueteTS(cmbPaquete.getSelectedItem().toString());
+                storage.setAirtagTS(chkAirTag.isSelected());
+                storage.setCaseTS(cmbCase.getSelectedItem().toString());
+                storage.setMensajeTS(mensajeAdj);
+                storage.setProductoTS(txtProducto.getText());
+                //volver
+                new info().setXY(this.getX(), this.getY());
+                new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
+                this.dispose();
+            } else {
+                //escriba el nomrbe del producto
             }
-            storage.setPlantillaTF(cmbPlantilla.getSelectedItem().toString());
-            storage.setResponsableTF(cmbResponsable.getSelectedItem().toString());
-            storage.setUsuariosTF(seleccion);
-            storage.setActividadesTF(actividades);
-            storage.setRequisitosTF(requisitos);
-            //volver
-            new info().setXY(this.getX(), this.getY());
-            new vistaActividades(con, user, priv, idioma, serie, 2).setVisible(true);
-            this.dispose();
+
         } catch (Exception e) {
             this.setCursor(new Cursor(DEFAULT_CURSOR));
-        } */
+        }
         //actualizar seleccion
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        //   new info().setXY(this.getX(), this.getY());
-        // this.setCursor(new Cursor(WAIT_CURSOR));
-        //  this.dispose();
-        /*   new info().setXY(this.getX(), this.getY());
-        new vistaActividades(con, user, priv, idioma, serie, 2).setVisible(true);
+        new info().setXY(this.getX(), this.getY());
+        new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
         this.setCursor(new Cursor(WAIT_CURSOR));
-        this.dispose(); */
+        this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
@@ -484,17 +570,31 @@ public class crearTS extends configuracionVentana {
 
     private void cmbPlantillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPlantillaActionPerformed
         // TODO add your handling code here:
-        /*    if (cargado) {
-            // System.out.println("Aquasai");
+        if (cargado) {
             if (!hasPrevious) {
                 limpiarTabla();
                 getActividades(cmbPlantilla.getSelectedItem().toString());
             }
-        } */
+        }
     }//GEN-LAST:event_cmbPlantillaActionPerformed
 
     private void btnMsjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMsjActionPerformed
         // TODO add your handling code here:
+        //abrir recuadro de texto
+        String titulo, cuerpo;
+        if (idioma.equals("english")) {
+            titulo = "Message";
+            cuerpo = "Write a comment";
+        } else {
+            titulo = "Mensaje";
+            cuerpo = "Escriba un comentario";
+        }
+        String resp = JOptionPane.showInputDialog(context, cuerpo, mensajeAdj);
+        if (resp != null) {
+            if (!resp.equals("")) {
+                mensajeAdj = resp;
+            }
+        }
     }//GEN-LAST:event_btnMsjActionPerformed
 
     private void chkAirTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAirTagActionPerformed
@@ -504,6 +604,264 @@ public class crearTS extends configuracionVentana {
     private void cmbCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCaseActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_cmbCaseActionPerformed
+
+    private void txtProductoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductoFocusGained
+        // TODO add your handling code here:
+        if (txtProducto.getText().equals(hintProducto)) {
+            txtProducto.setText("");
+            txtProducto.setForeground(Color.black);
+        }
+    }//GEN-LAST:event_txtProductoFocusGained
+
+    private void txtProductoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductoFocusLost
+        // TODO add your handling code here:
+        JTextField t = txtProducto;
+        if (!t.getText().equals("")) {
+            try {
+                if (t.getText().length() > 50) {
+                    t.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+                } else {
+                    t.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+                }
+            } catch (Exception e) {
+                t.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+            }
+        } else {
+            t.setText(hintProducto);
+            t.setForeground(Color.lightGray);
+            t.setBorder(BorderFactory.createLineBorder(Color.black, 1));
+        }
+    }//GEN-LAST:event_txtProductoFocusLost
+
+    private void txtProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductoKeyTyped
+        // TODO add your handling code here:
+        if (txtProducto.getText().length() >= 50) {
+            evt.consume();
+        }
+
+    }//GEN-LAST:event_txtProductoKeyTyped
+
+    private void limpiarTabla() {
+        int tam = modelo.getRowCount();
+        for (int i = 0; i < tam; i++) {
+            modelo.removeRow(0);
+        }
+        actividades.clear();
+        requisitos.clear();
+        seleccion.clear();
+    }
+
+    private void getPlantillas() {
+        try {
+            ArrayList<String> plantillas = new ArrayList<>();
+            Query query = null;
+            query = con.child("plantillasShipment");
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot user : snapshot.getChildren()) {
+                            plantillas.add(user.getKey());
+                            cmbPlantilla.addItem(user.getKey());
+                        }
+                        storage.setPlantillasTS(plantillas);
+                        cmbPlantilla.setSelectedIndex(0);
+                        if (hasPrevious) {
+                            cmbResponsable.setSelectedItem(storage.getResponsableTF());
+                            cmbPlantilla.setSelectedItem(storage.getPlantillaTF());
+                            cmbPaquete.setSelectedItem(storage.getTipoPaquete());
+                            hasPrevious = false;
+                        }
+                        getActividades(cmbPlantilla.getSelectedItem().toString());
+                    }
+                }
+                @Override
+                public void onCancelled(DatabaseError error) {
+                }
+            });
+        } catch (Exception e) {
+
+        }
+    }
+    private void ponerRv() {
+        if (storage.getUsuariosTS().size() > 0) {
+            seleccion = storage.getUsuariosTS();
+        } else {
+            llenarBaraja();
+        }
+        JComboBox cmb = new JComboBox();
+        for (int i = 0; i < listaUsuarios.size(); i++) {
+            cmb.addItem(listaUsuarios.get(i));
+        }
+        new disenos().selector(cmb);
+        tblActividades.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(cmb));
+        for (int i = 0; i < seleccion.size(); i++) {
+            modelo.addRow(new Object[]{actividades.get(i), seleccion.get(i)});
+        }
+        cargado = true;
+    }
+
+    private void llenarBaraja() {
+        ArrayList cartas1 = new ArrayList();
+        int pos;
+        int nCartas = listaUsuarios.size();
+        int comp = (listaUsuarios.contains("dummy")) ? (nCartas - 1) : nCartas;
+        for (int i = 0; i < actividades.size(); i++) {//nCartas
+            pos = (int) Math.floor(Math.random() * nCartas);
+            if (cartas1.size() == comp) {
+                cartas1.clear();
+            }
+            boolean val = cartas1.contains(pos) || listaUsuarios.get(pos).equals("dummy");
+            while (val) {
+                pos = (int) Math.floor(Math.random() * nCartas);
+                val = cartas1.contains(pos) || listaUsuarios.get(pos).equals("dummy");
+            }
+            seleccion.add(listaUsuarios.get(pos));
+            cartas1.add(pos);
+        }
+
+    }
+
+    private void getActividades(String plantilla) {
+        try {
+            actividades.clear();
+            requisitos.clear();
+            Query query = null;
+            System.out.println("Plantilla: " + plantilla);
+            query = con.child("plantillasShipment").child(plantilla);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        for (DataSnapshot info : snapshot.getChildren()) {
+                            plantillasShipment datos = info.getValue(plantillasShipment.class);
+                            actividades.add(datos.getAccesorio());
+                            requisitos.add(datos.getRequisito());
+                        }
+                        ponerRv();
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    System.out.println("Error: " + error);
+                }
+            });
+        } catch (Exception e) {
+            System.out.println("E: " + e);
+        }
+    }
+
+    private void leerUsuarios() {
+        // if (listaUsuarios.size() == 0) {//!hasPrevious && !loadFlag
+        Query query = con.child("usuarios").orderByChild("user");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot user : snapshot.getChildren()) {
+                        users log = user.getValue(users.class);
+                        try {
+                            int pr = log.getPriv();
+                            if (pr >= 2 && pr <= 4) {
+                                listaUsuarios.add(log.getUser());
+                                cmbResponsable.addItem(log.getUser());
+
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    storage.setListaUsuarios(listaUsuarios);
+                    cmbResponsable.setSelectedIndex(0);
+                    leerTipoPaquetes();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
+        // } else {
+        //    getPlantillas();
+        // }
+    }
+
+    private void rellenar() {
+        cmbPlantilla.setEnabled(valido);
+        hasPrevious = true;
+
+        listaUsuarios.addAll(storage.getListaUsuarios());
+        for (String plan : storage.getPlantillasTS()) {
+            cmbPlantilla.addItem(plan);
+        }
+        for (String us : listaUsuarios) {
+            cmbResponsable.addItem(us);
+        }
+        for (String paq : storage.getTipoPaquete()) {
+            cmbPaquete.addItem(paq);
+        }
+
+    }
+
+    private void leerTipoPaquetes() {
+        ArrayList<String> pa = new ArrayList<>();
+        Query query = con.child("tipoPaquete");
+        query.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot snapshot) {
+                if (snapshot.exists()) {
+                    for (DataSnapshot user : snapshot.getChildren()) {
+                        tipoPaquete twopaq = user.getValue(tipoPaquete.class);
+                        try {
+                            pa.add(twopaq.getPaquete());
+                            cmbPaquete.addItem(twopaq.getPaquete());
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    storage.setTipoPaquete(pa);
+
+                    getPlantillas();
+
+                    //    index = .indexOf(storage.getCaseTS());
+                    //    spnCaseTS.setSelection(index);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+
+            }
+        });
+    }
+
+    private void mostrar() {
+        cmbCase.addItem("Travel Case");
+        cmbCase.addItem("Caja de madera");
+        if (idioma.equals("english")) {
+            lblProducto.setText("Product");
+            lblPaquete.setText("Package");
+            lblResponsable.setText("Responsible");
+            lblPlantilla.setText("Template");
+            if (storage.getSerie() == 0) {
+                lblSerie.setText("Not stablished yet");
+            } else {
+                lblSerie.setText("" + storage.getSerie());
+            }
+        }else{
+            lblProducto.setText("Producto");
+            lblPaquete.setText("Paquete");
+            lblResponsable.setText("Responsable");
+            lblPlantilla.setText("Plantilla");
+            if (storage.getSerie() == 0) {
+                lblSerie.setText("No establecido aun");
+            } else {
+                lblSerie.setText("" + storage.getSerie());
+            }
+        }
+    }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

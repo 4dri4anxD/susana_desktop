@@ -7,7 +7,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import datos.infoOrdenes;
 import datos.leerJSON;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -40,12 +40,6 @@ public class tblUsersActividades extends configuracionVentana {//clase para pone
     public tblUsersActividades(DatabaseReference con, String idioma) {//constructor
         initComponents();
         //poner icono
-        ImageIcon imagen = new ImageIcon(configuracion.info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        json = new leerJSON();
-        //poner titulo
-        this.setTitle(configuracion.info.VERSION);
         //declaracion de variables globales
         this.idioma = idioma;
         this.con = con;

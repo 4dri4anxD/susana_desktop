@@ -2,10 +2,10 @@
 package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
-import configuracion.clasexml;
+import configuracion.xmlManagment;
 import configuracion.info;
 import disenos.colores;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -29,11 +29,6 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
     public menuPrincipal(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
         //pone el icono
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //pone el titulo
-        this.setTitle(info.VERSION);
         //inicializacion de variables
         this.con = con;
         this.user = user;
@@ -41,7 +36,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
         this.idioma = idioma;
         
         iniciarDiseno();
-        idioma = new clasexml().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
+        idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
         
         if (idioma.equals("English")) {
             ingles();//cambia la interfaz a ingles
@@ -416,7 +411,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                         null, options, options[0]);
                 if (opc == 0) {//agregar o editar trabajos
-                    new menuActividades(con, user, priv, idioma).setVisible(true);
+                    new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
                     this.dispose();
 
                 } else if (opc == 1) {//ver progreso de algun dron
@@ -430,7 +425,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                         null, options3, options3[0]);
                 if (opc == 0) {//agregar o editar trabajos
-                    new menuActividades(con, user, priv, idioma).setVisible(true);
+                    new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
                     this.dispose();
 
                 } else if (opc == 1) {//ver progreso de algun dron
@@ -444,7 +439,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                         null, options2, options2[0])) {
                     case 0://agregar o editar trabajos
-                        new menuActividades(con, user, priv, idioma).setVisible(true);
+                        new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
                         this.dispose();
                         break;
                     case 1://ver progreso de algun dron

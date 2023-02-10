@@ -9,7 +9,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import disenos.colores;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Color;
@@ -45,11 +45,6 @@ public class vistaUsuarios extends configuracionVentana {
 
     public vistaUsuarios(DatabaseReference con, String user, int priv, String idioma, String nombre) {
         initComponents();
-        
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        this.setTitle(info.VERSION);
         
         carga = 0;
         this.con = con;

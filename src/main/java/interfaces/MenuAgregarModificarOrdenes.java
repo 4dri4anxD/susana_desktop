@@ -7,7 +7,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import datos.leerJSON;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.customTabbedUI;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -42,7 +42,7 @@ import obtenerDatos.ordenes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class menuActividades extends configuracionVentana {//insert/update creo
+public class MenuAgregarModificarOrdenes extends configuracionVentana {//insert/update creo
 
     //declaracion de variables globales
     private DatabaseReference con;
@@ -59,14 +59,8 @@ public class menuActividades extends configuracionVentana {//insert/update creo
     private boolean verLog;
     private leerJSON json;
 
-    public menuActividades(DatabaseReference con, String user, int priv, String idioma) {
+    public MenuAgregarModificarOrdenes(DatabaseReference con, String user, int priv, String idioma) {
         initComponents();
-        //pone el icono de la aplicacion
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //pone el titulo al frame
-        this.setTitle(info.VERSION);
 
         //inicializacion de variables
         json = new leerJSON();
@@ -507,11 +501,11 @@ public class menuActividades extends configuracionVentana {//insert/update creo
             int cod = Integer.parseInt(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString());
             new info().setXY(this.getX(), this.getY());
             //DatabaseReference con, String user, int priv, String idioma, int serie, int inter
-            new vistaActividades(con, user, priv, idioma, cod, 3).setVisible(true);
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, cod, 3).setVisible(true);
             this.dispose();
         } catch (Exception e) {
             new info().setXY(this.getX(), this.getY());
-            new vistaActividades(con, user, priv, idioma, 0, 1).setVisible(true);
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, 0, 1).setVisible(true);
             this.dispose();
         }
     }//GEN-LAST:event_btnAddActionPerformed

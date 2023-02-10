@@ -11,7 +11,7 @@ import java.util.LinkedHashMap;
 
 public class temporalStorage {
     private static String productoTS, cajaTS, paqueteTS, responsableTS, plantillaTS, fecha, nombre, plantillaTC, responsableTC, responsableTT, plantillaTT, pilotoTT, responsableTF, plantillaTF, mensajeTS;
-    private static ArrayList<String> accesoriosTS, usuariosTS, ubicacionTC, usuariosTC, actividadesTT, usuariosTT, rendimientoTT, usuarios1TT, actividadesTF, usuariosTF, mensajeTC, comentarioTS, comentarioTF, ponderacionTT, comentarioTT, comentarioTT1, plantillas,listaUsuarios;
+    private static ArrayList<String> accesoriosTS, usuariosTS, ubicacionTC, usuariosTC, actividadesTT, usuariosTT, rendimientoTT, usuarios1TT, actividadesTF, usuariosTF, mensajeTC, comentarioTS, comentarioTF, ponderacionTT, comentarioTT, comentarioTT1, plantillasTT, plantillasTC, plantillasTS, plantillasTF,listaUsuarios, tipoPaquete;
     private static ArrayList<Integer>  requisitosTC, requisitosTS, requisitosTT, requisitosTT1, requisitosTF, completadoTS, completadoTF;
     private static HashMap<String, ArrayList<String>> comentariosTC;
     private static ArrayList<Boolean> aprobadoTC, revsolTC, aprobacionTT, realizadoTT;
@@ -28,7 +28,7 @@ public class temporalStorage {
         inicializarTT();
         inicializarTC();
         inicializarTF();
-        plantillas=new ArrayList();
+        
         listaUsuarios=new ArrayList();
     }
 
@@ -51,6 +51,8 @@ public class temporalStorage {
         requisitosTS=new ArrayList<>();
         completadoTS=new ArrayList<>();
         comentarioTS=new ArrayList<>();
+        tipoPaquete=new ArrayList<>();
+        plantillasTS=new ArrayList();
         porcentajeTS=0;
     }
     public void inicializarTC() {
@@ -63,6 +65,7 @@ public class temporalStorage {
         revsolTC=new ArrayList<>();
         aprobadoTC=new ArrayList<>();
         mensajeTC=new ArrayList<>();
+        plantillasTC=new ArrayList();
         porcentajeTC=0;
     }
 
@@ -81,6 +84,7 @@ public class temporalStorage {
         ponderacionTT=new ArrayList<>();
         comentarioTT=new ArrayList<>();
         comentarioTT1=new ArrayList<>();
+        plantillasTT=new ArrayList();
         porcentajeTT=0;
     }
     public void inicializarTF(){
@@ -91,15 +95,45 @@ public class temporalStorage {
         requisitosTF=new ArrayList<>();
         completadoTF=new ArrayList<>();
         comentarioTF=new ArrayList<>();
+        plantillasTF=new ArrayList();
         porcentajeTF=0;
     }
     
-    public static ArrayList<String> getPlantillas() {
-        return plantillas;
+    public static ArrayList<String> getTipoPaquete() {
+        return tipoPaquete;
     }
 
-    public static void setPlantillas(ArrayList<String> plantillas) {
-        temporalStorage.plantillas = plantillas;
+    public static void setTipoPaquete(ArrayList<String> tipoPaquete) {
+        temporalStorage.tipoPaquete = tipoPaquete;
+    }
+    
+    public static ArrayList<String> getPlantillasTC() {
+        return plantillasTC;
+    }
+
+    public static void setPlantillasTC(ArrayList<String> plantillas) {
+        temporalStorage.plantillasTC = plantillas;
+    }
+    public static ArrayList<String> getPlantillasTF() {
+        return plantillasTF;
+    }
+
+    public static void setPlantillasTF(ArrayList<String> plantillas) {
+        temporalStorage.plantillasTF = plantillas;
+    }
+    public static ArrayList<String> getPlantillasTS() {
+        return plantillasTS;
+    }
+
+    public static void setPlantillasTS(ArrayList<String> plantillas) {
+        temporalStorage.plantillasTS = plantillas;
+    }
+    public static ArrayList<String> getPlantillasTT() {
+        return plantillasTT;
+    }
+
+    public static void setPlantillasTT(ArrayList<String> plantillas) {
+        temporalStorage.plantillasTT = plantillas;
     }
 
     public static ArrayList<String> getListaUsuarios() {

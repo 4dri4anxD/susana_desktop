@@ -3,8 +3,7 @@ package interfaces;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
 import datos.datos;
-import disenos.configEXTRAS;
-import disenos.configuracionExtras;
+import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Component;
@@ -39,11 +38,6 @@ public class extrasVersiones extends configEXTRAS {//frame utilizado para mostra
         modelo = (DefaultTableModel) tablaPermisos.getModel();
 
         //se pone el icono de la aplicacion en la taskBar y en el titulo de la ventana
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        //se pone el titulo de la ventana con la version
-        this.setTitle(info.VERSION);
 
         //inicializacion de variables
         eliminados = new ArrayList();
@@ -55,7 +49,7 @@ public class extrasVersiones extends configEXTRAS {//frame utilizado para mostra
         this.proceso = proceso;
 
         //estilizar el frame
-        new configuracionExtras(this);
+       // new configuracionExtras(this);
         //estilizar componentes del frame
         iniciarDiseno();
 

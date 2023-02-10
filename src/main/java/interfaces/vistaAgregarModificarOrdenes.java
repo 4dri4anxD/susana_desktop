@@ -11,7 +11,7 @@ import obtenerDatos.ordenes;
 import datos.temporalStorage;
 import disenos.cmbTabla;
 import disenos.colores;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Color;
@@ -60,7 +60,7 @@ import notificacion.notificar;
 import obtenerDatos.users;
 import org.json.simple.JSONObject;
 
-public class vistaActividades extends configuracionVentana {
+public class vistaAgregarModificarOrdenes extends configuracionVentana {
 
     private DatabaseReference con;//conexion con la base de datos
     private String user, idioma;//usuario que esta utilizando la app e idioma de esta
@@ -72,16 +72,10 @@ public class vistaActividades extends configuracionVentana {
     private temporalStorage storage;
     private leerJSON json;
 
-    public vistaActividades(DatabaseReference con, String user, int priv, String idioma, int serie, int inter) {
+    public vistaAgregarModificarOrdenes(DatabaseReference con, String user, int priv, String idioma, int serie, int inter) {
         initComponents();
 
         storage = new temporalStorage();
-
-        //inicializacion de variables
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        this.setTitle(info.VERSION);
         json = new leerJSON();
         this.con = con;
         this.inter = inter;
@@ -96,7 +90,7 @@ public class vistaActividades extends configuracionVentana {
 
         Date f = new Date();
         txtPlazo.setDate(f);
-
+        
         if (inter == 1) {//inter 1 significa insert
             storage.inicializarTodo();
             if (idioma.equals("English")) {
@@ -117,7 +111,7 @@ public class vistaActividades extends configuracionVentana {
                 }
                 Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(storage.getFecha());
                 txtPlazo.setDate(date1);
-                System.out.println("nombrei: " + storage.getNombre());
+          
                 if (!storage.getNombre().equals("")) {
                     txtNombre.setForeground(Color.black);
                     txtNombre.setText(storage.getNombre());
@@ -128,6 +122,7 @@ public class vistaActividades extends configuracionVentana {
             }
 
         } else {//3
+            storage.inicializarTodo();
             //leer Toda la info de un trabajo en especifico
             leerExistente();
         }
@@ -740,7 +735,7 @@ public class vistaActividades extends configuracionVentana {
       new info().setXY(this.getX(), this.getY());
       storage.inicializarTodo();
       this.setCursor(new Cursor(WAIT_CURSOR));
-      new menuActividades(con, user, priv, idioma).setVisible(true);
+      new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
       this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
@@ -755,6 +750,7 @@ public class vistaActividades extends configuracionVentana {
             new info().setXY(this.getX(), this.getY());
             this.setCursor(new Cursor(WAIT_CURSOR));
         }
+        storage.inicializarTodo();
 
 
     }//GEN-LAST:event_btnAddActionPerformed
@@ -912,7 +908,7 @@ public class vistaActividades extends configuracionVentana {
         if (!txtSerie.getText().equals("") && !txtSerie.getText().equals(tSerie)) {
             serie = Integer.parseInt(txtSerie.getText());
         }
-        System.out.println("Serie: " + serie);
+        
         storage.setSerie(serie);
         this.setCursor(new Cursor(WAIT_CURSOR));
         new info().setXY(this.getX(), this.getY());
@@ -925,7 +921,7 @@ public class vistaActividades extends configuracionVentana {
             case 2:
                 break;
             case 3:
-                new crearTS().setVisible(true);//con, user, priv, idioma, serie, val
+                new crearTS(con, user, priv, idioma, serie, val).setVisible(true);//con, user, priv, idioma, serie, val
                 this.dispose();
                 break;
             case 4:
@@ -959,7 +955,7 @@ public class vistaActividades extends configuracionVentana {
                             storage.setProgreso(log.getProgreso());
                             Map<String, Object> value = (Map<String, Object>) snapshot.getValue();
                             JSONObject allData = new JSONObject(value);
-                            // System.out.println("AllData: "+allData);
+                         
                             //TC
                             fillTC(allData);
                             //TT
@@ -1050,7 +1046,7 @@ public class vistaActividades extends configuracionVentana {
             storage.setRequisitosTC(requisito);
             storage.setComentariosTC(comenta);
 
-            System.out.println("Plantilla: " + storage.getPlantillaTC());
+         /*   System.out.println("Plantilla: " + storage.getPlantillaTC());
             System.out.println("Responsable: " + storage.getResponsableTC());
             System.out.println("Ubicacion: " + storage.getUbicacionTC());
             System.out.println("Usuarios: " + storage.getUsuariosTC());
@@ -1059,7 +1055,7 @@ public class vistaActividades extends configuracionVentana {
             System.out.println("Aprobado: " + storage.getAprobadoTC());
             System.out.println("mensaje: " + mensaje);
             System.out.println("Requisitos: " + storage.getRequisitosTC());
-            System.out.println("Comentarios: " + storage.getComentariosTC());
+            System.out.println("Comentarios: " + storage.getComentariosTC()); */
         } catch (Exception e) {
             System.out.println("erroooooooooooooooooooooooooooor12: " + e);
         }
@@ -1069,10 +1065,10 @@ public class vistaActividades extends configuracionVentana {
         try {
 
             HashMap checkTT = (HashMap) allData.get(json.getString("trabajosTableCheckTT"));
-            System.out.println("CheckTT: " + checkTT);
+         
             ArrayList actividades = (ArrayList) checkTT.get(json.getString("trabajosTableCheckTTActividades"));
             // JSONArray rendimiento = checkTT.getJSONArray(getString(R.string.trabajosTableCheckTTRendimiento));
-            System.out.println("Actividadett: " + actividades);
+   
             ArrayList<String> usuarios = new ArrayList<>();
             ArrayList<String> actividad = new ArrayList<>();
             ArrayList<Integer> requisito = new ArrayList<>();
@@ -1086,7 +1082,7 @@ public class vistaActividades extends configuracionVentana {
             ArrayList<String> comenta1 = new ArrayList();
             for (int i = 0; i < actividades.size(); i++) {
                 HashMap jsonTC = (HashMap) actividades.get(i);
-                System.out.println("jsonTC: " + jsonTC);
+              
                 if (!jsonTC.get(json.getString("trabajosTableCheckTTActividadesAct")).toString().equals("")) {
                     usuarios.add(jsonTC.get(json.getString("trabajosTableCheckTTActividadesUsu")).toString());
                     actividad.add(jsonTC.get(json.getString("trabajosTableCheckTTActividadesAct")).toString());
@@ -1122,9 +1118,9 @@ public class vistaActividades extends configuracionVentana {
             storage.setResponsableTT(checkTT.get(json.getString("trabajosTableCheckTTResponsable")).toString());
             storage.setPilotoTT(checkTT.get(json.getString("trabajosTableCheckTTPiloto")).toString());
             storage.setPorcentajeTT(Double.parseDouble(checkTT.get(json.getString("trabajosTableCheckTTPorcentaje")).toString()));
-            System.out.println("Aca");
+        
 
-            System.out.println("Plantilla: " + storage.getPlantillaTT());
+          /*  System.out.println("Plantilla: " + storage.getPlantillaTT());
             System.out.println("Responsable: " + storage.getResponsableTT());
             System.out.println("Piloto: " + storage.getPilotoTT());
             System.out.println("Actividades: " + storage.getActividadesTT());
@@ -1134,7 +1130,7 @@ public class vistaActividades extends configuracionVentana {
             System.out.println("Rendimiento: " + storage.getRendimientoTT());
             System.out.println("Usuarios1: " + storage.getUsuarios1TT());
             //   System.out.println("Completado1: "+storage.getCompletado1TT());
-            System.out.println("Requisitos1: " + storage.getRequisitosTT1());
+            System.out.println("Requisitos1: " + storage.getRequisitosTT1()); */
         } catch (Exception e) {
             System.out.println("erroooooooooooooooooooooooooooor32: " + e);
         }
@@ -1175,7 +1171,7 @@ public class vistaActividades extends configuracionVentana {
             storage.setPaqueteTS(checkTS.get(json.getString("trabajosTableCheckTSPaquete")).toString());
             storage.setMensajeTS(checkTS.get(json.getString("trabajosTableCheckTSMensaje")).toString());
 
-            System.out.println("Plantilla: " + storage.getPlantillaTS());
+         /*   System.out.println("Plantilla: " + storage.getPlantillaTS());
             System.out.println("Responsable: " + storage.getResponsableTS());
             System.out.println("Caja: " + storage.getCaseTS());
             System.out.println("Mensaje: " + storage.getMensajeTS());
@@ -1186,7 +1182,7 @@ public class vistaActividades extends configuracionVentana {
             System.out.println("Actividades: " + storage.getAccesoriosTS());
             System.out.println("Usuarios: " + storage.getUsuariosTS());
             System.out.println("Completado: " + storage.getCompletadoTS());
-            System.out.println("Requisitos: " + storage.getRequisitosTS());
+            System.out.println("Requisitos: " + storage.getRequisitosTS());*/
         } catch (Exception e) {
             System.out.println("erroooooooooooooooooooooooooooor43: " + e);
         }
@@ -1220,13 +1216,13 @@ public class vistaActividades extends configuracionVentana {
             storage.setResponsableTF(checkTF.get(json.getString("trabajosTableCheckTFResponsable")).toString());
             storage.setPorcentajeTF(Double.parseDouble(checkTF.get(json.getString("trabajosTableCheckTFPorcentaje")).toString()));
 
-            System.out.println("Plantilla: " + storage.getPlantillaTF());
+         /*   System.out.println("Plantilla: " + storage.getPlantillaTF());
             System.out.println("Responsable: " + storage.getResponsableTF());
 
             System.out.println("Actividades: " + storage.getActividadesTF());
             System.out.println("Usuarios: " + storage.getUsuariosTF());
             System.out.println("Completado: " + storage.getCompletadoTF());
-            System.out.println("Requisitos: " + storage.getRequisitosTF());
+            System.out.println("Requisitos: " + storage.getRequisitosTF());*/
         } catch (Exception e) {
             System.out.println("erroooooooooooooooooooooooooooor42: " + e);
         }
@@ -1268,7 +1264,7 @@ public class vistaActividades extends configuracionVentana {
                         contenido = "Pulse para abrir la app";
                         topico = "trabajador";
                         new notificar().notificaT(titulo, contenido, topico);
-                        new menuActividades(con, user, priv, idioma).setVisible(true);
+                        new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
                         context.dispose();
 
                     }

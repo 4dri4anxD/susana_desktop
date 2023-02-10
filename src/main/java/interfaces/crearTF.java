@@ -13,9 +13,10 @@ import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import datos.temporalStorage;
 import disenos.centerTextInTable;
-import disenos.configuracionVentana;
+import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.crearOrdenes;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -38,60 +39,58 @@ import obtenerDatos.users;
 
 public class crearTF extends configuracionVentana {
 
-    private String idioma, responsableTF, plantillaTF, user;
+    private String idioma, user;
     private DefaultTableModel modelo;
     private temporalStorage storage;
-    private boolean hasPrevious;
     private ArrayList<String> actividades, listaUsuarios, seleccion;
     private ArrayList<Integer> requisitos;
     private DatabaseReference con;
     private int serie, priv;
     private JFrame context;
     private boolean valido, cargado;
+    private crearOrdenes co;
 
     public crearTF(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
-        cargado = false;
 
-        ImageIcon imagen = new ImageIcon(info.RUTA_IMAGEN);
-        Image icono = imagen.getImage();
-        this.setIconImage(icono);
-        storage = new temporalStorage();
-        hasPrevious = false;
-
-        context = this;
         this.valido = valido;
         this.serie = serie;
         this.con = con;
         this.user = user;
         this.idioma = idioma;
-        this.setTitle(info.VERSION);
-        modelo = (DefaultTableModel) tblActividades.getModel();
-        this.responsableTF = storage.getResponsableTF();
-        this.plantillaTF = storage.getPlantillaTF();
 
+        iniciarVariables();
+        mostrar();
+        iniciarDiseno();
+    }
+
+    private void iniciarVariables() {
+        cargado = false;
+        storage = new temporalStorage();
+        context = this;
+        modelo = (DefaultTableModel) tblActividades.getModel();
         actividades = new ArrayList<>();
         requisitos = new ArrayList<>();
         listaUsuarios = new ArrayList<>();
         seleccion = new ArrayList();
-
+        co = new crearOrdenes();
         try {
-
             actividades.addAll(storage.getActividadesTF());
             requisitos.addAll(storage.getRequisitosTF());
             seleccion.addAll(storage.getUsuariosTF());
             cmbPlantilla.setEnabled(valido);
+            
             if (actividades.size() > 0) {
-                rellenar();
+                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(),1));
                 ponerRv();
-                hasPrevious = true;
             } else {
-                System.out.println("Aca xd");
-                if (storage.getListaUsuarios().size() > 0) {
-                    rellenar();
+                if (storage.getPlantillasTF().size() > 0) {
+                    listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(),1));
                     getActividades(cmbPlantilla.getSelectedItem().toString());
-                }else{
-                    leerUsuarios();
+                } else {
+                    if(storage.getListaUsuarios().size() == 0) leerUsuarios();
+                    else listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(),0));
+                    getPlantillas();
                 }
             }
 
@@ -99,18 +98,9 @@ public class crearTF extends configuracionVentana {
             System.out.println("erorrrrrrrrrrrrrr: " + e);
         }
 
-        if (idioma.equals("English")) {
-            ingles();
-        } else {
-            esp();
-        }
-        //se le pone el cell renderer solo a las columnas 1 y 2
-        tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
-
-        iniciarDiseno();
     }
 
-    public void iniciarDiseno() {//decorar los componentes del frame
+    private void iniciarDiseno() {//decorar los componentes del frame
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
         new disenos().botones(btnAdd, 3);
@@ -135,6 +125,7 @@ public class crearTF extends configuracionVentana {
         ponerImg(btnAtras, "img/atras2.png");
 
         new disenoTabla().cabecera(tblActividades);
+        tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
     }
 
     public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
@@ -143,19 +134,6 @@ public class crearTF extends configuracionVentana {
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
         b.setIcon(icono);
-    }
-
-    private void rellenar() {
-        cmbPlantilla.setEnabled(valido);
-        hasPrevious = true;
-
-        listaUsuarios.addAll(storage.getListaUsuarios());
-        for (String plan : storage.getPlantillas()) {
-            cmbPlantilla.addItem(plan);
-        }
-        for (String us : listaUsuarios) {
-            cmbResponsable.addItem(us);
-        }
     }
 
     /**
@@ -417,7 +395,7 @@ public class crearTF extends configuracionVentana {
             storage.setRequisitosTF(requisitos);
             //volver
             new info().setXY(this.getX(), this.getY());
-            new vistaActividades(con, user, priv, idioma, serie, 2).setVisible(true);
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
             this.setCursor(new Cursor(DEFAULT_CURSOR));
@@ -431,7 +409,7 @@ public class crearTF extends configuracionVentana {
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
         new info().setXY(this.getX(), this.getY());
-        new vistaActividades(con, user, priv, idioma, serie, 2).setVisible(true);
+        new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
         this.setCursor(new Cursor(WAIT_CURSOR));
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
@@ -453,206 +431,88 @@ public class crearTF extends configuracionVentana {
         // TODO add your handling code here:
         if (cargado) {
             // System.out.println("Aquasai");
-            if (!hasPrevious) {
+        
                 limpiarTabla();
                 getActividades(cmbPlantilla.getSelectedItem().toString());
-            }
+            
         }
     }//GEN-LAST:event_cmbPlantillaActionPerformed
 
     private void limpiarTabla() {
-        int tam = modelo.getRowCount();
-        for (int i = 0; i < tam; i++) {
-            modelo.removeRow(0);
-        }
+        co.limpiarTabla(modelo);
+        System.out.println("modelo: " + modelo.getRowCount());
         actividades.clear();
         requisitos.clear();
-        // listaUsuarios.clear();
         seleccion.clear();
     }
 
-    private void getPlantillas() {
-
-        try {
-              ArrayList<String> plantillas = new ArrayList<>();
-            Query query = null;
-            query = con.child("plantillasFinal");
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                             plantillas.add(user.getKey());
-                            cmbPlantilla.addItem(user.getKey());
-                        }
-                        storage.setPlantillas(plantillas);
-                        cmbPlantilla.setSelectedIndex(0);
-                        //  ArrayAdapter<String> adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.light_background_item, plantillas);
-                        //  spnPlantillaTF.setAdapter(adapter);
-                        // adapter = new ArrayAdapter<String>(getApplicationContext(), R.layout.light_background_item, listaUsuarios);
-                        // spnResponsableF.setAdapter(adapter);
-                        if (hasPrevious) {
-                            cmbResponsable.setSelectedItem(storage.getResponsableTF());
-                            cmbPlantilla.setSelectedItem(storage.getPlantillaTF());
-                            //ver como arreglar listaUsuarios
-                            //Si se agrega un nuevo usuario, se va a desmadrar todo no?
-                            //O al menos no lo va a reconocer
-
-                            hasPrevious = false;
-                        }
-                        getActividades(cmbPlantilla.getSelectedItem().toString());
-
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-
-                }
-
-            });
-        } catch (Exception e) {
-
-        }
-    }
-
     private void ponerRv() {
-        plantillaTF = cmbPlantilla.getSelectedItem().toString();
-        responsableTF = cmbResponsable.getSelectedItem().toString();
-
-        if (storage.getUsuariosTF().size() > 0) {
-            seleccion = storage.getUsuariosTF();
-        } else {
-            //  System.out.println("ACA NOOOOOOOOOOOOOOOOOOOOOOOO");
-            llenarBaraja();
-        }
-        JComboBox cmb = new JComboBox();
-        for (int i = 0; i < listaUsuarios.size(); i++) {
-            cmb.addItem(listaUsuarios.get(i));
-        }
-        new disenos().selector(cmb);
-        //agrega el como box a las filas
-
-        tblActividades.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(cmb));
-        for (int i = 0; i < seleccion.size(); i++) {
-            modelo.addRow(new Object[]{actividades.get(i), seleccion.get(i)});
-        }
+        seleccion.clear();
+        seleccion.addAll(co.ponerRv(storage.getUsuariosTF(), listaUsuarios, tblActividades, modelo, actividades));
         cargado = true;
+        System.out.println("AUI");
+
     }
 
-    private void llenarBaraja() {
-        ArrayList cartas1 = new ArrayList();
-        int pos;
-        int nCartas = listaUsuarios.size();
-        int comp = (listaUsuarios.contains("dummy")) ? (nCartas - 1) : nCartas;
-        for (int i = 0; i < actividades.size(); i++) {//nCartas
-            pos = (int) Math.floor(Math.random() * nCartas);
-            if (cartas1.size() == comp) {
-                cartas1.clear();
-            }
-            boolean val = cartas1.contains(pos) || listaUsuarios.get(pos).equals("dummy");
-            while (val) {
-                pos = (int) Math.floor(Math.random() * nCartas);
-                val = cartas1.contains(pos) || listaUsuarios.get(pos).equals("dummy");
-            }
+    private void getPlantillas() {
+        co.readPlantillas(new crearOrdenes.CallBackPlantillas() {
+            @Override
+            public void onCallback(ArrayList<String> plantillas) {
 
-            seleccion.add(listaUsuarios.get(pos));
-            // pCartas.add(pos);
-            cartas1.add(pos);
-        }
+                storage.setPlantillasTF(plantillas);
+                getActividades(cmbPlantilla.getSelectedItem().toString());
+            }
+        }, con, "plantillasFinal", cmbResponsable, cmbPlantilla, storage.getResponsableTF(), storage.getPlantillaTF());
     }
 
     private void getActividades(String plantilla) {
-        try {
-            actividades.clear();
-            requisitos.clear();
-            Query query = null;
-            query = con.child("plantillasFinal").child(plantilla);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot info : snapshot.getChildren()) {
-                            plantillasFinal datos = info.getValue(plantillasFinal.class);
-                            actividades.add(datos.getActividad());
-                            requisitos.add(datos.getRequisito());
-                        }
-                        ponerRv();
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                }
-            });
-        } catch (Exception e) {
-
-        }
+        co.readActividades(new crearOrdenes.CallBackActividades() {
+            @Override
+            public void onCallback(crearOrdenes.Actividades c) {
+                actividades.addAll(c.getActividades());
+                requisitos.addAll(c.getRequisitos());
+                ponerRv();
+            }
+        }, con, "plantillasFinal", plantilla, "actividad", "requisito");
     }
 
     private void leerUsuarios() {
-       // if (listaUsuarios.size() == 0) {//!hasPrevious && !loadFlag
-            Query query = con.child("usuarios").orderByChild("user");
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                            users log = user.getValue(users.class);
-                            try {
-                                int pr = log.getPriv();
-                                if (pr >= 2 && pr <= 4) {
-                                    listaUsuarios.add(log.getUser());
-                                    cmbResponsable.addItem(log.getUser());
-                                }
-                            } catch (Exception e) {
-
-                            }
-                        }
-                        storage.setListaUsuarios(listaUsuarios);
-                        cmbResponsable.setSelectedIndex(0);
-                        getPlantillas();
-                    }
+        co.readUsuarios(new crearOrdenes.CallBackUsuarios() {
+            @Override
+            public void onCallback(ArrayList<String> usuarios) {
+                for (String usuario : usuarios) {
+                    listaUsuarios.add(usuario);
                 }
 
-                @Override
-                public void onCancelled(DatabaseError error) {
-
-                }
-            });
-       // } else {
-        //    getPlantillas();
-       // }
+            }
+        }, con, storage, cmbResponsable);
     }
 
-    private void ingles() {//poner la interfaz en ingles
-        lblTitulo.setText("CheckList");
-        JTableHeader tableHeader = tblActividades.getTableHeader();
-        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
-        TableColumn tableColumn = tableColumnModel.getColumn(0);
-        tableColumn.setHeaderValue("Activities");
-        tableColumn = tableColumnModel.getColumn(1);
-        tableColumn.setHeaderValue("User");
-        tableHeader.repaint();
-        lblResponsable.setText("Responsible");
-        lblPlantilla.setText("Template");
-       // leerUsuarios();
+    private void mostrar() {
+        if (idioma.equals("english")) {
+            lblTitulo.setText("CheckList");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Activities");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("User");
+            tableHeader.repaint();
+            lblResponsable.setText("Responsible");
+            lblPlantilla.setText("Template");
+        } else {
+            lblTitulo.setText("CheckList");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Actividades");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("Usuario");
+            tableHeader.repaint();
+            lblResponsable.setText("Responsable");
+            lblPlantilla.setText("Plantilla");
+        }
     }
-
-    private void esp() {//poner la interfaz en espanol
-        lblTitulo.setText("CheckList");
-        JTableHeader tableHeader = tblActividades.getTableHeader();
-        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
-        TableColumn tableColumn = tableColumnModel.getColumn(0);
-        tableColumn.setHeaderValue("Actividades");
-        tableColumn = tableColumnModel.getColumn(1);
-        tableColumn.setHeaderValue("Usuario");
-        tableHeader.repaint();
-        lblResponsable.setText("Responsable");
-        lblPlantilla.setText("Plantilla");
-      //  leerUsuarios();
-    }
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAtras;
