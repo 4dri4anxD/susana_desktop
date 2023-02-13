@@ -74,28 +74,41 @@ public class crearTF extends configuracionVentana {
         listaUsuarios = new ArrayList<>();
         seleccion = new ArrayList();
         co = new crearOrdenes();
-        try {
-            actividades.addAll(storage.getActividadesTF());
-            requisitos.addAll(storage.getRequisitosTF());
-            seleccion.addAll(storage.getUsuariosTF());
-            cmbPlantilla.setEnabled(valido);
-            
-            if (actividades.size() > 0) {
-                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(),1));
-                ponerRv();
-            } else {
-                if (storage.getPlantillasTF().size() > 0) {
-                    listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(),1));
-                    getActividades(cmbPlantilla.getSelectedItem().toString());
-                } else {
-                    if(storage.getListaUsuarios().size() == 0) leerUsuarios();
-                    else listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(),0));
-                    getPlantillas();
-                }
+        if (storage.getActividadesTF().size() > 0) {
+            try {
+                actividades.addAll(storage.getActividadesTF());
+                requisitos.addAll(storage.getRequisitosTF());
+                seleccion.addAll(storage.getUsuariosTF());
+            } catch (Exception e) {
+                System.out.println("erorrrrrrrrrrrrrr: " + e);
             }
+            
+            cmbPlantilla.setEnabled(valido);
+            //   listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(), 1));
+            //  ponerRv();
+            fill(true);
+            cmbPlantilla.setSelectedItem(storage.getPlantillaTF());
+            cmbResponsable.setSelectedItem(storage.getResponsableTF());
+        } else {
+            fill(false);
+        }
+    }
 
-        } catch (Exception e) {
-            System.out.println("erorrrrrrrrrrrrrr: " + e);
+    private void fill(boolean pr) {
+        if (storage.getPlantillasTF().size() > 0) {
+            listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(), 1));
+            if (!pr) {
+                getActividades(cmbPlantilla.getSelectedItem().toString());
+            } else {
+                ponerRv();
+            }
+        } else {
+            if (storage.getListaUsuarios().size() == 0) {
+                leerUsuarios();
+            } else {
+                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(), 0));
+            }
+            getPlantillas(pr);
         }
 
     }
@@ -431,16 +444,15 @@ public class crearTF extends configuracionVentana {
         // TODO add your handling code here:
         if (cargado) {
             // System.out.println("Aquasai");
-        
-                limpiarTabla();
-                getActividades(cmbPlantilla.getSelectedItem().toString());
-            
+
+            limpiarTabla();
+            getActividades(cmbPlantilla.getSelectedItem().toString());
+
         }
     }//GEN-LAST:event_cmbPlantillaActionPerformed
 
     private void limpiarTabla() {
         co.limpiarTabla(modelo);
-        System.out.println("modelo: " + modelo.getRowCount());
         actividades.clear();
         requisitos.clear();
         seleccion.clear();
@@ -454,13 +466,17 @@ public class crearTF extends configuracionVentana {
 
     }
 
-    private void getPlantillas() {
+    private void getPlantillas(boolean pr) {
         co.readPlantillas(new crearOrdenes.CallBackPlantillas() {
             @Override
             public void onCallback(ArrayList<String> plantillas) {
 
                 storage.setPlantillasTF(plantillas);
-                getActividades(cmbPlantilla.getSelectedItem().toString());
+                if (!pr) {
+                    getActividades(cmbPlantilla.getSelectedItem().toString());
+                } else {
+                    ponerRv();
+                }
             }
         }, con, "plantillasFinal", cmbResponsable, cmbPlantilla, storage.getResponsableTF(), storage.getPlantillaTF());
     }
@@ -473,7 +489,7 @@ public class crearTF extends configuracionVentana {
                 requisitos.addAll(c.getRequisitos());
                 ponerRv();
             }
-        }, con, "plantillasFinal", plantilla, "actividad", "requisito");
+        }, con, "plantillasFinal", plantilla, "actividad", "requisito", null, null);
     }
 
     private void leerUsuarios() {
@@ -490,7 +506,7 @@ public class crearTF extends configuracionVentana {
 
     private void mostrar() {
         if (idioma.equals("english")) {
-            lblTitulo.setText("CheckList");
+            lblTitulo.setText("Final CheckList");
             JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);
@@ -500,8 +516,13 @@ public class crearTF extends configuracionVentana {
             tableHeader.repaint();
             lblResponsable.setText("Responsible");
             lblPlantilla.setText("Template");
+            if (storage.getSerie() == 0) {
+                lblSerie.setText("Not stablished yet");
+            } else {
+                lblSerie.setText("" + storage.getSerie());
+            }
         } else {
-            lblTitulo.setText("CheckList");
+            lblTitulo.setText("CheckList Final");
             JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);
@@ -511,6 +532,11 @@ public class crearTF extends configuracionVentana {
             tableHeader.repaint();
             lblResponsable.setText("Responsable");
             lblPlantilla.setText("Plantilla");
+            if (storage.getSerie() == 0) {
+                lblSerie.setText("No establecido aun");
+            } else {
+                lblSerie.setText("" + storage.getSerie());
+            }
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables

@@ -1,98 +1,93 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package interfaces;
 
-import com.google.firebase.database.DataSnapshot;
-import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.Query;
-import com.google.firebase.database.ValueEventListener;
-import configuracion.info;
 import datos.temporalStorage;
 import disenos.centerTextInTable;
-import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.ventanas.configuracionVentana;
 import helpers.crearOrdenes;
-import java.awt.Color;
 import java.awt.Cursor;
-import java.awt.Font;
 import java.awt.Image;
 import java.util.ArrayList;
-import javax.swing.BorderFactory;
-import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
-import javax.swing.JComboBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JTextField;
 import javax.swing.table.DefaultTableModel;
-import obtenerDatos.plantillasShipment;
-import obtenerDatos.tipoPaquete;
-import obtenerDatos.users;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
+import configuracion.info;
 
-public class crearTS extends configuracionVentana {
+public class crearTT extends configuracionVentana {
 
-    private final String idioma, user;
-    private String mensajeAdj, hintProducto;
-    private DefaultTableModel modelo;
+    private String idioma, user;
+    private DefaultTableModel modelo, modelo1;
     private temporalStorage storage;
-    private ArrayList<String> actividades, listaUsuarios, seleccion;
-    private ArrayList<Integer> requisitos;
-    private final DatabaseReference con;
-    private final int serie, priv;
+    private ArrayList<String> actividades, listaUsuarios, seleccion, seleccion1, rendimiento;
+    private ArrayList<Integer> requisitos, requisitos1;
+    private DatabaseReference con;
+    private int serie, priv;
     private JFrame context;
-    private final boolean valido;
-    private boolean cargado;
+    private boolean valido, cargado;
     private crearOrdenes co;
 
-    public crearTS(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
+    public crearTT(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
-        //Igualar parametros
-        this.con = con;
+
         this.valido = valido;
-        this.user = user;
-        this.priv = priv;
-        this.idioma = idioma;
         this.serie = serie;
+        this.con = con;
+        this.user = user;
+        this.idioma = idioma;
 
         iniciarVariables();
-        iniciarDiseno();
         mostrar();
-
+        iniciarDiseno();
     }
 
     private void iniciarVariables() {
-        hintProducto = "Aurelia X6 Std";
-        mensajeAdj = "";
-        context = this;
-        seleccion = new ArrayList();
+        cargado = false;
         storage = new temporalStorage();
+        context = this;
         modelo = (DefaultTableModel) tblActividades.getModel();
+        modelo1 = (DefaultTableModel) tblRendimiento.getModel();
         actividades = new ArrayList<>();
         requisitos = new ArrayList<>();
+        rendimiento = new ArrayList<>();
+        requisitos1 = new ArrayList<>();
         listaUsuarios = new ArrayList<>();
+        seleccion = new ArrayList();
+        seleccion1 = new ArrayList();
         co = new crearOrdenes();
-        // chkAirTag.setSelected(false);
-        if (storage.getAccesoriosTS().size() > 0) {
+        //    System.out.println("rend: " + storage.getRendimientoTT());
+        //    System.out.println("ac: " + storage.getActividadesTT());
+
+        if (storage.getActividadesTT().size() > 0 || storage.getRendimientoTT().size() > 0) {
             try {
-                actividades.addAll(storage.getAccesoriosTS());
-                requisitos.addAll(storage.getRequisitosTS());
+                rendimiento.addAll(storage.getRendimientoTT());
+                requisitos1.addAll(storage.getRequisitosTT1());
+                seleccion1.addAll(storage.getUsuarios1TT());
             } catch (Exception e) {
-                System.out.println("erorrrrrrrrrrrrrr: " + e);
             }
-            
-            fill(true);
+            try {
+                actividades.addAll(storage.getActividadesTT());
+                requisitos.addAll(storage.getRequisitosTT());
+                seleccion.addAll(storage.getUsuariosTT());
+            } catch (Exception e) {
+            }
             cmbPlantilla.setEnabled(valido);
-            mensajeAdj = storage.getMensajeTS();
-            txtProducto.setText(storage.getProductoTS());
-            cmbPlantilla.setSelectedItem(storage.getPlantillaTS());
-            cmbResponsable.setSelectedItem(storage.getResponsableTS());
-            chkAirTag.setSelected(storage.isAirtagTS());
-            cmbCase.setSelectedItem(storage.getCaseTS());
-            cmbPaquete.setSelectedItem(storage.getPaqueteTS());
+            fill(true);
+            cmbPlantilla.setSelectedItem(storage.getPlantillaTT());
+            cmbResponsable.setSelectedItem(storage.getResponsableTT());
+            cmbPiloto.setSelectedItem(storage.getPilotoTT());
         } else {
             fill(false);
         }
@@ -100,7 +95,7 @@ public class crearTS extends configuracionVentana {
     }
 
     private void fill(boolean pr) {
-        if (storage.getPlantillasTS().size() > 0) {
+        if (storage.getPlantillasTT().size() > 0) {
             rellenar(1);
             if (!pr) {
                 getActividades(cmbPlantilla.getSelectedItem().toString());
@@ -111,13 +106,9 @@ public class crearTS extends configuracionVentana {
             if (storage.getListaUsuarios().size() == 0) {
                 leerUsuarios();
             } else {
-                rellenar(0);
-            }
-            if (storage.getTipoPaquete().size() == 0) {
-                leerTipoPaquetes();
+                rellenar(1);
             }
             getPlantillas(pr);
-
         }
 
     }
@@ -126,7 +117,6 @@ public class crearTS extends configuracionVentana {
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
         new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnMsj, 3);
         new disenos().botones(btnAtras, 3);
 
         new disenos().fondo(pnlFondo, 2);
@@ -139,52 +129,28 @@ public class crearTS extends configuracionVentana {
         new disenos().fondoLabel(lblSerie, 1);
         new disenos().titulo(lblSerie, 5);
         new disenos().titulo(lblResponsable, 6);
+        new disenos().titulo(lblPiloto, 6);
         new disenos().titulo(lblPlantilla, 6);
-        new disenos().titulo(lblPaquete, 6);
-        new disenos().titulo(lblProducto, 6);
-        new disenos().titulo(lblCase, 6);
         new disenos().selector(cmbResponsable);
-        new disenos().selector(cmbPaquete);
-        new disenos().selector(cmbCase);
-        new disenos().textoL1(txtProducto);
         new disenos().selector(cmbPlantilla);
+        new disenos().selector(cmbPiloto);
         new disenos().titulo(lblTitulo, 2);
-
-        chkAirTag.setFont(new Font("Lato", Font.BOLD, 20));
 
         ponerImg(btnAdd, "img/check1.png");
         ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnMsj, "img/adj1.png");
-        ponerImgChk(chkAirTag, "img/unchecked.png", "img/checked.jpg");
 
         new disenoTabla().cabecera(tblActividades);
         tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
-        // System.out.println("Antres: "+chkAirTag.isSelected());
-        
-        // System.out.println("Chk desues: "+chkAirTag.isSelected());
-
+        new disenoTabla().cabecera(tblRendimiento);
+        tblRendimiento.setDefaultRenderer(Object.class, new centerTextInTable());
     }
 
-    private void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
+    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
         ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
         b.setIcon(icono);
-    }
-
-    private void ponerImgChk(JCheckBox b, String ruta, String ruta2) {//poner imagenes a los botones
-        int w = 7, h = 2;
-        ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth() / w,
-                b.getHeight() / h, Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
-        imagen = new ImageIcon(ruta2);
-        imgEscalada = imagen.getImage().getScaledInstance(b.getWidth() / w,
-                b.getHeight() / h, Image.SCALE_SMOOTH);
-        icono = new ImageIcon(imgEscalada);
-        b.setSelectedIcon(icono);
     }
 
     /**
@@ -202,29 +168,25 @@ public class crearTS extends configuracionVentana {
         lblTitulo = new javax.swing.JLabel();
         pnlDer = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
-        btnMsj = new javax.swing.JButton();
         pnlIzq = new javax.swing.JPanel();
         btnAtras = new javax.swing.JButton();
         pnlCuerpo = new javax.swing.JPanel();
-        jScrollPane1 = new javax.swing.JScrollPane();
+        jScrollPane2 = new javax.swing.JScrollPane();
         tblActividades = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblRendimiento = new javax.swing.JTable();
         pnlArriba = new javax.swing.JPanel();
         lblSerie = new javax.swing.JLabel();
         lblResponsable = new javax.swing.JLabel();
         lblPlantilla = new javax.swing.JLabel();
         cmbResponsable = new javax.swing.JComboBox<>();
         cmbPlantilla = new javax.swing.JComboBox<>();
-        lblProducto = new javax.swing.JLabel();
-        txtProducto = new javax.swing.JTextField();
-        lblPaquete = new javax.swing.JLabel();
-        cmbPaquete = new javax.swing.JComboBox<>();
-        lblCase = new javax.swing.JLabel();
-        cmbCase = new javax.swing.JComboBox<>();
-        chkAirTag = new javax.swing.JCheckBox();
+        lblPiloto = new javax.swing.JLabel();
+        cmbPiloto = new javax.swing.JComboBox<>();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblTitulo.setText("CheckList de Envios");
+        lblTitulo.setText("CheckList Final");
 
         javax.swing.GroupLayout pnlCabeceraLayout = new javax.swing.GroupLayout(pnlCabecera);
         pnlCabecera.setLayout(pnlCabeceraLayout);
@@ -245,17 +207,10 @@ public class crearTS extends configuracionVentana {
 
         pnlDer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
-            }
-        });
-
-        btnMsj.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        btnMsj.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMsjActionPerformed(evt);
             }
         });
 
@@ -265,22 +220,18 @@ public class crearTS extends configuracionVentana {
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(27, Short.MAX_VALUE)
-                .addGroup(pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnMsj, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnMsj, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -303,6 +254,8 @@ public class crearTS extends configuracionVentana {
                 .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+
+        pnlCuerpo.setLayout(new java.awt.GridBagLayout());
 
         tblActividades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -337,7 +290,66 @@ public class crearTS extends configuracionVentana {
                 tblActividadesKeyTyped(evt);
             }
         });
-        jScrollPane1.setViewportView(tblActividades);
+        jScrollPane2.setViewportView(tblActividades);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 1;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 438;
+        gridBagConstraints.ipady = 171;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.5;
+        gridBagConstraints.insets = new java.awt.Insets(11, 10, 0, 0);
+        pnlCuerpo.add(jScrollPane2, gridBagConstraints);
+
+        tblRendimiento.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Actividad", "Usuario"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Object.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblRendimiento.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblRendimientoMouseClicked(evt);
+            }
+        });
+        tblRendimiento.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyTyped(java.awt.event.KeyEvent evt) {
+                tblRendimientoKeyTyped(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tblRendimiento);
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 438;
+        gridBagConstraints.ipady = 171;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 1.5;
+        gridBagConstraints.insets = new java.awt.Insets(6, 10, 11, 0);
+        pnlCuerpo.add(jScrollPane1, gridBagConstraints);
 
         pnlArriba.setLayout(new java.awt.GridBagLayout());
 
@@ -346,7 +358,7 @@ public class crearTS extends configuracionVentana {
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
-        gridBagConstraints.gridwidth = 4;
+        gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.5;
@@ -356,7 +368,7 @@ public class crearTS extends configuracionVentana {
         lblResponsable.setText("Responsable");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -365,7 +377,7 @@ public class crearTS extends configuracionVentana {
         lblPlantilla.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPlantilla.setText("Plantilla");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
+        gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
@@ -374,7 +386,7 @@ public class crearTS extends configuracionVentana {
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 3;
+        gridBagConstraints.gridy = 1;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
@@ -391,53 +403,22 @@ public class crearTS extends configuracionVentana {
             }
         });
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
+        gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 3;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
         pnlArriba.add(cmbPlantilla, gridBagConstraints);
 
-        lblProducto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblProducto.setText("Producto");
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 0;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        pnlArriba.add(lblProducto, gridBagConstraints);
-
-        txtProducto.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                txtProductoFocusGained(evt);
-            }
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                txtProductoFocusLost(evt);
-            }
-        });
-        txtProducto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtProductoKeyTyped(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 1;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        pnlArriba.add(txtProducto, gridBagConstraints);
-
-        lblPaquete.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblPaquete.setText("Paquete");
+        lblPiloto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPiloto.setText("Piloto");
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        pnlArriba.add(lblPaquete, gridBagConstraints);
+        pnlArriba.add(lblPiloto, gridBagConstraints);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 1;
@@ -445,66 +426,18 @@ public class crearTS extends configuracionVentana {
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        pnlArriba.add(cmbPaquete, gridBagConstraints);
+        pnlArriba.add(cmbPiloto, gridBagConstraints);
 
-        lblCase.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblCase.setText("Case");
         gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 2;
-        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 390;
+        gridBagConstraints.ipady = 119;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
-        pnlArriba.add(lblCase, gridBagConstraints);
-
-        cmbCase.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                cmbCaseActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        pnlArriba.add(cmbCase, gridBagConstraints);
-
-        chkAirTag.setBackground(new java.awt.Color(255, 255, 255));
-        chkAirTag.setFont(new java.awt.Font("Tahoma", 1, 20)); // NOI18N
-        chkAirTag.setText("AirTag");
-        chkAirTag.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        chkAirTag.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        chkAirTag.setHorizontalTextPosition(javax.swing.SwingConstants.LEFT);
-        chkAirTag.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chkAirTagActionPerformed(evt);
-            }
-        });
-        gridBagConstraints = new java.awt.GridBagConstraints();
-        gridBagConstraints.gridx = 3;
-        gridBagConstraints.gridy = 1;
-        gridBagConstraints.gridwidth = 2;
-        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 20;
-        gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 1.0;
-        pnlArriba.add(chkAirTag, gridBagConstraints);
-
-        javax.swing.GroupLayout pnlCuerpoLayout = new javax.swing.GroupLayout(pnlCuerpo);
-        pnlCuerpo.setLayout(pnlCuerpoLayout);
-        pnlCuerpoLayout.setHorizontalGroup(
-            pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
-            .addComponent(pnlArriba, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
-        );
-        pnlCuerpoLayout.setVerticalGroup(
-            pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCuerpoLayout.createSequentialGroup()
-                .addComponent(pnlArriba, javax.swing.GroupLayout.PREFERRED_SIZE, 215, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 332, Short.MAX_VALUE))
-        );
+        pnlCuerpo.add(pnlArriba, gridBagConstraints);
 
         javax.swing.GroupLayout pnlFondoLayout = new javax.swing.GroupLayout(pnlFondo);
         pnlFondo.setLayout(pnlFondoLayout);
@@ -514,7 +447,7 @@ public class crearTS extends configuracionVentana {
             .addGroup(pnlFondoLayout.createSequentialGroup()
                 .addComponent(pnlIzq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 481, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlDer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -524,7 +457,7 @@ public class crearTS extends configuracionVentana {
                 .addComponent(pnlCabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlCuerpo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(pnlCuerpo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 617, Short.MAX_VALUE)
                     .addComponent(pnlIzq, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlDer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -545,30 +478,28 @@ public class crearTS extends configuracionVentana {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        try {//Guardar
-            if (!txtProducto.getText().equals(hintProducto)) {
-                this.setCursor(new Cursor(WAIT_CURSOR));
-                for (int i = 0; i < modelo.getRowCount(); i++) {
-                    seleccion.set(i, modelo.getValueAt(i, 1).toString());
-                }
-                storage.setPlantillaTS(cmbPlantilla.getSelectedItem().toString());
-                storage.setResponsableTS(cmbResponsable.getSelectedItem().toString());
-                storage.setUsuariosTS(seleccion);
-                storage.setAccesoriosTS(actividades);
-                storage.setRequisitosTS(requisitos);
-                storage.setPaqueteTS(cmbPaquete.getSelectedItem().toString());
-                storage.setAirtagTS(chkAirTag.isSelected());
-                storage.setCaseTS(cmbCase.getSelectedItem().toString());
-                storage.setMensajeTS(mensajeAdj);
-                storage.setProductoTS(txtProducto.getText());
-                //volver
-                new info().setXY(this.getX(), this.getY());
-                new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
-                this.dispose();
-            } else {
-                //escriba el nomrbe del producto
-            }
 
+        try {
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            for (int i = 0; i < modelo.getRowCount(); i++) {
+                seleccion.set(i, modelo.getValueAt(i, 1).toString());
+            }
+            for (int i = 0; i < modelo1.getRowCount(); i++) {
+                seleccion1.set(i, modelo1.getValueAt(i, 1).toString());
+            }
+            storage.setPlantillaTT(cmbPlantilla.getSelectedItem().toString());
+            storage.setPilotoTT(cmbPiloto.getSelectedItem().toString());
+            storage.setResponsableTT(cmbResponsable.getSelectedItem().toString());
+            storage.setUsuariosTT(seleccion);
+            storage.setUsuarios1TT(seleccion1);
+            storage.setActividadesTT(actividades);
+            storage.setRendimientoTT(rendimiento);
+            storage.setRequisitosTT(requisitos);
+            storage.setRequisitosTT1(requisitos1);
+
+            new info().setXY(this.getX(), this.getY());
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
+            this.dispose();
         } catch (Exception e) {
             this.setCursor(new Cursor(DEFAULT_CURSOR));
         }
@@ -577,11 +508,35 @@ public class crearTS extends configuracionVentana {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
+        //   new info().setXY(this.getX(), this.getY());
+        // this.setCursor(new Cursor(WAIT_CURSOR));
+        //  this.dispose();
         new info().setXY(this.getX(), this.getY());
         new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
         this.setCursor(new Cursor(WAIT_CURSOR));
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
+
+    private void tblRendimientoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRendimientoMouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblRendimientoMouseClicked
+
+    private void tblRendimientoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblRendimientoKeyTyped
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tblRendimientoKeyTyped
+
+    private void cmbPlantillaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPlantillaItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cmbPlantillaItemStateChanged
+
+    private void cmbPlantillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPlantillaActionPerformed
+        // TODO add your handling code here:
+        if (cargado) {
+            // System.out.println("Aquasai");
+            limpiarTabla();
+            getActividades(cmbPlantilla.getSelectedItem().toString());
+        }
+    }//GEN-LAST:event_cmbPlantillaActionPerformed
 
     private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
         // TODO add your handling code here:
@@ -591,91 +546,31 @@ public class crearTS extends configuracionVentana {
         // TODO add your handling code here:
     }//GEN-LAST:event_tblActividadesKeyTyped
 
-    private void cmbPlantillaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cmbPlantillaItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbPlantillaItemStateChanged
-
-    private void cmbPlantillaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbPlantillaActionPerformed
-        // TODO add your handling code here:
-        if (cargado) {
-            limpiarTabla();
-            getActividades(cmbPlantilla.getSelectedItem().toString());
-        }
-    }//GEN-LAST:event_cmbPlantillaActionPerformed
-
-    private void btnMsjActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMsjActionPerformed
-        // TODO add your handling code here:
-        //abrir recuadro de texto
-        String titulo, cuerpo;
-        if (idioma.equals("english")) {
-            titulo = "Message";
-            cuerpo = "Write a comment";
-        } else {
-            titulo = "Mensaje";
-            cuerpo = "Escriba un comentario";
-        }
-        String resp = JOptionPane.showInputDialog(context, cuerpo, mensajeAdj);
-        if (resp != null) {
-            if (!resp.equals("")) {
-                mensajeAdj = resp;
-            }
-        }
-    }//GEN-LAST:event_btnMsjActionPerformed
-
-    private void chkAirTagActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkAirTagActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_chkAirTagActionPerformed
-
-    private void cmbCaseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_cmbCaseActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cmbCaseActionPerformed
-
-    private void txtProductoFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductoFocusGained
-        // TODO add your handling code here:
-        if (txtProducto.getText().equals(hintProducto)) {
-            txtProducto.setText("");
-            txtProducto.setForeground(Color.black);
-        }
-    }//GEN-LAST:event_txtProductoFocusGained
-
-    private void txtProductoFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtProductoFocusLost
-        // TODO add your handling code here:
-        JTextField t = txtProducto;
-        if (!t.getText().equals("")) {
-            try {
-                if (t.getText().length() > 50) {
-                    t.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
-                } else {
-                    t.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-                }
-            } catch (Exception e) {
-                t.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
-            }
-        } else {
-            t.setText(hintProducto);
-            t.setForeground(Color.lightGray);
-            t.setBorder(BorderFactory.createLineBorder(Color.black, 1));
-        }
-    }//GEN-LAST:event_txtProductoFocusLost
-
-    private void txtProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtProductoKeyTyped
-        // TODO add your handling code here:
-        if (txtProducto.getText().length() >= 50) {
-            evt.consume();
+    private void rellenar(int a) {
+        listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTT(), valido, storage.getListaUsuarios(), a));
+        for (String paq : listaUsuarios) {
+            cmbPiloto.addItem(paq);
         }
 
-    }//GEN-LAST:event_txtProductoKeyTyped
+    }
 
     private void limpiarTabla() {
         co.limpiarTabla(modelo);
+        co.limpiarTabla(modelo1);
         actividades.clear();
         requisitos.clear();
         seleccion.clear();
+        rendimiento.clear();
+        requisitos1.clear();
+        seleccion1.clear();
     }
 
     private void ponerRv() {
+        System.out.println("Poner rv");
         seleccion.clear();
-        seleccion.addAll(co.ponerRv(storage.getUsuariosTS(), listaUsuarios, tblActividades, modelo, actividades));
+        seleccion.addAll(co.ponerRv(storage.getUsuariosTT(), listaUsuarios, tblActividades, modelo, actividades));
+        seleccion1.clear();
+        seleccion1.addAll(co.ponerRv(storage.getUsuarios1TT(), listaUsuarios, tblRendimiento, modelo1, rendimiento));
         cargado = true;
     }
 
@@ -683,27 +578,29 @@ public class crearTS extends configuracionVentana {
         co.readPlantillas(new crearOrdenes.CallBackPlantillas() {
             @Override
             public void onCallback(ArrayList<String> plantillas) {
-                cmbPaquete.setSelectedItem(storage.getTipoPaquete());
-                storage.setPlantillasTF(plantillas);
+                storage.setPlantillasTT(plantillas);
                 if (!pr) {
                     getActividades(cmbPlantilla.getSelectedItem().toString());
                 } else {
                     ponerRv();
                 }
             }
-        }, con, "plantillasShipment", cmbResponsable, cmbPlantilla, storage.getResponsableTS(), storage.getPlantillaTS());
-
+        }, con, "plantillasTesting", cmbResponsable, cmbPlantilla, storage.getResponsableTT(), storage.getPlantillaTT());
     }
 
     private void getActividades(String plantilla) {
         co.readActividades(new crearOrdenes.CallBackActividades() {
             @Override
             public void onCallback(crearOrdenes.Actividades c) {
+                System.out.println("BACK: " + c.getActividades1());
                 actividades.addAll(c.getActividades());
                 requisitos.addAll(c.getRequisitos());
+                rendimiento.addAll(c.getActividades1());
+                requisitos1.addAll(c.getRequisitos1());
+                //  System.out.println("Aquie como no xd: "+rendimiento);
                 ponerRv();
             }
-        }, con, "plantillasShipment", plantilla, "accesorio", "requisito", null, null);
+        }, con, "plantillasTesting", plantilla, "actividad", "requisito", "accion", "requisito1");
     }
 
     private void leerUsuarios() {
@@ -712,97 +609,76 @@ public class crearTS extends configuracionVentana {
             public void onCallback(ArrayList<String> usuarios) {
                 for (String usuario : usuarios) {
                     listaUsuarios.add(usuario);
+                    cmbPiloto.addItem(usuario);
                 }
 
             }
         }, con, storage, cmbResponsable);
     }
 
-    private void rellenar(int a) {
-        listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTS(), valido, storage.getListaUsuarios(), a));
-        for (String paq : storage.getTipoPaquete()) {
-            cmbPaquete.addItem(paq);
-        }
-
-    }
-
-    private void leerTipoPaquetes() {
-        ArrayList<String> pa = new ArrayList<>();
-        Query query = con.child("tipoPaquete");
-        query.addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot snapshot) {
-                if (snapshot.exists()) {
-                    for (DataSnapshot user : snapshot.getChildren()) {
-                        tipoPaquete twopaq = user.getValue(tipoPaquete.class);
-                        try {
-                            pa.add(twopaq.getPaquete());
-
-                            cmbPaquete.addItem(twopaq.getPaquete());
-                        } catch (Exception e) {
-
-                        }
-                    }
-                    storage.setTipoPaquete(pa);
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError error) {
-
-            }
-        });
-    }
-
     private void mostrar() {
-        cmbCase.addItem("Travel Case");
-        cmbCase.addItem("Caja de madera");
         if (idioma.equals("english")) {
-            lblProducto.setText("Product");
-            lblPaquete.setText("Package");
+            lblTitulo.setText("Final CheckList");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Activities");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("User");
+            tableHeader.repaint();
+            tableHeader = tblRendimiento.getTableHeader();
+            tableColumnModel = tableHeader.getColumnModel();
+            tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Actions");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("User");
+            tableHeader.repaint();
             lblResponsable.setText("Responsible");
             lblPlantilla.setText("Template");
-            lblTitulo.setText("Shipment Checklist");
+            lblPiloto.setText("Pilot");
             if (storage.getSerie() == 0) {
                 lblSerie.setText("Not stablished yet");
             } else {
                 lblSerie.setText("" + storage.getSerie());
             }
         } else {
-            lblProducto.setText("Producto");
-            lblPaquete.setText("Paquete");
+            lblTitulo.setText("CheckList Final");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Actividades");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("Usuario");
+            tableHeader.repaint();
+            tableHeader = tblRendimiento.getTableHeader();
+            tableColumnModel = tableHeader.getColumnModel();
+            tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Acciones");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("Usuario");
+            tableHeader.repaint();
             lblResponsable.setText("Responsable");
             lblPlantilla.setText("Plantilla");
-            lblTitulo.setText("Checklist de envios");
+            lblPiloto.setText("Piloto");
             if (storage.getSerie() == 0) {
                 lblSerie.setText("No establecido aun");
             } else {
                 lblSerie.setText("" + storage.getSerie());
             }
         }
-        if (txtProducto.getText().equals("")) {
-            txtProducto.setText(hintProducto);
-        }else{
-            txtProducto.setForeground(Color.black);
-        }
-        txtProducto.requestFocus();
     }
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAtras;
-    private javax.swing.JButton btnMsj;
-    private javax.swing.JCheckBox chkAirTag;
-    private javax.swing.JComboBox<String> cmbCase;
-    private javax.swing.JComboBox<String> cmbPaquete;
+    private javax.swing.JComboBox<String> cmbPiloto;
     private javax.swing.JComboBox<String> cmbPlantilla;
     private javax.swing.JComboBox<String> cmbResponsable;
     private javax.swing.JScrollPane jScrollPane1;
-    private javax.swing.JLabel lblCase;
-    private javax.swing.JLabel lblPaquete;
+    private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JLabel lblPiloto;
     private javax.swing.JLabel lblPlantilla;
-    private javax.swing.JLabel lblProducto;
     private javax.swing.JLabel lblResponsable;
     private javax.swing.JLabel lblSerie;
     private javax.swing.JLabel lblTitulo;
@@ -813,6 +689,6 @@ public class crearTS extends configuracionVentana {
     private javax.swing.JPanel pnlFondo;
     private javax.swing.JPanel pnlIzq;
     private javax.swing.JTable tblActividades;
-    private javax.swing.JTextField txtProducto;
+    private javax.swing.JTable tblRendimiento;
     // End of variables declaration//GEN-END:variables
 }

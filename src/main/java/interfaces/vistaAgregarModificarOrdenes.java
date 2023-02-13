@@ -57,6 +57,16 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import notificacion.notificar;
+import obtenerDatos.checkAC;
+import obtenerDatos.checkAF;
+import obtenerDatos.checkAS;
+import obtenerDatos.checkAT;
+import obtenerDatos.checkCommentsC;
+import obtenerDatos.checkTC;
+import obtenerDatos.checkTF;
+import obtenerDatos.checkTS;
+import obtenerDatos.checkTT;
+import obtenerDatos.keys;
 import obtenerDatos.users;
 import org.json.simple.JSONObject;
 
@@ -85,12 +95,14 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
         this.priv = priv;
         this.idioma = idioma;
         this.serie = serie;
+        
+        if(serie!=0)txtSerie.setEnabled(false);
 
         iniciarDiseno();
 
         Date f = new Date();
         txtPlazo.setDate(f);
-        
+
         if (inter == 1) {//inter 1 significa insert
             storage.inicializarTodo();
             if (idioma.equals("English")) {
@@ -111,7 +123,7 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
                 }
                 Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(storage.getFecha());
                 txtPlazo.setDate(date1);
-          
+
                 if (!storage.getNombre().equals("")) {
                     txtNombre.setForeground(Color.black);
                     txtNombre.setText(storage.getNombre());
@@ -732,25 +744,77 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
 
   private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
       // TODO add your handling code here:
-      new info().setXY(this.getX(), this.getY());
-      storage.inicializarTodo();
-      this.setCursor(new Cursor(WAIT_CURSOR));
-      new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
-      this.dispose();
+      cambio1();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
         //si se guarda el trabajo
         //se actualiza la lista de userSel
+        System.out.println("--------------------------------------------------------------------------" + serie);
         if (serie == 0) {
+            System.out.println("Insert");
             //insert
+            if (!txtSerie.getText().toString().equals(tSerie)) {
+                if (txtPlazo.getDate() != null) {
+                    if (!txtNombre.getText().toString().equals(tNombre)) {
+                        if (!storage.getResponsableTC().equals("")) {
+                            if (!storage.getResponsableTT().equals("")) {
+                                if (!storage.getResponsableTS().equals("")) {
+                                    if (!storage.getResponsableTF().equals("")) {
+                                        System.out.println("Seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerie: " + serie);
+                                        //comrpobar que no exista ya la orden
+                                        leerT();
+                                    } else {
+                                        System.out.println("Final");
+                                        //Seleccione una plantilla para el checklist de final
+                                        //btnGuardar.setEnabled(true);
+                                        // new showToast(getString(R.string.lblSelectFinalCheckListVistaTrabajosSpn), getString(R.string.lblSelectFinalCheckListVistaTrabajosEng), idioma, this);
+                                    }
+                                } else {
+                                    System.out.println("Shipment");
+                                    //Seleccione una plantilla para el checklist de shipment
+                                    // btnGuardar.setEnabled(true);
+                                    // new showToast(getString(R.string.lblSelectShipmentCheckListVistaTrabajosSpn), getString(R.string.lblSelectShipmentCheckListVistaTrabajosEng), idioma, this);
+                                }
+                            } else {
+                                System.out.println("Testing");
+                                //Seleccione una plantilla para el checklist de testing
+                                //  btnGuardar.setEnabled(true);
+                                //  new showToast(getString(R.string.lblSelectTestingCheckListVistaTrabajosSpn), getString(R.string.lblSelectTestingCheckListVistaTrabajosEng), idioma, this);
+                            }
+                        } else {
+                            System.out.println("Calidad");
+                            //Seleccione una plantilla para el checklist de calidad
+                            // btnGuardar.setEnabled(true);
+                            //  new showToast(getString(R.string.lblSelectQualityCheckListVistaTrabajosSpn), getString(R.string.lblSelectQualityCheckListVistaTrabajosEng), idioma, this);
+                        }
+                    } else {
+                        System.out.println("Campo modelo");
+                        //llene el campo de modelo
+                        //  btnGuardar.setEnabled(true);
+                        //  new showToast(getString(R.string.lblModelBlankVistaTrabajosSpn), getString(R.string.lblModelBlankVistaTrabajosEng), idioma, this);
+                    }
+                } else {
+                    System.out.println("Campo fecha");
+                    //llene el campo de fecha
+                    // btnGuardar.setEnabled(true);
+                    //  new showToast(getString(R.string.lblDateBlankVistaTrabajosSpn), getString(R.string.lblDateBlankVistaTrabajosEng), idioma, this);
+                }
+            } else {
+                System.out.println("Campos erie");
+                //llene el campo de serie
+                // btnGuardar.setEnabled(true);
+                // new showToast(getString(R.string.lblSerialBlankVistaTrabajosSpn), getString(R.string.lblSerialBlankVistaTrabajosEng), idioma, this);
+            }
         } else {
             //update
-            new info().setXY(this.getX(), this.getY());
-            this.setCursor(new Cursor(WAIT_CURSOR));
+            update();
+            System.out.println("Uptodate");
+            //   new info().setXY(this.getX(), this.getY());
+            //  this.setCursor(new Cursor(WAIT_CURSOR));
         }
-        storage.inicializarTodo();
+        System.out.println("Salio");
 
 
     }//GEN-LAST:event_btnAddActionPerformed
@@ -895,7 +959,344 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
         cambio(4);
     }//GEN-LAST:event_lblRFMouseClicked
 
-  
+    private void cambio1() {
+        new info().setXY(this.getX(), this.getY());
+        storage.inicializarTodo();
+        this.setCursor(new Cursor(WAIT_CURSOR));
+        new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
+        this.dispose();
+    }
+
+    private void update() {
+        //primero se elimina todo lo relacionado al trabajo y luego se hace insert
+        //eliminar
+        con.child("trabajos").child("" + serie).removeValue(new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+                insert(false);
+            }
+        });
+
+    }
+
+    private void leerT() {
+        try {
+            Query query = null;
+            query = con.child("trabajos").child("" + txtSerie.getText());
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (!snapshot.exists()) {
+                        storage.setSerie(Integer.parseInt(txtSerie.getText()));
+                        insert(true);
+                    } else {
+                        System.out.println("Ya existexd");
+                        //  btnGuardar.setEnabled(true);
+                        // new showToast(getString(R.string.lblVistaTrabajosExistsSpn), getString(R.string.lblVistaTrabajosExistsEng), idioma, vistaAgregarModificarOrdenes.this);
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    System.out.println("Cancelado: " + error);
+                    // btnGuardar.setEnabled(true);
+                    //  new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + " :" + error, getString(R.string.lblErrorWhileReadingDBEng) + " :" + error, idioma, vistaAgregarModificarOrdenes.this);
+                }
+            });
+        } catch (Exception e) {
+            System.out.println("Exc: " + e);
+            // btnGuardar.setEnabled(true);
+            // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + " :" + e, getString(R.string.lblErrorWhileReadingDBEng) + " :" + e, idioma, vistaAgregarModificarOrdenes.this);
+
+        }
+
+    }
+
+    private void insertTC(DatabaseReference db) {
+        checkTC checkTC = new checkTC(storage.getResponsableTC(), storage.getPlantillaTC(), storage.getPorcentajeTC());
+        db.setValue(checkTC, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+        db = db.child("actividades");
+        checkAC checkAC = null;
+        checkCommentsC com = null;
+        int cont = 0;
+        ArrayList<String> usu = storage.getUsuariosTC();
+        ArrayList<String> mensaje = storage.getMensajeTC();
+        ArrayList<Integer> req = storage.getRequisitosTC();
+        ArrayList<Boolean> aprobado = storage.getAprobadoTC();
+        ArrayList<Boolean> revsol = storage.getRevsolTC();
+        for (String actividad : storage.getUbicacionTC()) {
+            String mensaj = "";
+            boolean aprob = false, revs = false;
+            try {
+                aprob = aprobado.get(cont);
+            } catch (Exception e) {
+            }
+            try {
+                revs = revsol.get(cont);
+            } catch (Exception e) {
+            }
+            try {
+                mensaj = mensaje.get(cont);
+            } catch (Exception e) {
+            }
+            checkAC = new checkAC(actividad, usu.get(cont), revs, aprob, req.get(cont), mensaj);
+            db.child("" + cont).setValue(checkAC, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+            if (storage.getComentariosTC().get(actividad) != null) {
+                int i = 0;
+                for (String comentario : storage.getComentariosTC().get(actividad)) {
+                    com = new checkCommentsC(comentario);
+                    db.child("" + cont).child("comentario").child("" + i).setValue(com, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError de, DatabaseReference dr) {
+                        }
+                    });
+                    i++;
+                }
+            }
+
+            cont++;
+        }
+    }
+
+    private void insertTT(DatabaseReference db) {
+        checkTT checkTT = new checkTT(storage.getResponsableTT(), storage.getPlantillaTT(), storage.getPilotoTT(), storage.getPorcentajeTT());
+        db.setValue(checkTT, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });//.child(serie)
+        db = db.child("actividades");
+        checkAT checkAT = null;
+        ArrayList<String> usu = storage.getUsuariosTT();
+        ArrayList<String> usu1 = storage.getUsuarios1TT();
+        ArrayList<String> rend = storage.getRendimientoTT();
+        ArrayList<String> act = storage.getActividadesTT();
+        ArrayList<Integer> req = storage.getRequisitosTT();
+        ArrayList<Integer> req1 = storage.getRequisitosTT1();
+        ArrayList<String> pondera = storage.getPonderacionTT();
+        ArrayList<Boolean> real = storage.getRealizadoTT();
+        ArrayList<Boolean> aproba = storage.getAprobacionTT();
+        ArrayList<String> comenta = storage.getComentarioTT();
+        ArrayList<String> comenta1 = storage.getComentarioTT1();
+        int sizeAct = act.size(), sizeRend = rend.size();
+        int max = (sizeAct > sizeRend) ? sizeAct : sizeRend;
+
+        for (int cont = 0; cont < max; cont++) {
+            String actividad = "", usuario = "", rendimiento = "", usuario1 = "", ponderacion = "", comentario = "", comentario1 = "";
+            int requisito = 2, requisito1 = 2;
+            boolean realizado = false, aprobacion = false;
+
+            if (cont < sizeAct) {
+                actividad = act.get(cont);
+                usuario = usu.get(cont);
+                requisito = req.get(cont);
+                try {
+                    comentario = comenta.get(cont);
+                } catch (Exception e) {
+                }
+                try {
+                    realizado = real.get(cont);
+                } catch (Exception e) {
+                }
+                try {
+                    aprobacion = aproba.get(cont);
+                } catch (Exception e) {
+                }
+            }
+            if (cont < sizeRend) {
+                rendimiento = rend.get(cont);
+                usuario1 = usu1.get(cont);
+                requisito1 = req1.get(cont);
+                try {
+                    comentario1 = comenta1.get(cont);
+                } catch (Exception e) {
+                }
+                try {
+                    ponderacion = pondera.get(cont);
+                } catch (Exception e) {
+                    ponderacion = "N/A";
+                }
+            }
+            checkAT = new checkAT(actividad, usuario, realizado, aprobacion, requisito, comentario, rendimiento, usuario1, ponderacion, requisito1, comentario1);
+            db.child("" + cont).setValue(checkAT, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+        }
+    }
+
+    private void insertTS(DatabaseReference db) {
+        checkTS checkTS = new checkTS(storage.getResponsableTS(), storage.getPlantillaTS(), storage.getPaqueteTS(), storage.getCaseTS(), storage.getProductoTS(), storage.getMensajeTS(), storage.isAirtagTS(), storage.getPorcentajeTS());
+        db.setValue(checkTS, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+        db = db.child("actividades");
+        checkAS checkAS = null;
+        int cont = 0;
+        ArrayList<String> usu = storage.getUsuariosTS();
+        ArrayList<Integer> req = storage.getRequisitosTS();
+        ArrayList<Integer> completo = storage.getCompletadoTS();
+        ArrayList<String> comentarios = storage.getComentarioTS();
+        for (String actividad : storage.getAccesoriosTS()) {
+            int comple = 0;
+            String comentario = "";
+            try {
+                comple = completo.get(cont);
+            } catch (Exception e) {
+            }
+            try {
+                comentario = comentarios.get(cont);
+            } catch (Exception e) {
+            }
+            checkAS = new checkAS(actividad, usu.get(cont), comple, req.get(cont), comentario);//.child(serie)
+            db.child("" + cont).setValue(checkAS, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+            cont++;
+        }
+    }
+
+    private void insertTF(DatabaseReference db) {
+        checkTF checkTF = new checkTF(storage.getResponsableTF(), storage.getPlantillaTF(), storage.getPorcentajeTF());//.child(serie)
+        db.setValue(checkTF, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+        db = db.child("actividades");
+        checkAF checkAF = null;
+        int cont = 0;
+        ArrayList<String> usu = storage.getUsuariosTF();
+        ArrayList<Integer> req = storage.getRequisitosTF();
+        ArrayList<Integer> comp = storage.getCompletadoTF();
+        ArrayList<String> com = storage.getComentarioTF();
+        for (String actividad : storage.getActividadesTF()) {
+            int comple = 0;
+            String comentario = "";
+            try {
+                comple = comp.get(cont);
+            } catch (Exception e) {
+            }
+            try {
+                comentario = com.get(cont);
+            } catch (Exception e) {
+            }
+            checkAF = new checkAF(actividad, usu.get(cont), comple, req.get(cont), comentario);//.child(serie)
+            db.child("" + cont).setValue(checkAF, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+            cont++;
+        }
+    }
+
+    private void insertTrabajo(DatabaseReference db) {
+        //convertir fecha a texto
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+        String strDate = dateFormat.format(txtPlazo.getDate());
+        ordenes trabajo = new ordenes(strDate, txtNombre.getText().toString(), storage.getProgreso());//.child(serie)
+        db.setValue(trabajo, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+    }
+
+    private void insert(boolean nuevo) {
+        String serie = txtSerie.getText().toString();
+        //poner callback para que primero ingrese trabajos y cuando termine suba el resto
+        insertTrabajo(con.child("Trabajos").child(serie));
+        insertTC(con.child("Trabajos").child(serie).child("checkTC"));
+        insertTT(con.child("Trabajos").child(serie).child("checkTT"));
+        insertTS(con.child("Trabajos").child(serie).child("checkTS"));
+        insertTF(con.child("Trabajos").child(serie).child("checkTF"));
+        sendNot(getInvolvedUsers(), nuevo);
+        cambio1();
+    }
+
+    private ArrayList<String> getInvolvedUsers() {
+        ArrayList<String> inUsers = new ArrayList<>();
+        for (String user : storage.getUsuariosTS()) {
+            if (!inUsers.contains(user)) {
+                inUsers.add(user);
+            }
+        }
+        for (String user : storage.getUsuariosTT()) {
+            if (!inUsers.contains(user)) {
+                inUsers.add(user);
+            }
+        }
+        for (String user : storage.getUsuarios1TT()) {
+            if (!inUsers.contains(user)) {
+                inUsers.add(user);
+            }
+        }
+        for (String user : storage.getUsuariosTC()) {
+            if (!inUsers.contains(user)) {
+                inUsers.add(user);
+            }
+        }
+        for (String user : storage.getUsuariosTF()) {
+            if (!inUsers.contains(user)) {
+                inUsers.add(user);
+            }
+        }
+        return inUsers;
+    }
+
+    private void sendNot(ArrayList<String> InUsers, boolean nuevo) {
+        try {
+            String titulo, contenido;//topic
+            if (nuevo) {
+                titulo = "Se ha generado una nueva orden: " + storage.getSerie();
+            } else {
+                titulo = "Se ha modificado la orden: " + storage.getSerie();
+            }
+            contenido = "Haga click para abrir la aplicacion";
+            //topic = "supervisor";
+            for (String user : InUsers) {
+                if (!user.equals(this.user)) {
+                    Query query = con.child("keys").orderByChild("usuario").equalTo(user);
+                    //.child(bus);
+                    query.addListenerForSingleValueEvent(new ValueEventListener() {
+                        @Override
+                        public void onDataChange(DataSnapshot snapshot) {
+                            if (snapshot.exists()) {
+                                keys dato = null;
+                                for (DataSnapshot user : snapshot.getChildren()) {
+                                    dato = user.getValue(keys.class);
+                                    new notificar().notificaT(titulo, contenido, dato.getKey());
+                                    //  new notify().notificaT(vistaAgregarModificarOrdenes.this, titulo, contenido, dato.getKey());
+                                }
+                            }
+                        }
+
+                        @Override
+                        public void onCancelled(DatabaseError error) {
+                            // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getApplicationContext());
+                        }
+                    });
+                }
+            }
+        } catch (Exception e) {
+            //  new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + " :" + e, getString(R.string.lblErrorWhileReadingDBEng) + " :" + e, idioma, vistaAgregarModificarOrdenes.this);
+        }
+
+    }
 
     private void cambio(int check) {
         if (!txtNombre.getText().equals(tNombre)) {
@@ -904,21 +1305,23 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
         String strDate = dateFormat.format(txtPlazo.getDate());
         storage.setFecha(strDate);
-        int serie = 0;
-        if (!txtSerie.getText().equals("") && !txtSerie.getText().equals(tSerie)) {
-            serie = Integer.parseInt(txtSerie.getText());
+        try {
+            storage.setSerie(Integer.parseInt(txtSerie.getText()));
+        } catch (NumberFormatException s) {
         }
-        
-        storage.setSerie(serie);
+
         this.setCursor(new Cursor(WAIT_CURSOR));
         new info().setXY(this.getX(), this.getY());
-        boolean val = (inter != 3) ? true : false;
+        boolean val = (serie==0) ? true : false;
+        
         switch (check) {
             case 1:
                 new crearTC(con, user, priv, idioma, serie, val).setVisible(true);
                 this.dispose();
                 break;
             case 2:
+                new crearTT(con, user, priv, idioma, serie, val).setVisible(true);
+                this.dispose();
                 break;
             case 3:
                 new crearTS(con, user, priv, idioma, serie, val).setVisible(true);//con, user, priv, idioma, serie, val
@@ -955,7 +1358,7 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
                             storage.setProgreso(log.getProgreso());
                             Map<String, Object> value = (Map<String, Object>) snapshot.getValue();
                             JSONObject allData = new JSONObject(value);
-                         
+
                             //TC
                             fillTC(allData);
                             //TT
@@ -975,13 +1378,11 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
                         }
                         txtSerie.setForeground(Color.black);
                         txtNombre.setForeground(Color.black);
-                        txtSerie.setEnabled(false);
                         txtSerie.setText("" + serie);
                         //2023-01-30
                         Date date1 = new SimpleDateFormat("yyyy-MM-dd").parse(storage.getFecha());
                         txtPlazo.setDate(date1);
                         txtNombre.setText(storage.getNombre());
-                        txtSerie.setEnabled(false);
                         // mostrar(idioma);
 
                     } catch (Exception ex) {
@@ -1046,7 +1447,7 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
             storage.setRequisitosTC(requisito);
             storage.setComentariosTC(comenta);
 
-         /*   System.out.println("Plantilla: " + storage.getPlantillaTC());
+            /*   System.out.println("Plantilla: " + storage.getPlantillaTC());
             System.out.println("Responsable: " + storage.getResponsableTC());
             System.out.println("Ubicacion: " + storage.getUbicacionTC());
             System.out.println("Usuarios: " + storage.getUsuariosTC());
@@ -1065,10 +1466,10 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
         try {
 
             HashMap checkTT = (HashMap) allData.get(json.getString("trabajosTableCheckTT"));
-         
+
             ArrayList actividades = (ArrayList) checkTT.get(json.getString("trabajosTableCheckTTActividades"));
             // JSONArray rendimiento = checkTT.getJSONArray(getString(R.string.trabajosTableCheckTTRendimiento));
-   
+
             ArrayList<String> usuarios = new ArrayList<>();
             ArrayList<String> actividad = new ArrayList<>();
             ArrayList<Integer> requisito = new ArrayList<>();
@@ -1082,7 +1483,7 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
             ArrayList<String> comenta1 = new ArrayList();
             for (int i = 0; i < actividades.size(); i++) {
                 HashMap jsonTC = (HashMap) actividades.get(i);
-              
+
                 if (!jsonTC.get(json.getString("trabajosTableCheckTTActividadesAct")).toString().equals("")) {
                     usuarios.add(jsonTC.get(json.getString("trabajosTableCheckTTActividadesUsu")).toString());
                     actividad.add(jsonTC.get(json.getString("trabajosTableCheckTTActividadesAct")).toString());
@@ -1110,6 +1511,8 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
             //  storage.setCompletadoTT(completado);
             storage.setRequisitosTT(requisito);
             storage.setRendimientoTT(rend);
+            System.out.println("Rendimiento: " + storage.getRendimientoTT());
+            System.out.println("Actividades: " + storage.getActividadesTT());
             storage.setUsuarios1TT(usuarios1);
             //    storage.setCompletado1TT(completado1);
             storage.setRequisitosTT1(requisito1);
@@ -1118,9 +1521,9 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
             storage.setResponsableTT(checkTT.get(json.getString("trabajosTableCheckTTResponsable")).toString());
             storage.setPilotoTT(checkTT.get(json.getString("trabajosTableCheckTTPiloto")).toString());
             storage.setPorcentajeTT(Double.parseDouble(checkTT.get(json.getString("trabajosTableCheckTTPorcentaje")).toString()));
-        
 
-          /*  System.out.println("Plantilla: " + storage.getPlantillaTT());
+
+            /*  System.out.println("Plantilla: " + storage.getPlantillaTT());
             System.out.println("Responsable: " + storage.getResponsableTT());
             System.out.println("Piloto: " + storage.getPilotoTT());
             System.out.println("Actividades: " + storage.getActividadesTT());
@@ -1171,7 +1574,7 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
             storage.setPaqueteTS(checkTS.get(json.getString("trabajosTableCheckTSPaquete")).toString());
             storage.setMensajeTS(checkTS.get(json.getString("trabajosTableCheckTSMensaje")).toString());
 
-         /*   System.out.println("Plantilla: " + storage.getPlantillaTS());
+            /*   System.out.println("Plantilla: " + storage.getPlantillaTS());
             System.out.println("Responsable: " + storage.getResponsableTS());
             System.out.println("Caja: " + storage.getCaseTS());
             System.out.println("Mensaje: " + storage.getMensajeTS());
@@ -1216,7 +1619,7 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
             storage.setResponsableTF(checkTF.get(json.getString("trabajosTableCheckTFResponsable")).toString());
             storage.setPorcentajeTF(Double.parseDouble(checkTF.get(json.getString("trabajosTableCheckTFPorcentaje")).toString()));
 
-         /*   System.out.println("Plantilla: " + storage.getPlantillaTF());
+            /*   System.out.println("Plantilla: " + storage.getPlantillaTF());
             System.out.println("Responsable: " + storage.getResponsableTF());
 
             System.out.println("Actividades: " + storage.getActividadesTF());
@@ -1226,62 +1629,6 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
         } catch (Exception e) {
             System.out.println("erroooooooooooooooooooooooooooor42: " + e);
         }
-    }
-
-    private void insertTrabajo() {//inserta el trabajo
-        try {
-//            Date a = (Date) txtHora.getValue();
-            if (!txtSerie.getText().toString().equals("")) {
-                //   if (validarHora(a)) {
-                Date fechaC = txtPlazo.getDate();
-                SimpleDateFormat plantilla = new SimpleDateFormat("yyyy-MM-dd");
-                String fo = plantilla.format(fechaC);
-                SimpleDateFormat sdf = new SimpleDateFormat("HH:mm");
-                //  String hora = sdf.format(a);
-                // trabajos pro = new trabajos(fo, hora, cmbPlantilla.getSelectedItem().toString(), 0, Integer.parseInt(txtSerie.getText()));
-
-                //pro
-                con.child("trabajos").push().setValue("d", new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError de, DatabaseReference dr) {
-                        if (idioma.equals("english")) {
-                            JOptionPane.showMessageDialog(context, "Work added");
-
-                        } else {
-                            JOptionPane.showMessageDialog(context, "Trabajo agregado");
-
-                        }
-                        //notifica
-                        String titulo = "Se ha agregado un nuevo trabajo";
-                        String contenido = "Pulse para abrir la app";
-                        String topico = "supervisor";
-                        new notificar().notificaT(titulo, contenido, topico);
-                        titulo = "Se ha agregado un nuevo trabajo";
-                        contenido = "Pulse para abrir la app";
-                        topico = "administrador";
-                        new notificar().notificaT(titulo, contenido, topico);
-                        titulo = "Se ha agregado un nuevo trabajo";
-                        contenido = "Pulse para abrir la app";
-                        topico = "trabajador";
-                        new notificar().notificaT(titulo, contenido, topico);
-                        new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
-                        context.dispose();
-
-                    }
-                });
-
-            } else {
-                if (idioma.equals("english")) {
-                    JOptionPane.showMessageDialog(context, "Fill out all fields");
-                } else {
-                    JOptionPane.showMessageDialog(context, "Llene todos los campos");
-                }
-            }
-
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error15: " + e);
-        }
-
     }
 
     private void ingles() {

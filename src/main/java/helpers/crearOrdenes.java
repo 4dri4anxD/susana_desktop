@@ -71,8 +71,6 @@ public class crearOrdenes {
             cmb.addItem(listaUsuarios.get(i));
         }
         new disenos().selector(cmb);
-        System.out.println("Seleccion: " + seleccion);
-        System.out.println("Actividades: " + actividades);
         tblActividades.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(cmb));
         for (int i = 0; i < seleccion.size(); i++) {
             modelo.addRow(new Object[]{actividades.get(i), seleccion.get(i)});
@@ -81,6 +79,7 @@ public class crearOrdenes {
     }
 
     public ArrayList<String> rellenar(JComboBox cmb1, JComboBox cmb2, ArrayList<String> plantillas, boolean valido, ArrayList<String> listaUsuarios, int caso) {
+        System.out.println("Rellenando con: "+plantillas);
         if (caso == 1) {
             cmb1.setEnabled(valido);
             for (String plan : plantillas) {
@@ -143,14 +142,16 @@ public class crearOrdenes {
         }
     }
 
-    Actividades getActividades(ArrayList<String> actividades, ArrayList<Integer> requisitos) {
-        return new Actividades(actividades, requisitos);
+    Actividades getActividades(ArrayList<String> actividades, ArrayList<Integer> requisitos, ArrayList<String> actividades1, ArrayList<Integer> requisitos1) {
+        return new Actividades(actividades, requisitos, actividades1, requisitos1);
     }
 
-    public void readActividades(CallBackActividades call, DatabaseReference con, String tabla, String plantilla, String campo1, String campo2) {
+    public void readActividades(CallBackActividades call, DatabaseReference con, String tabla, String plantilla, String campo1, String campo2, String campo3, String campo4) {
         try {
             ArrayList<String> actividades = new ArrayList();
             ArrayList<Integer> requisitos = new ArrayList();
+            ArrayList<String> actividades1 = new ArrayList();
+            ArrayList<Integer> requisitos1 = new ArrayList();
             Query query = null;
             query = con.child(tabla).child(plantilla);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -159,10 +160,21 @@ public class crearOrdenes {
                     if (snapshot.exists()) {
                         for (DataSnapshot info : snapshot.getChildren()) {
                             HashMap json = (HashMap) info.getValue();
-                            actividades.add(json.get(campo1).toString());
-                            requisitos.add(Integer.parseInt(json.get(campo2).toString()));
+                            String acti = json.get(campo1).toString();
+                            if (!acti.equals("")) {
+                                actividades.add(acti);
+                                requisitos.add(Integer.parseInt(json.get(campo2).toString()));
+                            }
+                            if (campo3 != null) {
+                                System.out.println("Si esta entrando");
+                                String rend = json.get(campo3).toString();
+                                if (!rend.equals("")) {
+                                    actividades1.add(rend);
+                                    requisitos1.add(Integer.parseInt(json.get(campo4).toString()));
+                                }
+                            }
                         }
-                        call.onCallback(getActividades(actividades, requisitos));
+                        call.onCallback(getActividades(actividades, requisitos, actividades1, requisitos1));
 
                     }
                 }
@@ -211,13 +223,15 @@ public class crearOrdenes {
     //Clases
     public class Actividades {
 
-        private ArrayList<String> actividades;
-        private ArrayList<Integer> requisitos;
+        private ArrayList<String> actividades, actividades1;
+        private ArrayList<Integer> requisitos, requisitos1;
 
-        public Actividades(ArrayList<String> actividades, ArrayList<Integer> requisitos) {
+        public Actividades(ArrayList<String> actividades, ArrayList<Integer> requisitos, ArrayList<String> actividades1, ArrayList<Integer> requisitos1) {
 
             this.actividades = actividades;
             this.requisitos = requisitos;
+            this.actividades1 = actividades1;
+            this.requisitos1 = requisitos1;
         }
 
         public ArrayList<String> getActividades() {
@@ -226,6 +240,14 @@ public class crearOrdenes {
 
         public ArrayList<Integer> getRequisitos() {
             return requisitos;
+        }
+
+        public ArrayList<String> getActividades1() {
+            return actividades1;
+        }
+
+        public ArrayList<Integer> getRequisitos1() {
+            return requisitos1;
         }
     }
 }

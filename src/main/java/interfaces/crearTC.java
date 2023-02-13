@@ -43,62 +43,69 @@ public class crearTC extends configuracionVentana {
 
     public crearTC(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
+
         cargado = false;
         co = new crearOrdenes();
-
         storage = new temporalStorage();
-        //poner titulo
         seleccion = new ArrayList();
         context = this;
-        this.valido = valido;
+        modelo = (DefaultTableModel) tblActividades.getModel();
 
+        this.valido = valido;
         this.serie = serie;
         this.con = con;
         this.user = user;
         this.idioma = idioma;
+        this.actividades = new ArrayList<>();
+        this.requisitos = new ArrayList<>();
+        this.listaUsuarios = new ArrayList<>();
+        this.comentarios = new LinkedHashMap<>();
 
-        this.setTitle(info.VERSION);
-        //inicializacion de variables
-        modelo = (DefaultTableModel) tblActividades.getModel();
-        if (storage.getUbicacionTC().size() > 0) {
-            this.actividades = new ArrayList<>();
-            this.requisitos = new ArrayList<>();
-            this.listaUsuarios = new ArrayList<>();
-            this.comentarios = new LinkedHashMap<>();
+        if (storage.getUbicacionTC().size() > 0) {//update
             try {
                 this.actividades.addAll(storage.getUbicacionTC());
                 this.requisitos.addAll(storage.getRequisitosTC());
-                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(),1));
-                ponerRv();
+
+                fill(true);
+                cmbPlantilla.setSelectedItem(storage.getPlantillaTC());
+                cmbResponsable.setSelectedItem(storage.getResponsableTC());
+                //listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(), 1));
                 if (storage.getComentariosTC().size() > 0) {
                     for (HashMap.Entry<String, ArrayList<String>> entry : storage.getComentariosTC().entrySet()) {
                         this.comentarios.put(entry.getKey(),
                                 entry.getValue());
                     }
                 }
-
             } catch (Exception e) {
                 System.out.println("erorrrrrrrrrrrrrr: " + e);
             }
-
-        } else {
-            this.actividades = new ArrayList<>();
-            this.requisitos = new ArrayList<>();
-            this.listaUsuarios = new ArrayList<>();
-            this.comentarios = new LinkedHashMap<>();
-            if (storage.getPlantillasTC().size() > 0) {
-                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(),1));
-                getActividades(cmbPlantilla.getSelectedItem().toString());
-            } else {
-                if(storage.getListaUsuarios().size() == 0) leerUsuarios();
-                else listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(),0));
-                getPlantillas();
-            }
-
+            cmbPlantilla.setEnabled(valido);
+        } else {//insert
+            fill(false);
         }
+
         mostrar();
         tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
         iniciarDiseno();
+
+    }
+
+    private void fill(boolean pr) {
+        if (storage.getPlantillasTC().size() > 0) {
+            listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(), 1));
+            if (!pr) {
+                getActividades(cmbPlantilla.getSelectedItem().toString());
+            } else {
+                ponerRv();
+            }
+        } else {
+            if (storage.getListaUsuarios().size() == 0) {
+                leerUsuarios();
+            } else {
+                listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTC(), valido, storage.getListaUsuarios(), 0));
+            }
+            getPlantillas(pr);
+        }
     }
 
     public void iniciarDiseno() {//decorar los componentes del frame
@@ -470,9 +477,8 @@ public class crearTC extends configuracionVentana {
         // TODO add your handling code here:
         if (cargado) {
             // System.out.println("Aquasai");
-                limpiarTabla();
-                getActividades(cmbPlantilla.getSelectedItem().toString());
-            
+            limpiarTabla();
+            getActividades(cmbPlantilla.getSelectedItem().toString());
         }
     }//GEN-LAST:event_cmbPlantillaActionPerformed
 
@@ -494,12 +500,16 @@ public class crearTC extends configuracionVentana {
         cargado = true;
     }
 
-    private void getPlantillas() {
+    private void getPlantillas(boolean pr) {
         co.readPlantillas(new CallBackPlantillas() {
             @Override
             public void onCallback(ArrayList<String> plantillas) {
                 storage.setPlantillasTC(plantillas);
-                getActividades(cmbPlantilla.getSelectedItem().toString());
+                if (!pr) {
+                    getActividades(cmbPlantilla.getSelectedItem().toString());
+                } else {
+                    ponerRv();
+                }
             }
         }, con, "plantillasCalidad", cmbResponsable, cmbPlantilla, storage.getResponsableTC(), storage.getPlantillaTC());
     }
@@ -513,7 +523,7 @@ public class crearTC extends configuracionVentana {
                 requisitos.addAll(c.getRequisitos());
                 ponerRv();
             }
-        }, con, "plantillasCalidad", plantilla, "ubicacion", "requisito");
+        }, con, "plantillasCalidad", plantilla, "ubicacion", "requisito", null, null);
     }
 
     private void leerUsuarios() {
@@ -529,7 +539,7 @@ public class crearTC extends configuracionVentana {
 
     private void mostrar() {
         if (idioma.equals("english")) {
-            lblTitulo.setText("CheckList");
+            lblTitulo.setText("Quality CheckList");
             JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);
@@ -539,8 +549,13 @@ public class crearTC extends configuracionVentana {
             tableHeader.repaint();
             lblResponsable.setText("Responsible");
             lblPlantilla.setText("Template");
+            if (storage.getSerie() == 0) {
+                lblSerie.setText("Not stablished yet");
+            } else {
+                lblSerie.setText("" + storage.getSerie());
+            }
         } else {
-            lblTitulo.setText("CheckList");
+            lblTitulo.setText("CheckList de calidad");
             JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);
@@ -550,6 +565,11 @@ public class crearTC extends configuracionVentana {
             tableHeader.repaint();
             lblResponsable.setText("Responsable");
             lblPlantilla.setText("Plantilla");
+            if (storage.getSerie() == 0) {
+                lblSerie.setText("No establecido aun");
+            } else {
+                lblSerie.setText("" + storage.getSerie());
+            }
         }
     }
 
