@@ -27,7 +27,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class menuActividades1 extends configuracionVentana {//clase para los trabajadores para que vean todas sus actividades pendientes
+public class menuActividades1 extends JFrame {//clase para los trabajadores para que vean todas sus actividades pendientes
     //o para que algun admin o supervisor vea como va el progreso de algun dron
 
     private DatabaseReference con;
@@ -40,6 +40,7 @@ public class menuActividades1 extends configuracionVentana {//clase para los tra
 
     public menuActividades1(DatabaseReference con, String user, int priv, String idioma, int tipo) {//constructor
         initComponents();
+        new configuracionVentana(this);
 
         //inicializacion de variables
         this.con = con;

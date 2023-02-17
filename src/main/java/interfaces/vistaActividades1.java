@@ -32,7 +32,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class vistaActividades1 extends configuracionVentana {
+public class vistaActividades1 extends JFrame {
 
     private DatabaseReference con;
     private String user, idioma;
@@ -59,6 +59,7 @@ public class vistaActividades1 extends configuracionVentana {
 
     public vistaActividades1(DatabaseReference con, String user, int priv, String idioma, int tipo, int serie, String plantilla) {
         initComponents();
+        new configuracionVentana(this);
 
 
         //inicializacion de variables

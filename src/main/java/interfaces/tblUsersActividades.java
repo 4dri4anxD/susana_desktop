@@ -26,7 +26,7 @@ import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class tblUsersActividades extends configuracionVentana {//clase para poner la lista de usuarios trabajando en diferentes drones en la clase de menuActividades
+public class tblUsersActividades extends JFrame {//clase para poner la lista de usuarios trabajando en diferentes drones en la clase de menuActividades
 
     //declaracion de variables globales
     private String idioma;
@@ -39,6 +39,7 @@ public class tblUsersActividades extends configuracionVentana {//clase para pone
 
     public tblUsersActividades(DatabaseReference con, String idioma) {//constructor
         initComponents();
+        new configuracionVentana(this);
         //poner icono
         //declaracion de variables globales
         this.idioma = idioma;

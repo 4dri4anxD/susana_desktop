@@ -14,10 +14,11 @@ import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 
-public class menuPrincipal extends configuracionVentana {//clase que contiene el menu principal
+public class menuPrincipal extends JFrame {//clase que contiene el menu principal
 
     //declaracion de variable globales
     private int alto, ancho;
@@ -28,7 +29,8 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
 
     public menuPrincipal(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
-        //pone el icono
+        new configuracionVentana(this);
+       
         //inicializacion de variables
         this.con = con;
         this.user = user;
@@ -46,6 +48,8 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
         
         permisos();
         lblBienvenida.setText(lblBienvenida.getText() + " " + user);
+        
+        
     }
 
     public void iniciarDiseno() {//decoracion de los componentes del frame
@@ -124,6 +128,8 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
         btnPlantillas = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setName("frame1"); // NOI18N
+        setPreferredSize(new java.awt.Dimension(965, 752));
 
         pnlFondo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -134,7 +140,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
         lblBienvenida.setText("Hola de nuevo,");
 
         btnAtras.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -142,7 +148,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
         });
 
         btnOpciones.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnOpciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOpciones.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnOpciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpcionesActionPerformed(evt);
@@ -190,7 +196,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
         btnAct.setText("Actividades");
         btnAct.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnAct.setContentAreaFilled(false);
-        btnAct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAct.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAct.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAct.setIconTextGap(10);
         btnAct.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -211,7 +217,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
 
         btnChat.setText("Chat");
         btnChat.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnChat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnChat.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnChat.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnChat.setIconTextGap(10);
         btnChat.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -235,7 +241,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
 
         btnUsers.setText("Usuarios");
         btnUsers.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnUsers.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnUsers.setIconTextGap(10);
         btnUsers.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -256,7 +262,7 @@ public class menuPrincipal extends configuracionVentana {//clase que contiene el
 
         btnPlantillas.setText("Plantillas");
         btnPlantillas.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnPlantillas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPlantillas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnPlantillas.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPlantillas.setIconTextGap(10);
         btnPlantillas.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);

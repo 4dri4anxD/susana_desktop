@@ -4,6 +4,7 @@ import configuracion.info;
 import java.awt.Color;
 import java.awt.Dimension;
 import static java.awt.Frame.MAXIMIZED_BOTH;
+import java.awt.GraphicsEnvironment;
 import java.awt.Image;
 import java.net.URL;
 import javax.swing.ImageIcon;
@@ -12,33 +13,36 @@ import javax.swing.JFrame;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-public class configuracionVentana extends JFrame {//clase para definir ciertas propiedades para algunos frame de la aplicacion
+public class configuracionVentana {//clase para definir ciertas propiedades para algunos frame de la aplicacion
     //declaracion de variables globales
-
+    JFrame v;
     private final String RUTA_IMAGEN = "img/image.png";
 
-    public configuracionVentana() {
+    public configuracionVentana(JFrame v) {
+        this.v=v;
         setLocation();
         maxV();//esto esta presente en cada JFrame tambien, porque sabra porque no se hereda el alto y ancho de la ventana, entonces, se tiene que llamar en el constructor de cada JFrame
         ponerDimensionMinima();
         ponerIcono(RUTA_IMAGEN);
         ponerDecoracionDeWindows();
         colorearFoco(new Color(50, 50, 96));
-        
-        this.setTitle(info.VERSION);
+        v.setTitle(info.VERSION);
     }
 
     private void setLocation() {//establece las coordenadas en las que se mostrara la ventana, esto por si se estan usando 2 monitores
-        this.setLocation(new info().getX(), new info().getY());
+        v.setLocation(new info().getX(), new info().getY());
 
     }
 
-    public void maxV() {// maximiza la ventana
-        this.setExtendedState(MAXIMIZED_BOTH);
+    public final void maxV() {// maximiza la ventana
+        GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
+        v.setMaximizedBounds(env.getMaximumWindowBounds());
+        v.setExtendedState(v.getExtendedState() | v.MAXIMIZED_BOTH);
+       // v.setExtendedState(MAXIMIZED_BOTH);
     }
 
     private void ponerDimensionMinima() {//establece una dimension minima para la ventana
-        setMinimumSize(new Dimension(900, (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height) - ((java.awt.Toolkit.getDefaultToolkit().getScreenSize().height) * 10 / 100)));//975/*JFrame.MAXIMIZED_VERT*/
+        v.setMinimumSize(new Dimension(900, (java.awt.Toolkit.getDefaultToolkit().getScreenSize().height) - ((java.awt.Toolkit.getDefaultToolkit().getScreenSize().height) * 10 / 100)));//975/*JFrame.MAXIMIZED_VERT*/
     }
 
     /**
@@ -47,11 +51,10 @@ public class configuracionVentana extends JFrame {//clase para definir ciertas p
      * @param ruta la direccion del package donde esta la imagen
      * @return la url
      */
-   /* private URL buscarImagen(String ruta) {
+    /* private URL buscarImagen(String ruta) {
         URL rutaDeLaImagen = getClass().getResource(ruta);
         return rutaDeLaImagen;
     } */
-
     /**
      * método que valida si se encontro la ruta
      *
@@ -72,7 +75,7 @@ public class configuracionVentana extends JFrame {//clase para definir ciertas p
         if (seEcontroLaRuta(url)) {
             ImageIcon imagen = new ImageIcon(url);
             Image icono = imagen.getImage();
-            setIconImage(icono);
+            v.setIconImage(icono);
         }
     }
 
@@ -85,6 +88,7 @@ public class configuracionVentana extends JFrame {//clase para definir ciertas p
             JFrame.setDefaultLookAndFeelDecorated(true);
             JDialog.setDefaultLookAndFeelDecorated(true);
             UIManager.setLookAndFeel("com.sun.java.swing.plaf.windows.WindowsLookAndFeel");
+            v.setDefaultLookAndFeelDecorated(true);
         } catch (ClassNotFoundException | IllegalAccessException | InstantiationException | UnsupportedLookAndFeelException ex) {
             System.err.println(ex + "No se pudo cambiar el estilo de la ventana");
         }

@@ -17,12 +17,13 @@ import javax.swing.DefaultListModel;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import obtenerDatos.keys;
 import obtenerDatos.users;
 
-public class menuChat extends configuracionVentana {//no esta en uso
+public class menuChat extends JFrame {//no esta en uso
 
     private DatabaseReference con;
     private int priv;
@@ -34,12 +35,14 @@ public class menuChat extends configuracionVentana {//no esta en uso
 
     public menuChat(DatabaseReference con, String user, int priv, String idioma) {
         initComponents();
+        new configuracionVentana(this);
         this.con = con;
         this.user = user;
         this.priv = priv;
         this.idioma = idioma;
 
         iniciarDiseno();
+        
 
         panel = new JPanel();
         panel.setLayout(new GridBagLayout());

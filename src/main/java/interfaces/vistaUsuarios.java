@@ -32,7 +32,7 @@ import javax.swing.table.TableColumnModel;
 import obtenerDatos.users;
 import seguridad.encriptado;
 
-public class vistaUsuarios extends configuracionVentana {
+public class vistaUsuarios extends JFrame {
 
     private DatabaseReference con;
     private String user, idioma, nombre;
@@ -45,6 +45,7 @@ public class vistaUsuarios extends configuracionVentana {
 
     public vistaUsuarios(DatabaseReference con, String user, int priv, String idioma, String nombre) {
         initComponents();
+        new configuracionVentana(this);
         
         carga = 0;
         this.con = con;

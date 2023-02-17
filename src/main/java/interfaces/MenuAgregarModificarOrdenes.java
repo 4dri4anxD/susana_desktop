@@ -42,7 +42,7 @@ import obtenerDatos.ordenes;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
-public class MenuAgregarModificarOrdenes extends configuracionVentana {//insert/update creo
+public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
 
     //declaracion de variables globales
     private DatabaseReference con;
@@ -61,7 +61,7 @@ public class MenuAgregarModificarOrdenes extends configuracionVentana {//insert/
 
     public MenuAgregarModificarOrdenes(DatabaseReference con, String user, int priv, String idioma) {
         initComponents();
-
+        new configuracionVentana(this);
         //inicializacion de variables
         json = new leerJSON();
         drone_user = new HashMap();
@@ -101,23 +101,23 @@ public class MenuAgregarModificarOrdenes extends configuracionVentana {//insert/
             pnlOpc.addTab("Usuarios", usAct.returnPanel());
         }
     }
-    
-    public void inhabilitarBotones(){
-          btnAdd.setEnabled(false);
-          btnEliminar.setEnabled(false);
-          btnElReg.setEnabled(false);
-          btnVerReg.setEnabled(false);
+
+    public void inhabilitarBotones() {
+        btnAdd.setEnabled(false);
+        btnEliminar.setEnabled(false);
+        btnElReg.setEnabled(false);
+        btnVerReg.setEnabled(false);
     }
-    public void habilitarBotones(){
-          btnAdd.setEnabled(true);
-          btnEliminar.setEnabled(true);
-          btnElReg.setEnabled(true);
-          btnVerReg.setEnabled(true);
+
+    public void habilitarBotones() {
+        btnAdd.setEnabled(true);
+        btnEliminar.setEnabled(true);
+        btnElReg.setEnabled(true);
+        btnVerReg.setEnabled(true);
     }
 
     public void iniciarDiseno() {//decoracion de los componentes del frame
         //   lblAct.setVisible(false);
-        
 
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
         txtBuscar.setHorizontalAlignment(JLabel.CENTER);
@@ -729,9 +729,9 @@ public class MenuAgregarModificarOrdenes extends configuracionVentana {//insert/
         // TODO add your handling code here:
         JTabbedPane tabbedPane = (JTabbedPane) evt.getSource();
         int selectedIndex = tabbedPane.getSelectedIndex();
-        if(selectedIndex==0){
+        if (selectedIndex == 0) {
             habilitarBotones();
-        }else{
+        } else {
             inhabilitarBotones();
         }
     }//GEN-LAST:event_pnlOpcStateChanged

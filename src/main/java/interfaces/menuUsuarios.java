@@ -31,7 +31,7 @@ import javax.swing.table.TableColumnModel;
 import obtenerDatos.ultimomsj;
 import obtenerDatos.users;
 
-public class menuUsuarios extends configuracionVentana {//clase que muestra a los usuarios en la base de datos
+public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en la base de datos
 
     //declaracion de variables globales
     private DatabaseReference con;
@@ -42,6 +42,7 @@ public class menuUsuarios extends configuracionVentana {//clase que muestra a lo
 
     public menuUsuarios(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
+        new configuracionVentana(this);
         //poner icono
 
         //inicializacion de variables

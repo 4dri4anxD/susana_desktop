@@ -27,7 +27,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class crearTC extends configuracionVentana {
+public class crearTC extends JFrame {
 
     private String idioma, user;
     private DefaultTableModel modelo;
@@ -43,7 +43,7 @@ public class crearTC extends configuracionVentana {
 
     public crearTC(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
-
+        new configuracionVentana(this);
         cargado = false;
         co = new crearOrdenes();
         storage = new temporalStorage();

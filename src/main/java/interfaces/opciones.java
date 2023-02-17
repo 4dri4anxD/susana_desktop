@@ -6,16 +6,18 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import java.awt.Cursor;
+import static java.awt.Frame.WAIT_CURSOR;
 import java.awt.Image;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class opciones extends configuracionVentana {//clase para cambiar el idioma o cambiar foto
+public class opciones extends JFrame {//clase para cambiar el idioma o cambiar foto
 
     //declaracion de variables globales
     private DatabaseReference con;
@@ -24,6 +26,7 @@ public class opciones extends configuracionVentana {//clase para cambiar el idio
 
     public opciones(DatabaseReference con, String user, int priv, String idioma) {//constructores
         initComponents();
+        new configuracionVentana(this);
         //poner icono
 
         //inicializacion de variables

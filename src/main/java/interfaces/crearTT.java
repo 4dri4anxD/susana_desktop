@@ -26,7 +26,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import configuracion.info;
 
-public class crearTT extends configuracionVentana {
+public class crearTT extends JFrame {
 
     private String idioma, user;
     private DefaultTableModel modelo, modelo1;
@@ -41,7 +41,7 @@ public class crearTT extends configuracionVentana {
 
     public crearTT(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
-
+        new configuracionVentana(this);
         this.valido = valido;
         this.serie = serie;
         this.con = con;

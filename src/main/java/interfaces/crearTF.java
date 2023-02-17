@@ -37,7 +37,7 @@ import javax.swing.table.TableColumnModel;
 import obtenerDatos.plantillasFinal;
 import obtenerDatos.users;
 
-public class crearTF extends configuracionVentana {
+public class crearTF extends JFrame {
 
     private String idioma, user;
     private DefaultTableModel modelo;
@@ -52,6 +52,7 @@ public class crearTF extends configuracionVentana {
 
     public crearTF(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
+        new configuracionVentana(this);
 
         this.valido = valido;
         this.serie = serie;

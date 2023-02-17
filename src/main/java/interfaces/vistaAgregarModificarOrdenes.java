@@ -70,7 +70,7 @@ import obtenerDatos.keys;
 import obtenerDatos.users;
 import org.json.simple.JSONObject;
 
-public class vistaAgregarModificarOrdenes extends configuracionVentana {
+public class vistaAgregarModificarOrdenes extends JFrame {
 
     private DatabaseReference con;//conexion con la base de datos
     private String user, idioma;//usuario que esta utilizando la app e idioma de esta
@@ -84,6 +84,7 @@ public class vistaAgregarModificarOrdenes extends configuracionVentana {
 
     public vistaAgregarModificarOrdenes(DatabaseReference con, String user, int priv, String idioma, int serie, int inter) {
         initComponents();
+        new configuracionVentana(this);
 
         storage = new temporalStorage();
         json = new leerJSON();

@@ -45,7 +45,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import obtenerDatos.versiones;
 
-public class vistaPlantillas extends configuracionVentana {
+public class vistaPlantillas extends JFrame {
 
     private DatabaseReference con;//Conexion a la base de datos
     private String user, idioma, codigo, plantilla;//nombre de usuario que esta utlizando la app, idioma de la app, codigo de plantilla y nombre de plantilla
@@ -62,6 +62,7 @@ public class vistaPlantillas extends configuracionVentana {
 
     public vistaPlantillas(DatabaseReference con, String user, int priv, String idioma, String codigo, String plantilla) {
         initComponents();
+        new configuracionVentana(this);
 
         listo = 0;
         new datos().inicializar();

@@ -33,7 +33,7 @@ import obtenerDatos.plantillasShipment;
 import obtenerDatos.tipoPaquete;
 import obtenerDatos.users;
 
-public class crearTS extends configuracionVentana {
+public class crearTS extends JFrame {
 
     private final String idioma, user;
     private String mensajeAdj, hintProducto;
@@ -50,6 +50,7 @@ public class crearTS extends configuracionVentana {
 
     public crearTS(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
+        new configuracionVentana(this);
         //Igualar parametros
         this.con = con;
         this.valido = valido;

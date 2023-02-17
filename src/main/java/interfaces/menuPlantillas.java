@@ -26,7 +26,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class menuPlantillas extends configuracionVentana {//clase que muestra todas las plantillas
+public class menuPlantillas extends JFrame {//clase que muestra todas las plantillas
 
     //declaracion de variables globales
     private DatabaseReference con;
@@ -37,6 +37,7 @@ public class menuPlantillas extends configuracionVentana {//clase que muestra to
 
     public menuPlantillas(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
+        new configuracionVentana(this);
         //poner icono
         //inicializacion de variables
         context = this;
