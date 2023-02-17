@@ -23,10 +23,10 @@ public class tblProAct extends configEXTRAS {//clase para marcar como completada
     private String idioma;
     private DefaultTableModel modelo;
     private LinkedHashMap<String, String> actividades;
-    private vistaActividades1 va;
+    private VistaCheckLists va;
     private int tipo;
 
-    public tblProAct(String idioma, LinkedHashMap<String, String> act, vistaActividades1 va, int tipo) {//constructor
+    public tblProAct(String idioma, LinkedHashMap<String, String> act, VistaCheckLists va, int tipo) {//constructor
         initComponents();
         //poner icono
         //inicializacion de variables

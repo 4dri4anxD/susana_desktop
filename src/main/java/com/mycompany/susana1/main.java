@@ -2,11 +2,12 @@ package com.mycompany.susana1;
 
 import interfaces.login;
 
-//Termine el update de vistaAgregarModificarOrdenes (checarlo)
-//Una vez revisado el update, sigue el apartado de plantillas
-//tambien falta el apartado de los usuarios checkeando las actividades xd
-//poner mensajes de error en toda la interfaz de creacion de ordenes
+//falta el apartado de los usuarios checkeando las actividades xd
+//poner mensajes de error en toda la interfaz de creacion de ordenes y creacion de plantillas
 //quitar textos y agregarlos al jsonxdd
+//Ando en vistaCompletarOrden
+
+//busquedas en plantillas indiferentes de minusculas o mayusculas
 
 
 //Borrar datos en package datos

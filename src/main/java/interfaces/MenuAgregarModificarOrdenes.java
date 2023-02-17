@@ -75,7 +75,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
         this.user = user;
         context = this;
         this.idioma = idioma;
-        modelo = (DefaultTableModel) tablaUsers.getModel();
+       // modelo = (DefaultTableModel) tablaUsers.getModel();
 
         if (idioma.equals("English")) {
             ingles();//cambia la interfaz a ingles

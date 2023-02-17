@@ -6,6 +6,7 @@ import java.awt.Dimension;
 import static java.awt.Frame.MAXIMIZED_BOTH;
 import java.awt.GraphicsEnvironment;
 import java.awt.Image;
+import java.awt.Rectangle;
 import java.net.URL;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
@@ -35,10 +36,15 @@ public class configuracionVentana {//clase para definir ciertas propiedades para
     }
 
     public final void maxV() {// maximiza la ventana
-        GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
-        v.setMaximizedBounds(env.getMaximumWindowBounds());
-        v.setExtendedState(v.getExtendedState() | v.MAXIMIZED_BOTH);
+       // GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
+      //  v.setMaximizedBounds(env.getMaximumWindowBounds());
+     //   v.setExtendedState(v.getExtendedState() | v.MAXIMIZED_BOTH);
        // v.setExtendedState(MAXIMIZED_BOTH);
+       GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
+       Rectangle bounds=env.getMaximumWindowBounds();
+       v.setBounds(bounds);
+       
+       
     }
 
     private void ponerDimensionMinima() {//establece una dimension minima para la ventana

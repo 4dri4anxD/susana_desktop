@@ -32,7 +32,7 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class vistaActividades1 extends JFrame {
+public class VistaCheckLists extends JFrame {
 
     private DatabaseReference con;
     private String user, idioma;
@@ -57,7 +57,7 @@ public class vistaActividades1 extends JFrame {
     
     //completados es lo que se lee de la bd
 
-    public vistaActividades1(DatabaseReference con, String user, int priv, String idioma, int tipo, int serie, String plantilla) {
+    public VistaCheckLists(DatabaseReference con, String user, int priv, String idioma, int tipo, int serie, String plantilla) {
         initComponents();
         new configuracionVentana(this);
 
@@ -204,14 +204,14 @@ public class vistaActividades1 extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnVerAct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnVerAct.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnVerAct.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerActActionPerformed(evt);
@@ -239,7 +239,7 @@ public class vistaActividades1 extends JFrame {
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -356,7 +356,7 @@ public class vistaActividades1 extends JFrame {
         // TODO add your handling code here:
         new info().setXY(this.getX(), this.getY());
         this.setCursor(new Cursor(WAIT_CURSOR));
-        new menuActividades1(con, user, priv, idioma, tipo).setVisible(true);
+        new MenuCompletarOrden(con, user, priv, idioma, tipo).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
@@ -815,7 +815,7 @@ public class vistaActividades1 extends JFrame {
                         } else {
                             JOptionPane.showMessageDialog(context, "Informacion actualizada");
                         }
-                        new menuActividades1(con, user, priv, idioma, tipo).setVisible(true);
+                        new MenuCompletarOrden(con, user, priv, idioma, tipo).setVisible(true);
                         context.dispose();
                     }
                 }

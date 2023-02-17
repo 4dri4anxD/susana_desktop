@@ -8,6 +8,8 @@ import disenos.disenos;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Set;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -17,34 +19,83 @@ import javax.swing.table.DefaultTableModel;
 public class requisitos extends configEXTRAS {//clase para establecer los requisitos de cada proceso (se manda a llamar desde vistaPlantillas)
 
     //declaracion de variables globales
-    private DefaultTableModel modelo;
-    private DatabaseReference con;
-    private String user, idioma, proceso, codigo;
-    private ArrayList<String> lista;
-    private int priv, num, pos;
-    private vistaPlantillas vista;
+    private final DefaultTableModel modelo;
+    private final String idioma, actividad;
+    private final int pos, requisito,val;
+    private final vistaPlantillas vista;
+    private final LinkedHashMap<String, Integer> req,actireq;
+    private final vistaPlantillasTT testing;
 
-    public requisitos(DatabaseReference con, String user, int priv, String idioma,
-            ArrayList<String> lista, int num, vistaPlantillas vista, String codigo, int pos) {//constructor
+    public requisitos( String idioma, int pos, String actividad, int requisito, LinkedHashMap<String, Integer> actireq,
+            vistaPlantillas vista, vistaPlantillasTT testing, int val) {//constructor
         initComponents();
         //poner icono
         //inicializacion de variables
-        this.con = con;
-        this.user = user;
-        this.priv = priv;
-        this.codigo = codigo;
         this.vista = vista;
         this.idioma = idioma;
+        this.actividad = actividad;
+        this.requisito = requisito;
         this.pos = pos;
-        this.lista = lista;
+        this.val=val;
+        this.actireq = actireq;
+        this.testing = testing;
+        // this.lista = lista;
+        req = new LinkedHashMap();
         modelo = (DefaultTableModel) tablaPermisos.getModel();
-        this.num = num;
 
         iniciarDiseno();
+        llenarArray();
         ponerInfo();
+
     }
 
-    public void iniciarDiseno() {//decoracion de los componentes del frame
+    private void llenarArray() {
+        try {
+            Set<String> lista = actireq.keySet();
+            int x = 0;
+            if (requisito > 0) {
+                String numero = Integer.toBinaryString(requisito);
+                x = numero.length() - 1;
+                for (String key : lista) {
+                    if (!key.equals(actividad)) {
+                        try {
+                            if (x < 0) {
+                                req.put(key, 0);
+                            } else {
+                                if (numero.charAt(x) == '1') {
+                                    if (!key.equals(actividad)) {
+                                        req.put(key, 1);
+                                    }
+                                } else {
+                                    req.put(key, 0);
+                                }
+                            }
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    x--;
+                }
+            } else {
+                for (String key : lista) {
+                    if (!key.equals(actividad)) {
+                        try {
+                            req.put(key, 0);
+                        } catch (Exception e) {
+
+                        }
+                    }
+                    x--;
+                }
+
+            }
+
+        } catch (Exception e) {
+            System.out.println("Excepcion e: " + e);
+        }
+    }
+
+    private void iniciarDiseno() {//decoracion de los componentes del frame
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
         new disenos().botones(btnAdd, 3);
@@ -266,8 +317,13 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
 
             }
         }
-        String valor = "" + req; //se convierte el valor a string
-        vista.setRequisito(codigo, valor);//se guarda el valor del requisito
+        //   String valor = "" + req; //se convierte el valor a string
+        if (testing == null) {
+            vista.setRequisito(actividad, req);//se guarda el valor del requisito
+        } else {
+            testing.setRequisito(actividad, req,val);//se guarda el valor del requisito
+        }
+
         new info().setXY(this.getX(), this.getY());
         this.setCursor(new Cursor(WAIT_CURSOR));
         this.dispose();
@@ -291,29 +347,17 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
     }//GEN-LAST:event_tablaPermisosKeyTyped
 
     private void ponerInfo() {//pone como seleccionados los procesos requeridos por el proceso que se selecciono para entrar aqui
-        if (num == 0) {//si no se tiene ningun proceso como requerido nomas se agrega la lista de procesos a la tabla sin seleccionar nada
-            for (int i = 0; i < lista.size(); i++) {
-                modelo.addRow(new Object[]{lista.get(i), false});
-            }
-        } else {//si hay al menos 1 proceso como requisito del seleccionado
-            String numero = Integer.toBinaryString(num);//se convierte de decimal a binario
-            int x = numero.length() - 1;//se obtiene el largo del numero binario
-
-            for (int i = 0; i < lista.size(); i++) {//se recorre la lista de procesos
-                try {
-                    if (numero.charAt(x) == '1') {//si se tiene un 1 en la posicion de un proceso, quiere decir que ese proceso es un requisito por lo que se selecciona
-                        modelo.addRow(new Object[]{lista.get(i), true});
-                    } else {
-                        modelo.addRow(new Object[]{lista.get(i), false});//si tiene un 0, entonces no es requisito
-                    }
-                } catch (Exception e) {
-                    modelo.addRow(new Object[]{lista.get(i), false});
-                }
-                x--;
+        Set<String> actividades = req.keySet();
+        for (String actividad : actividades) {
+            if (req.get(actividad) == 1) {//si se tiene un 1 en la posicion de un proceso, quiere decir que ese proceso es un requisito por lo que se selecciona
+                modelo.addRow(new Object[]{actividad, true});
+            } else {
+                modelo.addRow(new Object[]{actividad, false});//si tiene un 0, entonces no es requisito
             }
         }
 
     }
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAtras;

@@ -492,7 +492,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblCC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCC.setText("Calidad");
-        lblCC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblCC.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblCC.setPreferredSize(new java.awt.Dimension(0, 0));
         lblCC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -509,7 +509,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblTC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTC.setText("-");
-        lblTC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblTC.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblTC.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -526,7 +526,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblRC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblRC.setText("-");
-        lblRC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRC.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblRC.setPreferredSize(new java.awt.Dimension(0, 0));
         lblRC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -543,7 +543,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblCT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCT.setText("Pruebas");
-        lblCT.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblCT.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblCT.setPreferredSize(new java.awt.Dimension(0, 0));
         lblCT.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -560,7 +560,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblTT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTT.setText("-");
-        lblTT.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblTT.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblTT.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTT.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -577,7 +577,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblRT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblRT.setText("-");
-        lblRT.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRT.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblRT.setPreferredSize(new java.awt.Dimension(0, 0));
         lblRT.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -594,7 +594,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblCS.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCS.setText("Envios");
-        lblCS.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblCS.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblCS.setPreferredSize(new java.awt.Dimension(0, 0));
         lblCS.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -611,7 +611,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblTS.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTS.setText("-");
-        lblTS.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblTS.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblTS.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTS.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -628,7 +628,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblRS.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblRS.setText("-");
-        lblRS.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRS.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblRS.setPreferredSize(new java.awt.Dimension(0, 0));
         lblRS.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -645,7 +645,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblCF.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblCF.setText("Final");
-        lblCF.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblCF.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblCF.setPreferredSize(new java.awt.Dimension(0, 0));
         lblCF.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -662,7 +662,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblTF.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTF.setText("-");
-        lblTF.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblTF.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblTF.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTF.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
@@ -679,7 +679,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         lblRF.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblRF.setText("-");
-        lblRF.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        lblRF.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         lblRF.setPreferredSize(new java.awt.Dimension(0, 0));
         lblRF.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {

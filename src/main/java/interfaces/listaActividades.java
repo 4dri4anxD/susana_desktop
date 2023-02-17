@@ -25,10 +25,10 @@ public class listaActividades extends configEXTRAS {
     private DefaultTableModel modelo;
     private LinkedHashMap<String, String> actividades;
     private LinkedHashMap<String, Integer> completados;
-    private vistaActividades1 va;
+    private VistaCheckLists va;
     private int tipo, seleccion;
     
-    public listaActividades(String idioma, LinkedHashMap<String, String> act, LinkedHashMap<String, Integer> co, vistaActividades1 va, int tipo,int seleccion) {//LinkedHashMap<String, List<String>> hm, ArrayList<String> codProceso,ArrayList<String> procesos
+    public listaActividades(String idioma, LinkedHashMap<String, String> act, LinkedHashMap<String, Integer> co, VistaCheckLists va, int tipo,int seleccion) {//LinkedHashMap<String, List<String>> hm, ArrayList<String> codProceso,ArrayList<String> procesos
         initComponents();
         //inicializacion de variables
         modelo = (DefaultTableModel) tablaPermisos.getModel();

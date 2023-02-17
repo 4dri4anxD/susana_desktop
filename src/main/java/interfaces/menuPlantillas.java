@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
+import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -13,13 +14,13 @@ import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
-import javax.swing.SwingConstants;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
@@ -30,12 +31,12 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
     //declaracion de variables globales
     private DatabaseReference con;
-    private int priv;
+    private int priv, check;
     private String user, idioma;
     private DefaultTableModel modelo;//modelo de la tabla
     private JFrame context;
 
-    public menuPlantillas(DatabaseReference con, String user, int priv, String idioma) {//constructor
+    public menuPlantillas(DatabaseReference con, String user, int priv, String idioma, int check) {//constructor
         initComponents();
         new configuracionVentana(this);
         //poner icono
@@ -43,14 +44,11 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         context = this;
         modelo = (DefaultTableModel) tablaUsers.getModel();
         this.con = con;
+        this.check = check;
         this.priv = priv;
         this.user = user;
         this.idioma = idioma;
-        if (idioma.equals("English")) {
-            ingles();//cambia la interfaz a ingles
-        } else {
-            esp();//cambia la interfaz a espanol
-        }
+        mostrar();
         iniciarDiseno();
         leer();
     }
@@ -59,10 +57,11 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         //centrar el texto de las celdas de la tabla
         DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
         modelo = (DefaultTableModel) tablaUsers.getModel();
-        tcr.setHorizontalAlignment(SwingConstants.CENTER);
-        for (int i = 0; i < modelo.getColumnCount(); i++) {
-            tablaUsers.getColumnModel().getColumn(i).setCellRenderer(tcr);
-        }
+       // tcr.setHorizontalAlignment(SwingConstants.CENTER);
+      //  for (int i = 0; i < modelo.getColumnCount(); i++) {
+       //     tablaUsers.getColumnModel().getColumn(i).setCellRenderer(tcr);
+      //  }
+        tablaUsers.setDefaultRenderer(Object.class, new centerTextInTable());
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
         txtBuscar.setHorizontalAlignment(JLabel.CENTER);
 
@@ -280,18 +279,25 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
             },
             new String [] {
-                "Código", "Plantilla"
+                "Plantilla"
             }
         ) {
-            boolean[] canEdit = new boolean [] {
-                false, false
+            Class[] types = new Class [] {
+                java.lang.String.class
             };
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
-        tablaUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablaUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         tablaUsers.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusLost(java.awt.event.FocusEvent evt) {
                 tablaUsersFocusLost(evt);
@@ -300,9 +306,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         jScrollPane1.setViewportView(tablaUsers);
         if (tablaUsers.getColumnModel().getColumnCount() > 0) {
             tablaUsers.getColumnModel().getColumn(0).setResizable(false);
-            tablaUsers.getColumnModel().getColumn(0).setPreferredWidth(50);
-            tablaUsers.getColumnModel().getColumn(1).setResizable(false);
-            tablaUsers.getColumnModel().getColumn(1).setPreferredWidth(500);
+            tablaUsers.getColumnModel().getColumn(0).setPreferredWidth(500);
         }
 
         javax.swing.GroupLayout pnlCuerpoLayout = new javax.swing.GroupLayout(pnlCuerpo);
@@ -381,12 +385,22 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
             int sel = tablaUsers.getSelectedRow();
             if (sel == -1) {
                 new info().setXY(this.getX(), this.getY());
-                new vistaPlantillas(con, user, priv, idioma, "", "").setVisible(true);
+                if(check==2){
+                    new vistaPlantillasTT(con, user, priv, idioma, null, check).setVisible(true);
+                }else{
+                    new vistaPlantillas(con, user, priv, idioma, null, check).setVisible(true);
+                }
                 this.dispose();
             } else {
                 new info().setXY(this.getX(), this.getY());
-                new vistaPlantillas(con, user, priv, idioma, modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(),
-                        modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString()).setVisible(true);
+                if(check==2){
+                    new vistaPlantillasTT(con, user, priv, idioma, modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(),
+                        check).setVisible(true);
+                }else{
+                    new vistaPlantillas(con, user, priv, idioma, modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(),
+                        check).setVisible(true);
+                }
+                
                 this.dispose();
             }
         } catch (Exception e) {
@@ -398,7 +412,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         // TODO add your handling code here:
         new info().setXY(this.getX(), this.getY());
         this.setCursor(new Cursor(WAIT_CURSOR));
-        new menuPrincipal(con, user, priv, idioma).setVisible(true);
+        new menuCheckList(con, user, priv, idioma).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
@@ -423,8 +437,8 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                 null, options, options[0]) == 0) {
             try {
                 String id = modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString();
-                String plantilla = modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString();
-                eliminar(id, tablaUsers.getSelectedRow(), plantilla);
+               // String plantilla = modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString();
+                eliminar(id, tablaUsers.getSelectedRow());
             } catch (NullPointerException e) {
                 if (idioma.equals("English")) {
                     JOptionPane.showMessageDialog(context, "Select a template to delete");
@@ -437,13 +451,13 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        buscar();
+        buscar(txtBuscar.getText());
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtBuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {//si se presiona el enter con el focus en el campo de usuario
-            buscar();
+            buscar(txtBuscar.getText());
         }
     }//GEN-LAST:event_txtBuscarKeyPressed
 
@@ -492,12 +506,31 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         }
     }//GEN-LAST:event_txtBuscarKeyTyped
 
-    private void eliminar(String id, int pos, String plantilla) {//eliminar la plantilla seleccionada
+    private String getTableName() {
+        String plantilla = "";
+        switch (check) {
+            case 1:
+                plantilla = "plantillasCalidad";
+                break;
+            case 2:
+                plantilla = "plantillasTesting";
+                break;
+            case 3:
+                plantilla = "plantillasShipment";
+                break;
+            case 4:
+                plantilla = "plantillasFinal";
+                break;
+        }
+        return plantilla;
+    }
+
+    private void eliminar(String id, int position) {//eliminar la plantilla seleccionada
         try {
-            //se elimina el nodo de la plantilla seleccionada
-            con.child("plantillas").child(id).removeValue(new DatabaseReference.CompletionListener() {
+            con.child(getTableName()).child(id).removeValue(new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError de, DatabaseReference dr) {
+                    modelo.removeRow(position);
                     if (idioma.equals("English")) {
                         JOptionPane.showMessageDialog(context, "Template deleted");
                     } else {
@@ -505,226 +538,131 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                     }
                 }
             });
-            //se elimina la fila seleccionada de la tabla
-            modelo.removeRow(pos);
+
+            // localDataSet1.remove(position);
         } catch (Exception e) {
-            System.out.println("Es: " + e);
+
         }
-        try {
-            try {
-                //elimina las actividades relacionados a la plantilla
-                con.child("actividades").child(id).removeValue(new DatabaseReference.CompletionListener() {
-                    @Override
-                    public void onComplete(DatabaseError de, DatabaseReference dr) {
-                    }
-                });
-
-            } catch (Exception e) {
-                System.out.println("Es: " + e);
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
-        }
-        try {
-            //los extras seleccionados relacionados a la plantilla
-            Query query = con.child("extraSel").orderByChild("plantilla").equalTo(plantilla);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                            try {
-                                con.child("extraSel").child(user.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError de, DatabaseReference dr) {
-                                    }
-                                });
-
-                            } catch (Exception e) {
-                                System.out.println("Es: " + e);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
-                }
-            });
-
-        } catch (Exception e) {
-            System.out.println("Es: " + e);
-        }
-        try {
-            //se elimina las versiones de la plantilla
-            Query query = con.child("version").orderByChild("plantilla").equalTo(plantilla);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                            try {
-                                con.child("version").child(user.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError de, DatabaseReference dr) {
-                                    }
-                                });
-
-                            } catch (Exception e) {
-                                System.out.println("Es: " + e);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
-                }
-            });
-        } catch (Exception e) {
-            System.out.println("Es: " + e);
-        }
-        try {
-            //se elimina a los procesos relacionados a la plantilla
-            con.child("procesos").child(id).removeValue(new DatabaseReference.CompletionListener() {
-                @Override
-                public void onComplete(DatabaseError de, DatabaseReference dr) {
-                }
-            });
-
-        } catch (Exception e) {
-            System.out.println("Es: "+e);
-        }
-        try {
-            //se elimina los extras relacionados a la plantilla
-            Query query = con.child("extra").orderByChild("plantilla").equalTo(plantilla);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                            try {
-                                con.child("extra").child(user.getKey()).removeValue(new DatabaseReference.CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError de, DatabaseReference dr) {
-                                    }
-                                });
-                            } catch (Exception e) {
-                                System.out.println("Es: "+e);
-                            }
-                        }
-                    }
-                }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
-                }
-            });
-        } catch (Exception e) {
-            System.out.println("Es: "+e);
-        }
+       
     }
 
-    private void buscar() {//busca alguna plantilla si su nombre coincide en parte con la busqueda
+    private void buscar(String bus) {//busca alguna plantilla si su nombre coincide en parte con la busqueda
         try {
-            String bus = txtBuscar.getText().toLowerCase();
-            Query query = con.child("plantillas").orderByChild("nombre").startAt(bus).endAt(bus + "\uf8ff");
+            Query query = con.child(getTableName()).child(bus);//orderByChild("nombre").startAt(bus).endAt(bus + "\uf8ff");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        int x = modelo.getRowCount();
-                        for (int i = 0; i < x; i++) {
-                            //elimina todo lo de la tabla
-                            modelo.removeRow(0);
+                        limpiarTabla();
+                        ArrayList keys = new ArrayList();
+                        try {
+                            keys.add(bus.toLowerCase());
+                            llenarTabla(keys);
+                        } catch (Exception e) {
+                            // Toast.makeText(getApplicationContext(), "Notifica el siguiente error: " + e, Toast.LENGTH_LONG).show();
                         }
-                        for (DataSnapshot pl : snapshot.getChildren()) {
-                            try {
-                                //si encuentra algo lo pone en la tabla
-                             //   plantillas log = pl.getValue(plantillas.class);
-                             //   modelo.addRow(new Object[]{pl.getKey(), log.getNombre()});
-
-                            } catch (Exception e) {
-                                System.out.println("Es: "+e);
-                            }
+                    } else {
+                        if(modelo.getRowCount()<2){
+                            limpiarTabla();
+                            leer();
                         }
-                    } else {//si no se encuentra nada
-                        if (idioma.equals("English")) {
-                            JOptionPane.showMessageDialog(context, "No results were found");
+                        if (idioma.equals("english")) {
+                            // Toast.makeText(getApplicationContext(), "No se encontraron resultados", Toast.LENGTH_SHORT).show();
                         } else {
-                            JOptionPane.showMessageDialog(context, "No se encontraron resultados");
+                            // Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
                         }
-                        int x = modelo.getRowCount();
-                        for (int i = 0; i < x; i++) {
-                            modelo.removeRow(0);
-                            //se elimina todo lo que tenga la tabla
-                        }
-                        leer();
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
+                    // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                 }
-
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
+            //Context context = getApplicationContext();
+            // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            //  toast.show();
         }
+
     }
 
     private void leer() {//se leen todas las plantillas 
         try {
-            Query query = con.child("plantillas").orderByChild("nombre");
+
+            Query query = null;
+            query = con.child(getTableName());//.orderByChild("nombre");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        for (DataSnapshot user : snapshot.getChildren()) {
-                            try {
-                              //  plantillas log = user.getValue(plantillas.class);
-                                //se pone lo que se encontro en la tabla
-                              //  modelo.addRow(new Object[]{user.getKey(), log.getNombre()});
-                            } catch (Exception e) {
-                                System.out.println("Es: "+e);
+                        limpiarTabla();
+                        ArrayList keys = new ArrayList();
+                        try {
+                            for (DataSnapshot user : snapshot.getChildren()) {
+                                keys.add(user.getKey());
+
                             }
+                            llenarTabla(keys);
+                        } catch (Exception e) {
+                            // Toast.makeText(getApplicationContext(), "Notifica el siguiente error: " + e, Toast.LENGTH_LONG).show();
+                        }
+                    } else {
+                        if (idioma.equals("english")) {
+                            // Toast.makeText(getApplicationContext(), "There are no templates", Toast.LENGTH_LONG).show();
+                        } else {
+                            //Toast.makeText(getApplicationContext(), "No existen plantillas", Toast.LENGTH_LONG).show();
                         }
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
+                    // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                 }
             });
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
+            // Context context = getApplicationContext();
+            //  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            //  toast.show();
         }
     }
 
-    private void ingles() {//se pone la interfaz en ingles
-        txtBuscar.setText("Search");
-        lblTitulo.setText("Templates menu");
-        JTableHeader tableHeader = tablaUsers.getTableHeader();
-        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
-        TableColumn tableColumn = tableColumnModel.getColumn(0);
-        tableColumn.setHeaderValue("Code");
-        tableColumn = tableColumnModel.getColumn(0);
-        tableColumn.setHeaderValue("Template");
-        tableHeader.repaint();
-        btnEliminar.setToolTipText("<html><b style='font-size: 12px;'>Delete selected template</b></html>");
-        btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Add/Edit templates</b></html>");
+    private void limpiarTabla() {
+        int size = modelo.getRowCount();
+        for (int i = 0; i < size; i++) {
+            modelo.removeRow(0);
+        }
+
     }
 
-    private void esp() {//se pone la interfaz en espanol
-        txtBuscar.setText("Buscar");
-        lblTitulo.setText("Menu de plantillas");
-        btnEliminar.setToolTipText("<html><b style='font-size: 12px;'>Eliminar la plantilla seleccionada</b></html>");
-        btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Agregar/Editar plantillas</b></html>");
+    private void llenarTabla(ArrayList<String> nombre) {
+        for (int i = 0; i < nombre.size(); i++) {
+            modelo.addRow(new Object[]{nombre.get(i)});
+        }
+
+    }
+
+    private void mostrar() {
+        if (idioma.equals("english")) {
+            txtBuscar.setText("Search");
+            lblTitulo.setText("Templates menu");
+            JTableHeader tableHeader = tablaUsers.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Code");
+            tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Template");
+            tableHeader.repaint();
+            btnEliminar.setToolTipText("<html><b style='font-size: 12px;'>Delete selected template</b></html>");
+            btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Add/Edit templates</b></html>");
+        } else {
+            txtBuscar.setText("Buscar");
+            lblTitulo.setText("Menu de plantillas");
+            btnEliminar.setToolTipText("<html><b style='font-size: 12px;'>Eliminar la plantilla seleccionada</b></html>");
+            btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Agregar/Editar plantillas</b></html>");
+        }
     }
 
 

@@ -37,18 +37,19 @@ import javax.swing.table.TableColumnModel;
 import obtenerDatos.plantillasFinal;
 import obtenerDatos.plantillasShipment;
 import obtenerDatos.plantillasCalidad;
+import obtenerDatos.plantillasTesting;
 
-public class vistaPlantillas extends JFrame {
+public class vistaPlantillasTT extends JFrame {
 
     private DatabaseReference con;//Conexion a la base de datos
     private String user, idioma, plantilla;//nombre de usuario que esta utlizando la app, idioma de la app, codigo de plantilla y nombre de plantilla
     private int priv, check;//privilegio de usuario (0,1,2,3,4)
-    private DefaultTableModel modelo;//modelo de la tabla
+    private DefaultTableModel modelo, modelo1;//modelo de la tabla
     private JFrame context;//para los JOptionPane
     private String tN;//variables que guardan un hint para las cajas de texto
-    private LinkedHashMap<String, Integer> actireq;
+    private LinkedHashMap<String, Integer> actireq, rendireq;
 
-    public vistaPlantillas(DatabaseReference con, String user, int priv, String idioma, String plantilla, int check) {
+    public vistaPlantillasTT(DatabaseReference con, String user, int priv, String idioma, String plantilla, int check) {
         initComponents();
         new configuracionVentana(this);
         this.check = check;
@@ -81,24 +82,25 @@ public class vistaPlantillas extends JFrame {
             }
 
         }
-    
     }
 
     private void iniciarVariables() {
-        modelo = (DefaultTableModel) tablaPermisos.getModel();
+        modelo = (DefaultTableModel) tblActividades.getModel();
+        modelo1 = (DefaultTableModel) tblRendimiento.getModel();
         actireq = new LinkedHashMap();
-        //   actividades = new ArrayList();
-        //   requisitos = new ArrayList();
+        rendireq = new LinkedHashMap();
 
     }
 
     private void iniciarDiseno() {
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
-        tablaPermisos.setDefaultRenderer(Object.class, new centerTextInTable());
+        tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
+        tblRendimiento.setDefaultRenderer(Object.class, new centerTextInTable());
 
         new disenos().botones(btnAdd, 3);
         new disenos().botones(btnAsignarPre, 3);
         new disenos().botones(btnAddProceso, 3);
+        new disenos().botones(btnAddPrueba, 3);
         new disenos().botones(btnAtras, 3);
 
         new disenos().textoL1(txtNombre);
@@ -114,16 +116,19 @@ public class vistaPlantillas extends JFrame {
 
         ponerImg(btnAdd, "img/guardar1.png");
         ponerImg(btnAddProceso, "img/agregarProceso.png");
+        ponerImg(btnAddPrueba, "img/agregarActividad.png");
         ponerImg(btnAsignarPre, "img/checklist.png");
         ponerImg(btnAtras, "img/atras2.png");
 
-        new disenoTabla().cabecera(tablaPermisos);
+        new disenoTabla().cabecera(tblActividades);
+        new disenoTabla().cabecera(tblRendimiento);
 
         //las siguientes 3 lineas nomas son pa que el celleditor no sea null
         final JTextField text = new JTextField();
         TableCellEditor s = new DefaultCellEditor(text);
-        tablaPermisos.setCellEditor(s);
-        
+        tblActividades.setCellEditor(s);
+        tblRendimiento.setCellEditor(s);
+
     }
 
     public void ponerImg(JButton b, String ruta) {
@@ -147,13 +152,16 @@ public class vistaPlantillas extends JFrame {
         btnAdd = new javax.swing.JButton();
         btnAddProceso = new javax.swing.JButton();
         btnAsignarPre = new javax.swing.JButton();
+        btnAddPrueba = new javax.swing.JButton();
         pnlIzq = new javax.swing.JPanel();
         btnAtras = new javax.swing.JButton();
         pnlCuerpo = new javax.swing.JPanel();
         lblNombre = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
         scrool = new javax.swing.JScrollPane();
-        tablaPermisos = new javax.swing.JTable();
+        tblActividades = new javax.swing.JTable();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tblRendimiento = new javax.swing.JTable();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -204,6 +212,14 @@ public class vistaPlantillas extends JFrame {
             }
         });
 
+        btnAddPrueba.setToolTipText("Agregar proceso");
+        btnAddPrueba.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAddPrueba.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAddPruebaActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout pnlDerLayout = new javax.swing.GroupLayout(pnlDer);
         pnlDer.setLayout(pnlDerLayout);
         pnlDerLayout.setHorizontalGroup(
@@ -211,8 +227,9 @@ public class vistaPlantillas extends JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(27, Short.MAX_VALUE)
                 .addGroup(pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAsignarPre, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAddProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAsignarPre, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGap(23, 23, 23))
         );
@@ -223,6 +240,8 @@ public class vistaPlantillas extends JFrame {
                 .addComponent(btnAsignarPre, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnAddProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(18, 18, 18)
+                .addComponent(btnAddPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
@@ -261,11 +280,12 @@ public class vistaPlantillas extends JFrame {
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 199;
-        gridBagConstraints.ipady = 31;
+        gridBagConstraints.ipadx = 210;
+        gridBagConstraints.ipady = 33;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 0);
         pnlCuerpo.add(lblNombre, gridBagConstraints);
 
         txtNombre.setHorizontalAlignment(javax.swing.JTextField.CENTER);
@@ -286,11 +306,12 @@ public class vistaPlantillas extends JFrame {
         gridBagConstraints.gridx = 1;
         gridBagConstraints.gridy = 0;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 200;
-        gridBagConstraints.ipady = 25;
+        gridBagConstraints.ipadx = 211;
+        gridBagConstraints.ipady = 27;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
         gridBagConstraints.weighty = 1.0;
+        gridBagConstraints.insets = new java.awt.Insets(1, 0, 0, 1);
         pnlCuerpo.add(txtNombre, gridBagConstraints);
 
         scrool.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -299,7 +320,7 @@ public class vistaPlantillas extends JFrame {
             }
         });
 
-        tablaPermisos.setModel(new javax.swing.table.DefaultTableModel(
+        tblActividades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
@@ -315,49 +336,79 @@ public class vistaPlantillas extends JFrame {
                 return types [columnIndex];
             }
         });
-        tablaPermisos.addFocusListener(new java.awt.event.FocusAdapter() {
+        tblActividades.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
-                tablaPermisosFocusGained(evt);
+                tblActividadesFocusGained(evt);
             }
             public void focusLost(java.awt.event.FocusEvent evt) {
-                tablaPermisosFocusLost(evt);
+                tblActividadesFocusLost(evt);
             }
         });
-        tablaPermisos.addMouseListener(new java.awt.event.MouseAdapter() {
+        tblActividades.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablaPermisosMouseClicked(evt);
+                tblActividadesMouseClicked(evt);
             }
         });
-        tablaPermisos.addInputMethodListener(new java.awt.event.InputMethodListener() {
+        tblActividades.addInputMethodListener(new java.awt.event.InputMethodListener() {
             public void caretPositionChanged(java.awt.event.InputMethodEvent evt) {
             }
             public void inputMethodTextChanged(java.awt.event.InputMethodEvent evt) {
-                tablaPermisosInputMethodTextChanged(evt);
+                tblActividadesInputMethodTextChanged(evt);
             }
         });
-        tablaPermisos.addKeyListener(new java.awt.event.KeyAdapter() {
+        tblActividades.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
-                tablaPermisosKeyPressed(evt);
+                tblActividadesKeyPressed(evt);
             }
         });
-        scrool.setViewportView(tablaPermisos);
-        if (tablaPermisos.getColumnModel().getColumnCount() > 0) {
-            tablaPermisos.getColumnModel().getColumn(0).setResizable(false);
-            tablaPermisos.getColumnModel().getColumn(0).setPreferredWidth(300);
-        }
+        scrool.setViewportView(tblActividades);
 
         gridBagConstraints = new java.awt.GridBagConstraints();
         gridBagConstraints.gridx = 0;
         gridBagConstraints.gridy = 1;
         gridBagConstraints.gridwidth = 2;
         gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
-        gridBagConstraints.ipadx = 477;
-        gridBagConstraints.ipady = 405;
+        gridBagConstraints.ipadx = 499;
+        gridBagConstraints.ipady = 259;
         gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
         gridBagConstraints.weightx = 1.0;
-        gridBagConstraints.weighty = 12.0;
-        gridBagConstraints.insets = new java.awt.Insets(6, 0, 11, 0);
+        gridBagConstraints.weighty = 6.0;
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 0, 1);
         pnlCuerpo.add(scrool, gridBagConstraints);
+
+        tblRendimiento.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+
+            },
+            new String [] {
+                "Prueba"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+        });
+        jScrollPane1.setViewportView(tblRendimiento);
+        if (tblRendimiento.getColumnModel().getColumnCount() > 0) {
+            tblRendimiento.getColumnModel().getColumn(0).setResizable(false);
+        }
+
+        gridBagConstraints = new java.awt.GridBagConstraints();
+        gridBagConstraints.gridx = 0;
+        gridBagConstraints.gridy = 2;
+        gridBagConstraints.gridwidth = 2;
+        gridBagConstraints.fill = java.awt.GridBagConstraints.BOTH;
+        gridBagConstraints.ipadx = 499;
+        gridBagConstraints.ipady = 259;
+        gridBagConstraints.anchor = java.awt.GridBagConstraints.NORTHWEST;
+        gridBagConstraints.weightx = 1.0;
+        gridBagConstraints.weighty = 6.0;
+        gridBagConstraints.insets = new java.awt.Insets(6, 0, 11, 1);
+        pnlCuerpo.add(jScrollPane1, gridBagConstraints);
 
         javax.swing.GroupLayout pnlFondoLayout = new javax.swing.GroupLayout(pnlFondo);
         pnlFondo.setLayout(pnlFondoLayout);
@@ -367,7 +418,7 @@ public class vistaPlantillas extends JFrame {
             .addGroup(pnlFondoLayout.createSequentialGroup()
                 .addComponent(pnlIzq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 500, Short.MAX_VALUE)
+                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlDer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -377,7 +428,7 @@ public class vistaPlantillas extends JFrame {
                 .addComponent(pnlCabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlCuerpo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 494, Short.MAX_VALUE)
+                    .addComponent(pnlCuerpo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
                     .addComponent(pnlIzq, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlDer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -396,12 +447,6 @@ public class vistaPlantillas extends JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
-        // TODO add your handling code here:
-
-        cambio();
-    }//GEN-LAST:event_btnAtrasActionPerformed
-
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
 
@@ -412,11 +457,24 @@ public class vistaPlantillas extends JFrame {
                 actireq.put(modelo.getValueAt(i, 0).toString(), 0);
             }
         }
+        for (int i = 0; i < modelo1.getRowCount(); i++) {
+            if (!rendireq.containsKey(modelo1.getValueAt(i, 0).toString())) {
+                rendireq.put(modelo1.getValueAt(i, 0).toString(), 0);
+            }
+        }
+
         Set<String> actividades = actireq.keySet();
         for (String actividad : actividades) {
-            ArrayList<Integer> comprobar = buscarTabla(actividad);
+            ArrayList<Integer> comprobar = buscarTabla(actividad, modelo);
             if (comprobar.get(0) == 0) {
                 actireq.remove(actividad);
+            }
+        }
+        Set<String> rendimientos = rendireq.keySet();
+        for (String rendimiento : rendimientos) {
+            ArrayList<Integer> comprobar = buscarTabla(rendimiento, modelo1);
+            if (comprobar.get(0) == 0) {
+                rendireq.remove(rendimiento);
             }
         }
         if (actireq.size() > 0) {//si existe algun proceso
@@ -424,12 +482,11 @@ public class vistaPlantillas extends JFrame {
             //  boolean val = true;
             //   actualizarIndices();//actualizar datos.procesosPlantilla
             if (!txtNombre.getText().equals(tN)) {//si hay algo en los campos de texto diferente al hint
-                if (!txtNombre.getText().contains("{")||!txtNombre.getText().contains("}")||!txtNombre.getText().contains(";")) {
-                    String tableName = getTableName();
+                if (!txtNombre.getText().contains("{") || !txtNombre.getText().contains("}") || !txtNombre.getText().contains(";")) {
                     if (plantilla != null) {//update
                         //Eliminar e insertar
                         try {
-                            con.child(tableName).child(plantilla).removeValue(new DatabaseReference.CompletionListener() {
+                            con.child("plantillasTesting").child(plantilla).removeValue(new DatabaseReference.CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError de, DatabaseReference dr) {
                                 }
@@ -441,9 +498,9 @@ public class vistaPlantillas extends JFrame {
                             // toast.show();
                         }
                     } else {//insert
-                        leerC(tableName);
+                        leerC("plantillasTesting");
                     }
-                }else{
+                } else {
                     //caracteres invalidos
                 }
             } else {
@@ -461,7 +518,7 @@ public class vistaPlantillas extends JFrame {
             if (txtNombre.getText().equals("") || txtNombre.getText().equals(tN)) {
                 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
             }
-            tablaPermisos.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
+            tblActividades.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
             if (idioma.equals("English")) {
                 JOptionPane.showMessageDialog(context, "Template must have at least one proccess and\nat least an activity assigned to each proccess");
             } else {
@@ -477,74 +534,93 @@ public class vistaPlantillas extends JFrame {
         //   if (comprobarTabla() || modelo.getRowCount() < 2) {
         comprobarTabla();
         modelo.addRow(new Object[]{"", "", ""});
-        tablaPermisos.editCellAt(modelo.getRowCount() - 1, 0);
-        Component aComp = tablaPermisos.getEditorComponent();
+        tblActividades.editCellAt(modelo.getRowCount() - 1, 0);
+        Component aComp = tblActividades.getEditorComponent();
         aComp.requestFocus();
         //  }
 
-        if (modelo.getRowCount() > 1) {
+        if (modelo1.getRowCount() > 1 || modelo.getRowCount()>1) {
             btnAsignarPre.setEnabled(true);
         }
     }//GEN-LAST:event_btnAddProcesoActionPerformed
 
-    private void tablaPermisosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPermisosMouseClicked
+    private void btnAsignarPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsignarPreActionPerformed
         // TODO add your handling code here:
-        comprobarTabla();
-        if (evt.getButton() == 3) {
-            Point p = evt.getPoint();
-            int rowNumber = tablaPermisos.rowAtPoint(p);
-            ListSelectionModel modelo1 = tablaPermisos.getSelectionModel();
-            modelo1.setSelectionInterval(rowNumber, rowNumber);
-            String texto1, texto2, o1, o2;
-            if (idioma.equals("English")) {
-                texto1 = "Are you sure you want to delete the selected proccess?";
-                texto2 = "Confirm Action";
-                o1 = "Yes";
-                o2 = "No";
-            } else {
-                texto1 = "¿Seguro que quiere eliminar el proceso seleccionado?";
-                texto2 = "Confirmar Acción";
-                o1 = "Si";
-                o2 = "No";
-            }
-            Object[] options = {o1, o2};
-            if (JOptionPane.showOptionDialog(this, texto1, texto2,
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                    null, options, options[0]) == 0) {
-                try {
-                    actireq.remove(modelo.getValueAt(rowNumber, 0).toString());
-                    modelo.removeRow(rowNumber);
-                } catch (NullPointerException e) {
-                    if (idioma.equals("English")) {
-                        JOptionPane.showMessageDialog(context, "Select a proccess to delete");
-                    } else {
-                        JOptionPane.showMessageDialog(context, "Seleccione un proceso para eliminar");
+        try {
+            int cont = 0;
+            //  if (comprobarTabla()) {
+            comprobarTabla();
+            new info().setXY(this.getX(), this.getY());
+            String procesoSel = "";
+            int proceso=0;
+            try {
+                procesoSel = modelo.getValueAt(tblActividades.getSelectedRow(), 0).toString();
+                for (int i = 0; i < modelo.getRowCount(); i++) {
+                    if (!actireq.containsKey(modelo.getValueAt(i, 0).toString())) {
+                        actireq.put(modelo.getValueAt(i, 0).toString(), 0);
                     }
                 }
+                proceso=1;
+            } catch (Exception e) {
+                cont++;
+            }
+            try {
+                procesoSel = modelo1.getValueAt(tblRendimiento.getSelectedRow(), 0).toString();
+                for (int i = 0; i < modelo1.getRowCount(); i++) {
+                    if (!rendireq.containsKey(modelo1.getValueAt(i, 0).toString())) {
+                        rendireq.put(modelo1.getValueAt(i, 0).toString(), 0);
+                    }
+                }
+                proceso=2;
+            } catch (Exception e) {
+                cont++;
+            }
+            if (cont == 2) {
+                if (idioma.equals("English")) {
+                    JOptionPane.showMessageDialog(context, "Select a process to see its required processes");
+                } else {
+                    JOptionPane.showMessageDialog(context, "Selecciona un proceso para ver sus procesos requeridos");
+                }
+            } else {
+
+                int req = 0;
+                try {
+                    if(proceso==1){
+                        req = actireq.get(procesoSel);
+                    }else{
+                        req = rendireq.get(procesoSel);
+                    }
+                    
+                } catch (Exception e) {
+                    // System.out.println("ex: "+e);
+                }
+                if(proceso==1){
+                    new requisitos( idioma, tblActividades.getSelectedRow(), procesoSel, req, actireq, null, this, 1).setVisible(true);
+                }else{
+                    new requisitos( idioma, tblActividades.getSelectedRow(), procesoSel, req, rendireq, null, this, 2).setVisible(true);
+                }
+                
+                //   }
+            }
+
+        } catch (Exception e) {
+            if (idioma.equals("English")) {
+                JOptionPane.showMessageDialog(context, "Error");
+            } else {
+                JOptionPane.showMessageDialog(context, "Error inesperado");
             }
         }
-    }//GEN-LAST:event_tablaPermisosMouseClicked
+    }//GEN-LAST:event_btnAsignarPreActionPerformed
 
-    private void tablaPermisosFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tablaPermisosFocusLost
+    private void pnlDerMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDerMousePressed
         // TODO add your handling code here:
-        comprobarTabla();
-    }//GEN-LAST:event_tablaPermisosFocusLost
+    }//GEN-LAST:event_pnlDerMousePressed
 
-    private void tablaPermisosFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tablaPermisosFocusGained
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tablaPermisosFocusGained
-
-    private void tablaPermisosKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPermisosKeyPressed
-        // TODO add your handling code here:
-        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {//si se presiona el enter con el focus en el campo de usuario
-            comprobarTabla();
-        }
-    }//GEN-LAST:event_tablaPermisosKeyPressed
-
-    private void tablaPermisosInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tablaPermisosInputMethodTextChanged
+    private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
 
-    }//GEN-LAST:event_tablaPermisosInputMethodTextChanged
+        cambio();
+    }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained
         // TODO add your handling code here:
@@ -587,39 +663,63 @@ public class vistaPlantillas extends JFrame {
         }
     }//GEN-LAST:event_txtNombreKeyTyped
 
-    private void btnAsignarPreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAsignarPreActionPerformed
+    private void tblActividadesFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblActividadesFocusGained
         // TODO add your handling code here:
-        try {
-            //  if (comprobarTabla()) {
-            comprobarTabla();
-            new info().setXY(this.getX(), this.getY());
-            String procesoSel = modelo.getValueAt(tablaPermisos.getSelectedRow(), 0).toString();
-            for (int i = 0; i < modelo.getRowCount(); i++) {
-                if (!actireq.containsKey(modelo.getValueAt(i, 0).toString())) {
-                    actireq.put(modelo.getValueAt(i, 0).toString(), 0);
-                }
+    }//GEN-LAST:event_tblActividadesFocusGained
 
-            }
-            int req = 0;
-            try {
-                req = actireq.get(procesoSel);
-            } catch (Exception e) {
-                // System.out.println("ex: "+e);
-            }
-            new requisitos( idioma, tablaPermisos.getSelectedRow(), procesoSel, req, actireq, this, null,0).setVisible(true);
-            //   }
-        } catch (Exception e) {
+    private void tblActividadesFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_tblActividadesFocusLost
+        // TODO add your handling code here:
+        comprobarTabla();
+    }//GEN-LAST:event_tblActividadesFocusLost
+
+    private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
+        // TODO add your handling code here:
+        comprobarTabla();
+        if (evt.getButton() == 3) {
+            Point p = evt.getPoint();
+            int rowNumber = tblActividades.rowAtPoint(p);
+            ListSelectionModel modelo1 = tblActividades.getSelectionModel();
+            modelo1.setSelectionInterval(rowNumber, rowNumber);
+            String texto1, texto2, o1, o2;
             if (idioma.equals("English")) {
-                JOptionPane.showMessageDialog(context, "Select a process to see its required processes");
+                texto1 = "Are you sure you want to delete the selected proccess?";
+                texto2 = "Confirm Action";
+                o1 = "Yes";
+                o2 = "No";
             } else {
-                JOptionPane.showMessageDialog(context, "Selecciona un proceso para ver sus procesos requeridos");
+                texto1 = "¿Seguro que quiere eliminar el proceso seleccionado?";
+                texto2 = "Confirmar Acción";
+                o1 = "Si";
+                o2 = "No";
+            }
+            Object[] options = {o1, o2};
+            if (JOptionPane.showOptionDialog(this, texto1, texto2,
+                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
+                    null, options, options[0]) == 0) {
+                try {
+                    actireq.remove(modelo.getValueAt(rowNumber, 0).toString());
+                    modelo.removeRow(rowNumber);
+                } catch (NullPointerException e) {
+                    if (idioma.equals("English")) {
+                        JOptionPane.showMessageDialog(context, "Select a proccess to delete");
+                    } else {
+                        JOptionPane.showMessageDialog(context, "Seleccione un proceso para eliminar");
+                    }
+                }
             }
         }
-    }//GEN-LAST:event_btnAsignarPreActionPerformed
+    }//GEN-LAST:event_tblActividadesMouseClicked
 
-    private void pnlDerMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlDerMousePressed
+    private void tblActividadesInputMethodTextChanged(java.awt.event.InputMethodEvent evt) {//GEN-FIRST:event_tblActividadesInputMethodTextChanged
         // TODO add your handling code here:
-    }//GEN-LAST:event_pnlDerMousePressed
+    }//GEN-LAST:event_tblActividadesInputMethodTextChanged
+
+    private void tblActividadesKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblActividadesKeyPressed
+        // TODO add your handling code here:
+        if (evt.getKeyCode() == KeyEvent.VK_ENTER) {//si se presiona el enter con el focus en el campo de usuario
+            comprobarTabla();
+        }
+    }//GEN-LAST:event_tblActividadesKeyPressed
 
     private void scroolKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_scroolKeyPressed
         // TODO add your handling code here:
@@ -628,28 +728,24 @@ public class vistaPlantillas extends JFrame {
         }
     }//GEN-LAST:event_scroolKeyPressed
 
-    private String getTableName() {
-        String plantilla = "";
-        switch (check) {
-            case 1:
-                plantilla = "plantillasCalidad";
-                break;
-            case 2:
-                plantilla = "plantillasTesting";
-                break;
-            case 3:
-                plantilla = "plantillasShipment";
-                break;
-            case 4:
-                plantilla = "plantillasFinal";
-                break;
+    private void btnAddPruebaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddPruebaActionPerformed
+        // TODO add your handling code here:
+        comprobarTabla();
+        modelo1.addRow(new Object[]{"", "", ""});
+        tblRendimiento.editCellAt(modelo1.getRowCount() - 1, 0);
+        Component aComp = tblRendimiento.getEditorComponent();
+        aComp.requestFocus();
+        if (modelo1.getRowCount() > 1 || modelo.getRowCount()>1) {
+            btnAsignarPre.setEnabled(true);
         }
-        return plantilla;
-    }
+    }//GEN-LAST:event_btnAddPruebaActionPerformed
 
     private void comprobarTabla() {
-        if (tablaPermisos.isEditing()) {
-            tablaPermisos.getCellEditor().stopCellEditing();//detenga la edicion para almacenar el valor
+        if (tblActividades.isEditing()) {
+            tblActividades.getCellEditor().stopCellEditing();//detenga la edicion para almacenar el valor
+        }
+        if (tblRendimiento.isEditing()) {
+            tblRendimiento.getCellEditor().stopCellEditing();//detenga la edicion para almacenar el valor
         }
         //  tablaPermisos.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
         for (int i = 0; i < modelo.getRowCount(); i++) {
@@ -658,9 +754,23 @@ public class vistaPlantillas extends JFrame {
                 //  return false;
                 return;
             } else {
-                ArrayList<Integer> b = buscarTabla(modelo.getValueAt(i, 0).toString());
+                ArrayList<Integer> b = buscarTabla(modelo.getValueAt(i, 0).toString(), modelo);
                 if (b.get(0) > 1) {
                     modelo.removeRow(b.get(1));
+                    //  return false;
+                    return;
+                }
+            }
+        }
+        for (int i = 0; i < modelo1.getRowCount(); i++) {
+            if (modelo1.getValueAt(i, 0).toString().equals("")) {//si algun campo de nombre de proceso se encuentra vacio
+                modelo1.removeRow(i);
+                //  return false;
+                return;
+            } else {
+                ArrayList<Integer> b = buscarTabla(modelo1.getValueAt(i, 0).toString(), modelo1);
+                if (b.get(0) > 1) {
+                    modelo1.removeRow(b.get(1));
                     //  return false;
                     return;
                 }
@@ -669,7 +779,7 @@ public class vistaPlantillas extends JFrame {
         //  return true;
     }
 
-    private ArrayList<Integer> buscarTabla(String plantilla) {
+    private ArrayList<Integer> buscarTabla(String plantilla, DefaultTableModel modelo) {
         ArrayList<Integer> regreso = new ArrayList();
         int cont = 0;
         int removePos = 0;
@@ -687,121 +797,55 @@ public class vistaPlantillas extends JFrame {
         return regreso;
     }
 
-    public void setRequisito(String proceso, int requisito) {
-        actireq.put(proceso, requisito);
+    public void setRequisito(String proceso, int requisito, int tipo) {
+        if (tipo == 1) {
+            actireq.put(proceso, requisito);
+        } else {
+            rendireq.put(proceso, requisito);
+        }
+
     }
 
     private void leer() {
         try {
-            Query query = null;
-            switch (check) {
-                case 1://child("actividades")
-                    query = con.child("plantillasCalidad").child(plantilla);//child("ubicacion");//.orderByChild("nombre");
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                try {
-                                    plantillasCalidad dato = null;
-                                    for (DataSnapshot user : snapshot.getChildren()) {
-                                        dato = user.getValue(plantillasCalidad.class);
-                                        //  actividades.add(dato.getUbicacion());
-                                        //requisitos.add(dato.getRequisito());
-                                        actireq.put(dato.getUbicacion(), dato.getRequisito());
-                                        modelo.addRow(new Object[]{dato.getUbicacion()});
-                                    }
-                                    //llenarTabla
+            Query query = con.child("plantillasTesting").child(plantilla);//child("ubicacion");//.orderByChild("nombre");
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        try {
+                            plantillasTesting dato = null;
+                            for (DataSnapshot user : snapshot.getChildren()) {
+                                dato = user.getValue(plantillasTesting.class);
+                                if (!dato.getActividad().equals("")) {
+                                    actireq.put(dato.getActividad(), dato.getRequisito());
+                                    modelo.addRow(new Object[]{dato.getActividad()});
+                                }
+                                if (!dato.getAccion().equals("")) {
+                                    rendireq.put(dato.getAccion(), dato.getRequisito1());
+                                    modelo1.addRow(new Object[]{dato.getAccion()});
+                                }
 
-                                } catch (Exception e) {
-                                    // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
-                                }
-                            } else {
-                                if (idioma.equals("english")) {
-                                    //  Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
-                                }
                             }
-                        }
 
-                        @Override
-                        public void onCancelled(DatabaseError error) {
-                            //Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
+                            //llenarTabla
+                        } catch (Exception e) {
+                            // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
                         }
-                    });
-                    break;
-                case 3:
-                    query = con.child("plantillasShipment").child(plantilla);//child("ubicacion");//.orderByChild("nombre");
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                try {
-                                    plantillasShipment dato = null;
-                                    for (DataSnapshot user : snapshot.getChildren()) {
-                                        dato = user.getValue(plantillasShipment.class);
-                                        // actividades.add(dato.getAccesorio());
-                                        // requisitos.add(dato.getRequisito());
-                                        actireq.put(dato.getAccesorio(), dato.getRequisito());
-                                        modelo.addRow(new Object[]{dato.getAccesorio()});
-                                    }
-                                    //poner rv
-                                    //  LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                                    // rvVCC.setLayoutManager(layoutManager);
+                    } else {
+                        if (idioma.equals("english")) {
+                            //  Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
+                        } else {
+                            // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                }
 
-                                    //mAdapter = new adapterVCC(ubicacion, requisito, vistaCheckListsPlantillas.this, priv, nomU, idioma, vistaCheckListsPlantillas.this, txtId.getText().toString(), tipo, rendimiento, requisitoR, 1, iu);
-                                    //rvVCC.setAdapter(mAdapter);
-                                } catch (Exception e) {
-                                    // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
-                                }
-                            } else {
-                                if (idioma.equals("english")) {
-                                    // Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-
-                        @Override
-                        public void onCancelled(DatabaseError error) {
-                            // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    break;
-                case 4:
-                    query = con.child("plantillasFinal").child(plantilla);//child("ubicacion");//.orderByChild("nombre");
-                    query.addListenerForSingleValueEvent(new ValueEventListener() {
-                        @Override
-                        public void onDataChange(DataSnapshot snapshot) {
-                            if (snapshot.exists()) {
-                                try {
-                                    plantillasFinal dato = null;
-                                    for (DataSnapshot user : snapshot.getChildren()) {
-                                        dato = user.getValue(plantillasFinal.class);
-                                        //  actividades.add(dato.getActividad());
-                                        // requisitos.add(dato.getRequisito());
-                                        actireq.put(dato.getActividad(), dato.getRequisito());
-                                        modelo.addRow(new Object[]{dato.getActividad()});
-                                    }
-                                } catch (Exception e) {
-                                    // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
-                                }
-                            } else {
-                                if (idioma.equals("english")) {
-                                    // Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
-                                } else {
-                                    // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
-                                }
-                            }
-                        }
-                        @Override
-                        public void onCancelled(DatabaseError error) {
-                            // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
-                        }
-                    });
-                    break;
-            }
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    //Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
 
         } catch (Exception e) {
             //  Context context = getApplicationContext();
@@ -838,43 +882,32 @@ public class vistaPlantillas extends JFrame {
 
     private void insert(boolean update) {//Inserta la info en la base de datos
         try {
+            plantillasTesting datoTesting;
+            //Se queda con el tamano del arreglo con mas elementos
+            int resultado = (actireq.size() > rendireq.size()) ? actireq.size() : rendireq.size();
             Set<String> act = actireq.keySet();
-            int i = 0;
-            switch (check) {
-                case 1://Calidad
-                    plantillasCalidad datoCalidad;
-                    for (String actividad : act) {
-                        datoCalidad = new plantillasCalidad(actividad, actireq.get(actividad));
-                        con.child("plantillasCalidad").child(txtNombre.getText().toString()).child("" + i).setValue(datoCalidad, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(DatabaseError de, DatabaseReference dr) {
-                            }
-                        });
-                        i++;
+            Set<String> ren = rendireq.keySet();
+            ArrayList<String> actividades = new ArrayList();
+            actividades.addAll(act);
+            ArrayList<String> rendimiento = new ArrayList();
+            rendimiento.addAll(ren);
+            for (int i = 0; i < resultado; i++) {
+                String dato1 = "", dato2 = "";
+                int requisito1 = 0, requisito2 = 0;
+                if (i < actireq.size()) {
+                    dato1 = actividades.get(i);
+                    requisito1 = actireq.get(actividades.get(i));
+                }
+                if (i < rendireq.size()) {
+                    dato2 = rendimiento.get(i);
+                    requisito2 = rendireq.get(rendimiento.get(i));
+                }
+                datoTesting = new plantillasTesting(dato1, requisito1, dato2, requisito2);
+                con.child("plantillasTesting").child(txtNombre.getText().toString()).child("" + i).setValue(datoTesting, new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError de, DatabaseReference dr) {
                     }
-                    break;
-                case 3://Shipment
-                    for (String actividad : act) {
-                        plantillasShipment datoShipment = new plantillasShipment(actividad, actireq.get(actividad));
-                        con.child("plantillasShipment").child(txtNombre.getText().toString()).child("" + i).setValue(datoShipment, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(DatabaseError de, DatabaseReference dr) {
-                            }
-                        });
-                        i++;
-                    }
-                    break;
-                case 4:
-                    for (String actividad : act) {
-                        plantillasFinal datoFinal = new plantillasFinal(actividad, actireq.get(actividad));
-                        con.child("plantillasFinal").child(txtNombre.getText().toString()).child("" + i).setValue(datoFinal, new DatabaseReference.CompletionListener() {
-                            @Override
-                            public void onComplete(DatabaseError de, DatabaseReference dr) {
-                            }
-                        });
-                        i++;
-                    }
-                    break;
+                });
             }
             if (update) {
                 //  mostrarTexto("Plantilla actualizada exitosamente", "Template updated succesfully");
@@ -901,13 +934,19 @@ public class vistaPlantillas extends JFrame {
     private void mostrar() {
         if (idioma.equals("english")) {
             lblTitulo.setText("Template view");
-            JTableHeader tableHeader = tablaPermisos.getTableHeader();
+            JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);
             tableColumn.setHeaderValue("Activity");
             tableHeader.repaint();
+            tableHeader = tblRendimiento.getTableHeader();
+            tableColumnModel = tableHeader.getColumnModel();
+            tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Test");
+            tableHeader.repaint();
             btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Save template</b></html>");
             btnAddProceso.setToolTipText("<html><b style='font-size: 12px;'>Add an activity</b></html>");
+            btnAddPrueba.setToolTipText("<html><b style='font-size: 12px;'>Add a test</b></html>");
             btnAsignarPre.setToolTipText("<html><b style='font-size: 12px;'>Manage required activities</b></html>");
             tN = "Ex. Skywalker";
             txtNombre.setText(tN);
@@ -920,15 +959,17 @@ public class vistaPlantillas extends JFrame {
             btnAsignarPre.setToolTipText("<html><b style='font-size: 12px;'>Administrar actividades requeridas</b></html>");
             btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Guardar plantilla</b></html>");
             btnAddProceso.setToolTipText("<html><b style='font-size: 12px;'>Agregar una actividad</b></html>");
+            btnAddPrueba.setToolTipText("<html><b style='font-size: 12px;'>Agregar una prueba</b></html>");
         }
     }
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
     private javax.swing.JButton btnAddProceso;
+    private javax.swing.JButton btnAddPrueba;
     private javax.swing.JButton btnAsignarPre;
     private javax.swing.JButton btnAtras;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblNombre;
     private javax.swing.JLabel lblTitulo;
     private javax.swing.JPanel pnlCabecera;
@@ -937,7 +978,8 @@ public class vistaPlantillas extends JFrame {
     private javax.swing.JPanel pnlFondo;
     private javax.swing.JPanel pnlIzq;
     private javax.swing.JScrollPane scrool;
-    private javax.swing.JTable tablaPermisos;
+    private javax.swing.JTable tblActividades;
+    private javax.swing.JTable tblRendimiento;
     private javax.swing.JTextField txtNombre;
     // End of variables declaration//GEN-END:variables
 }

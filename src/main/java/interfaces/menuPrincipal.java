@@ -68,9 +68,9 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         new disenos().titulo(lblBienvenida, 5);
         new disenos().titulo(lblTitulo, 2);
 
-        new disenos().botones(btnUsers, 3);
+        new disenos().botones(btnUsers, 4);
         new disenos().botones(btnAct, 3);
-        new disenos().botones(btnPlantillas, 4);
+        new disenos().botones(btnPlantillas, 3);
         new disenos().botones(btnChat, 4);
         new disenos().botones(btnOpciones, 1);
         new disenos().botones(btnAtras, 1);
@@ -140,7 +140,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         lblBienvenida.setText("Hola de nuevo,");
 
         btnAtras.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -148,7 +148,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         });
 
         btnOpciones.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnOpciones.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnOpciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnOpciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpcionesActionPerformed(evt);
@@ -196,7 +196,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         btnAct.setText("Actividades");
         btnAct.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnAct.setContentAreaFilled(false);
-        btnAct.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAct.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAct.setIconTextGap(10);
         btnAct.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -217,7 +217,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
         btnChat.setText("Chat");
         btnChat.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnChat.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnChat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnChat.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnChat.setIconTextGap(10);
         btnChat.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -241,7 +241,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
         btnUsers.setText("Usuarios");
         btnUsers.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnUsers.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnUsers.setIconTextGap(10);
         btnUsers.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -262,7 +262,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
         btnPlantillas.setText("Plantillas");
         btnPlantillas.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnPlantillas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnPlantillas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnPlantillas.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPlantillas.setIconTextGap(10);
         btnPlantillas.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -389,7 +389,8 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
     private void btnPlantillasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlantillasActionPerformed
         // TODO add your handling code here:
         new info().setXY(this.getX(), this.getY());
-        new menuPlantillas(con, user, priv, idioma).setVisible(true);
+        new menuCheckList(con, user, priv, idioma).setVisible(true);
+      //  new menuPlantillas(con, user, priv, idioma).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPlantillasActionPerformed
 
@@ -421,7 +422,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
                     this.dispose();
 
                 } else if (opc == 1) {//ver progreso de algun dron
-                    new menuActividades1(con, user, priv, idioma, 0).setVisible(true);
+                    new MenuCompletarOrden(con, user, priv, idioma, 1).setVisible(true);
                     this.dispose();
                 }
                 break;
@@ -435,7 +436,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
                     this.dispose();
 
                 } else if (opc == 1) {//ver progreso de algun dron
-                    new menuActividades1(con, user, priv, idioma, 0).setVisible(true);
+                    new MenuCompletarOrden(con, user, priv, idioma, 1).setVisible(true);
                     this.dispose();
                 }
                 break;
@@ -449,17 +450,17 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
                         this.dispose();
                         break;
                     case 1://ver progreso de algun dron
-                        new menuActividades1(con, user, priv, idioma, 0).setVisible(true);
+                        new MenuCompletarOrden(con, user, priv, idioma, 1).setVisible(true);
                         this.dispose();
                         break;
                     case 2://trabajar
-                        new menuActividades1(con, user, priv, idioma, 1).setVisible(true);
+                        new MenuCompletarOrden(con, user, priv, idioma, 2).setVisible(true);
                         this.dispose();
                         break;
                 }
                 break;
             case 4://si se es trabajador
-                new menuActividades1(con, user, priv, idioma, 1).setVisible(true); //ver trabajos
+                new MenuCompletarOrden(con, user, priv, idioma, 2).setVisible(true); //ver trabajos
                 this.dispose();
                 break;
         }

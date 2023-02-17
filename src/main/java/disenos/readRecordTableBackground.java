@@ -25,7 +25,6 @@ public class readRecordTableBackground extends DefaultTableCellRenderer {//clase
 
     public Component getTableCellRendererComponent(JTable table, Object color, boolean isSelected, boolean hasFocus, int row, int column) {
         cellComponent = super.getTableCellRendererComponent(table, color, isSelected, hasFocus, row, column);
-        
         if (progreso.get(row)==100) {//si el proceso de la fila ya se realizo
             if (isSelected) {//se pinta de gris asi este seleccionado o no
                 cellComponent.setBackground(Color.LIGHT_GRAY);
