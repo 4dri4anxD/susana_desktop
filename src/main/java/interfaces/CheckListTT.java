@@ -1,112 +1,130 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
-import disenos.ventanas.configEXTRAS;
+import datos.temporalStorage;
 import disenos.disenoTabla;
 import disenos.disenos;
-import java.awt.Component;
+import disenos.ventanas.configuracionVentana;
 import java.awt.Cursor;
 import java.awt.Image;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
-import java.util.LinkedHashMap;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JTable;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
-public class addComentarios extends configEXTRAS {
-
-    //declaracion de variables globales
-    private String user, idioma, proceso;
-    private int priv, interfaz;
+public class CheckListTT extends JFrame {
+    private String idioma, plantilla, user;
     private DefaultTableModel modelo;
-    private crearTC creartc;
-    private LinkedHashMap<String, ArrayList<String>> comentarios;
+    private DatabaseReference con;
+    private int priv, modo, serie;
+    private disenos disenos;
+    private temporalStorage storage;
+    private ArrayList<String> actividades, mensajes, mensajes1, rendimiento, ponderacion;
+    private ArrayList<Boolean> realizado, aprobacion;
+    
+    private CheckListTT context;
 
-    public addComentarios(String user, int priv, String idioma, int interfaz, String proceso, LinkedHashMap<String, ArrayList<String>> comentarios,
-            crearTC creartc) {
+    public CheckListTT(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {
         initComponents();
-        this.creartc = creartc;
-        modelo = (DefaultTableModel) tablaPermisos.getModel();
-        this.comentarios = comentarios;
-        // this.listaUsuarios=listaUsuarios;
-
-        //inicializacion de variables
-        //  eliminados = new ArrayList();
-        this.user = user;
-        this.priv = priv;
+        new configuracionVentana(this);
+        modelo = (DefaultTableModel) tblActividades.getModel();
+        context = this;
         this.idioma = idioma;
-        this.interfaz = interfaz;
-        this.proceso = proceso;
+        this.modo = modo;
+        this.plantilla = plantilla;
+        this.serie = serie;
+        this.user = user;
+        this.con = con;
+        this.priv = priv;
 
-        //estilizar el frame
-        //  new configuracionExtras(this);
-        //estilizar componentes del frame
+        actividades = new ArrayList();
+        mensajes = new ArrayList();
+        realizado = new ArrayList();
+        aprobacion = new ArrayList();
+        mensajes1 = new ArrayList();
+        rendimiento = new ArrayList();
+        ponderacion = new ArrayList();
+
+        storage = new temporalStorage();
+        disenos = new disenos();
+
+       // actividades.addAll(storage.getActividadesTT());
+      //  mensajes.addAll(storage.getComentarioTT());
+
         iniciarDiseno();
-        fill();
-        
-        if(interfaz==5){
-            btnAdd.setVisible(false);
-            btnAdd1.setVisible(false);
-            tablaPermisos.setEnabled(false);
-        }
+        ponerTabla();
+        mostrar();
 
-        //poner la interfaz en el idioma seleccionado
-        if (idioma.equals("English")) {
-            ingles();//cambia la interfaz a ingles
-        } else {
-            esp();//cambia la interfaz a espanol
-        }
-        //leer();//lee los extras/versiones/actividades
+        tblActividades.addMouseListener(new MouseAdapter() {
+            public void mousePressed(MouseEvent mouseEvent) {
+                JTable table = (JTable) mouseEvent.getSource();
+                Point point = mouseEvent.getPoint();
+                int row = table.rowAtPoint(point);
+                if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
+                    String titulo, cuerpo;
+                    if (idioma.equals("english")) {
+                        titulo = "Message";
+                        cuerpo = "Write a comment";
+                    } else {
+                        titulo = "Mensaje";
+                        cuerpo = "Escriba un comentario";
+                    }
+                    String mensaje = mensajes.get(row);
+                    String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                    if (resp != null) {
+                        if (!resp.equals("")) {
+                            mensajes.set(row, resp);
+                        }
+                    }
+
+                }
+            }
+        });
     }
 
-    public void iniciarDiseno() {//estilizar componentes
+    public void iniciarDiseno() {//decorar los componentes del frame
 
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnAdd1, 3);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().titulo(lblTitulo, 2);
+        disenos.titulo(lblTitulo, 2);
 
         ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAdd1, "img/agregarProceso.png");
         ponerImg(btnAtras, "img/atras2.png");
 
-        new disenoTabla().cabecera(tablaPermisos);
+        new disenoTabla().cabecera(tblActividades);
     }
 
-    public void ponerImg(JButton b, String ruta) {//les pone una imagen a los botones
+    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
         ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
         b.setIcon(icono);
     }
+    
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -116,16 +134,15 @@ public class addComentarios extends configEXTRAS {
         lblTitulo = new javax.swing.JLabel();
         pnlDer = new javax.swing.JPanel();
         btnAdd = new javax.swing.JButton();
-        btnAdd1 = new javax.swing.JButton();
         pnlIzq = new javax.swing.JPanel();
         btnAtras = new javax.swing.JButton();
         pnlCuerpo = new javax.swing.JPanel();
         jScrollPane1 = new javax.swing.JScrollPane();
-        tablaPermisos = new javax.swing.JTable();
+        tblActividades = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblTitulo.setText("Menu usuarios");
+        lblTitulo.setText("Check shipment");
 
         javax.swing.GroupLayout pnlCabeceraLayout = new javax.swing.GroupLayout(pnlCabecera);
         pnlCabecera.setLayout(pnlCabeceraLayout);
@@ -151,30 +168,19 @@ public class addComentarios extends configEXTRAS {
             }
         });
 
-        btnAdd1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAdd1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAdd1ActionPerformed(evt);
-            }
-        });
-
         javax.swing.GroupLayout pnlDerLayout = new javax.swing.GroupLayout(pnlDer);
         pnlDer.setLayout(pnlDerLayout);
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addGroup(pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAdd1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
@@ -203,35 +209,55 @@ public class addComentarios extends configEXTRAS {
                 .addContainerGap())
         );
 
-        tablaPermisos.setModel(new javax.swing.table.DefaultTableModel(
+        tblActividades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
             },
             new String [] {
-                "Actividad"
+                "Procesos", "Realizado", "Aprobacion"
             }
-        ));
-        tablaPermisos.addMouseListener(new java.awt.event.MouseAdapter() {
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.Boolean.class, java.lang.Boolean.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, true, true
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tblActividades.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tablaPermisosMouseClicked(evt);
+                tblActividadesMouseClicked(evt);
             }
         });
-        tablaPermisos.addKeyListener(new java.awt.event.KeyAdapter() {
+        tblActividades.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
-                tablaPermisosKeyTyped(evt);
+                tblActividadesKeyTyped(evt);
             }
         });
-        jScrollPane1.setViewportView(tablaPermisos);
+        jScrollPane1.setViewportView(tblActividades);
+        if (tblActividades.getColumnModel().getColumnCount() > 0) {
+            tblActividades.getColumnModel().getColumn(0).setPreferredWidth(200);
+            tblActividades.getColumnModel().getColumn(1).setPreferredWidth(20);
+            tblActividades.getColumnModel().getColumn(2).setPreferredWidth(20);
+        }
 
         javax.swing.GroupLayout pnlCuerpoLayout = new javax.swing.GroupLayout(pnlCuerpo);
         pnlCuerpo.setLayout(pnlCuerpoLayout);
         pnlCuerpoLayout.setHorizontalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 420, Short.MAX_VALUE)
         );
         pnlCuerpoLayout.setVerticalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 552, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 555, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout pnlFondoLayout = new javax.swing.GroupLayout(pnlFondo);
@@ -273,130 +299,74 @@ public class addComentarios extends configEXTRAS {
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        //Asociar los extras, actividades o versiones a la plantilla o proceso.
-
-        //comprobar que actividad no se repite
-        if (tablaPermisos.isEditing()) {
-            tablaPermisos.getCellEditor().stopCellEditing();//detenga la edicion para almacenar el valor
-        }
-        int a = 0;
-        int b = modelo.getRowCount();
-        ArrayList<String> comments = new ArrayList();
-        for (int i = 0; i < b; i++) {
-            if (modelo.getValueAt(a, 0).toString().equals("")) {
-                modelo.removeRow(a);//se eliminan filas vacias
-                a--;
-            } else {
-                if (!comments.contains(modelo.getValueAt(a, 0).toString())) {
-                    comments.add(modelo.getValueAt(a, 0).toString());
-                }
+      /*  for (int i = 0; i < modelo.getRowCount(); i++) {
+            if(Boolean.parseBoolean(modelo.getValueAt(i, 1).toString())){
+                completado.set(i,1);
+            }else{
+                completado.set(i, 0);
             }
-            a++;
+
         }
-        comentarios.put(proceso, comments);
-        creartc.setComentarios(comentarios);
-        System.out.println("Antes: " + comentarios);
-        // eliminarArray();
-        // if (llenarArray()) {
+        storage.setComentarioTF(mensajes);
+        storage.setCompletadoTF(completado);
         new info().setXY(this.getX(), this.getY());
         this.setCursor(new Cursor(WAIT_CURSOR));
-        this.dispose();//cerrar esta ventanas para volver a vistaPlantillas
-        //  } 
+        new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
+        this.dispose(); */
     }//GEN-LAST:event_btnAddActionPerformed
-
-    private void btnAdd1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAdd1ActionPerformed
-        // TODO add your handling code here:
-        //agregar una fila a la tabla
-        modelo.addRow(new Object[]{""});
-        tablaPermisos.editCellAt(modelo.getRowCount() - 1, 0);
-        Component aComp = tablaPermisos.getEditorComponent();
-        aComp.requestFocus();
-    }//GEN-LAST:event_btnAdd1ActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        //boton atras
         new info().setXY(this.getX(), this.getY());
         this.setCursor(new Cursor(WAIT_CURSOR));
+        new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
-    private void tablaPermisosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPermisosMouseClicked
+    private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
         // TODO add your handling code here:
-        if (evt.getButton() == 3) {//si se da click derecho sobre un fila, quiere decir que se pretende eliminar dicha fila
-            String texto1, texto2, o1, o2;
-            if (idioma.equals("English")) {
-                texto1 = "Are you sure you want to delete the selected item?";
-                texto2 = "Confirm Action";
-                o1 = "Yes";
-                o2 = "No";
-            } else {
-                texto1 = "¿Seguro que quiere eliminar el objeto seleccionado?";
-                texto2 = "Confirmar Acción";
-                o1 = "Si";
-                o2 = "No";
-            }
+    }//GEN-LAST:event_tblActividadesMouseClicked
 
-            Object[] options = {o1, o2};
-            if (JOptionPane.showOptionDialog(this, texto1, texto2,
-                    JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                    null, options, options[0]) == 0) {
-                try {
-                    // eliminados.add(modelo.getValueAt(tablaPermisos.getSelectedRow(), 0).toString());//agregar el contenido de la fila a los eliminados
-                    modelo.removeRow(tablaPermisos.getSelectedRow());//eliminar fila
-                } catch (NullPointerException e) {
-                    if (idioma.equals("English")) {
-                        JOptionPane.showMessageDialog(this, "Select an item to delete");
-                    } else {
-                        JOptionPane.showMessageDialog(this, "Seleccione un objeto para eliminar");
-                    }
-                }
-            }
-        }
-    }//GEN-LAST:event_tablaPermisosMouseClicked
-
-    private void tablaPermisosKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tablaPermisosKeyTyped
+    private void tblActividadesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblActividadesKeyTyped
         // TODO add your handling code here:
+    }//GEN-LAST:event_tblActividadesKeyTyped
 
-    }//GEN-LAST:event_tablaPermisosKeyTyped
-
-    private void fill() {
-        if (comentarios.get(proceso) != null) {
-            for (String comentario : comentarios.get(proceso)) {
-                modelo.addRow(new Object[]{comentario});
+     private void ponerTabla() {//poner las actividades del proceso seleccionado en la tabla
+      /*  for (int i = 0; i < actividades.size(); i++) {
+            if(completado.get(i)==1){
+                modelo.addRow(new Object[]{actividades.get(i), true});
+            }else{
+                modelo.addRow(new Object[]{actividades.get(i), false});
             }
+        } */
+            
+    }
+
+    private void mostrar() {
+        if (idioma.equals("english")) {
+            lblTitulo.setText("Testing check");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Activities");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("Done");
+            tableColumn = tableColumnModel.getColumn(2);
+            tableColumn.setHeaderValue("Aprovement");
+            tableHeader.repaint();
+        } else {
+            lblTitulo.setText("Revision de pruebas");
+            JTableHeader tableHeader = tblActividades.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Actividades");
+            tableHeader.repaint();
         }
     }
 
-    private void ingles() {//se pone la interfaz en ingles
-
-        JTableHeader tableHeader = tablaPermisos.getTableHeader();
-        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
-        TableColumn tableColumn = tableColumnModel.getColumn(0);
-        lblTitulo.setText(proceso);
-        tableColumn.setHeaderValue("Comments");
-        btnAdd1.setToolTipText("<html><b style='font-size: 12px;'>Add a comment</b></html>");
-        btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Save comments</b></html>");
-
-        tableHeader.repaint();
-    }
-
-    private void esp() {//se pone la interfaz en espanol
-        JTableHeader tableHeader = tablaPermisos.getTableHeader();
-        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
-        TableColumn tableColumn = tableColumnModel.getColumn(0);
-        lblTitulo.setText(proceso);
-        tableColumn.setHeaderValue("Comentarios");
-        btnAdd.setToolTipText("<html><b style='font-size: 12px;'>Guardar comentarios</b></html>");
-        btnAdd1.setToolTipText("<html><b style='font-size: 12px;'>Agrega un comentario</b></html>");
-
-        tableHeader.repaint();
-    }
-
-
+ 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;
-    private javax.swing.JButton btnAdd1;
     private javax.swing.JButton btnAtras;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblTitulo;
@@ -405,6 +375,6 @@ public class addComentarios extends configEXTRAS {
     private javax.swing.JPanel pnlDer;
     private javax.swing.JPanel pnlFondo;
     private javax.swing.JPanel pnlIzq;
-    private javax.swing.JTable tablaPermisos;
+    private javax.swing.JTable tblActividades;
     // End of variables declaration//GEN-END:variables
 }

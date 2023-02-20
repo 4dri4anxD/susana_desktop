@@ -11,6 +11,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JProgressBar;
 import javax.swing.JSpinner;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -146,8 +147,10 @@ public class disenos {//clase que sirve para establecer el diseno de algunos com
             panel.setBackground(colores.getGris());
         } else if (tipo == 2) {
             panel.setBackground(colores.getBlanco());
-        } else {
+        } else if(tipo==3){
             panel.setBackground(colores.getAzul());
+        }else{
+            panel.setBackground(colores.getGrisBlanco());
         }
     }
 
@@ -194,6 +197,15 @@ public class disenos {//clase que sirve para establecer el diseno de algunos com
         combo.setBorder(BorderFactory.createLineBorder(Color.black, 1));
         combo.setOpaque(true);
         combo.setFont(new Font("Lato", Font.PLAIN, 20));
+    }
+    
+    public void progressBar(JProgressBar pb){
+      //  pb.setValue(50);
+        //pbCalidad.setBorderPainted(true);
+        pb.setForeground(colores.getAzul());
+        pb.setStringPainted(true);
+        pb.setFont(new Font("Lato", Font.BOLD, 20));
+        
     }
 
 }

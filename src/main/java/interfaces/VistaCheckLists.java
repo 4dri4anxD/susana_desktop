@@ -185,7 +185,7 @@ public class VistaCheckLists extends JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
-        lblTitulo.setText("Menu usuarios");
+        lblTitulo.setText("Completar checklist calidad");
 
         javax.swing.GroupLayout pnlCabeceraLayout = new javax.swing.GroupLayout(pnlCabecera);
         pnlCabecera.setLayout(pnlCabeceraLayout);
@@ -380,7 +380,7 @@ public class VistaCheckLists extends JFrame {
                         c.put(a.get(i), estados.get(a.get(i)));
                     }
                 }
-                new listaActividades(idioma, b, c, this, tipo, tablaPermisos.getSelectedRow()).setVisible(true);// hm, codProceso, procesos
+              //  new listaActividades(idioma, b, c, this, tipo, tablaPermisos.getSelectedRow()).setVisible(true);// hm, codProceso, procesos
             }
         } else {//si se esta visualizando el progreso de todo
             List<String> a = hm.get(modelo.getValueAt(tablaPermisos.getSelectedRow(), 0));
@@ -392,7 +392,7 @@ public class VistaCheckLists extends JFrame {
                     c.put(a.get(i), estados.get(a.get(i)));
                 }
             }
-            new listaActividades(idioma, b, c, this, tipo, tablaPermisos.getSelectedRow()).setVisible(true);
+          //  new listaActividades(idioma, b, c, this, tipo, tablaPermisos.getSelectedRow()).setVisible(true);
         }
     }//GEN-LAST:event_btnVerActActionPerformed
 
