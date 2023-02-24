@@ -10,6 +10,8 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.back;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -163,7 +165,12 @@ public class vistaPlantillasTT extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblRendimiento = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Menu usuarios");
 
@@ -493,9 +500,8 @@ public class vistaPlantillasTT extends JFrame {
                             });
                             insert(true);
                         } catch (Exception e) {
-                            //  Context context = getApplicationContext();
-                            // Toast toast = Toast.makeText(context, "Notifica el siguiente error20: " + e, Toast.LENGTH_SHORT);
-                            // toast.show();
+                            JOptionPane.showMessageDialog(context, "Error: " + e);
+
                         }
                     } else {//insert
                         leerC("plantillasTesting");
@@ -539,7 +545,7 @@ public class vistaPlantillasTT extends JFrame {
         aComp.requestFocus();
         //  }
 
-        if (modelo1.getRowCount() > 1 || modelo.getRowCount()>1) {
+        if (modelo1.getRowCount() > 1 || modelo.getRowCount() > 1) {
             btnAsignarPre.setEnabled(true);
         }
     }//GEN-LAST:event_btnAddProcesoActionPerformed
@@ -552,7 +558,7 @@ public class vistaPlantillasTT extends JFrame {
             comprobarTabla();
             new info().setXY(this.getX(), this.getY());
             String procesoSel = "";
-            int proceso=0;
+            int proceso = 0;
             try {
                 procesoSel = modelo.getValueAt(tblActividades.getSelectedRow(), 0).toString();
                 for (int i = 0; i < modelo.getRowCount(); i++) {
@@ -560,7 +566,7 @@ public class vistaPlantillasTT extends JFrame {
                         actireq.put(modelo.getValueAt(i, 0).toString(), 0);
                     }
                 }
-                proceso=1;
+                proceso = 1;
             } catch (Exception e) {
                 cont++;
             }
@@ -571,7 +577,7 @@ public class vistaPlantillasTT extends JFrame {
                         rendireq.put(modelo1.getValueAt(i, 0).toString(), 0);
                     }
                 }
-                proceso=2;
+                proceso = 2;
             } catch (Exception e) {
                 cont++;
             }
@@ -585,21 +591,21 @@ public class vistaPlantillasTT extends JFrame {
 
                 int req = 0;
                 try {
-                    if(proceso==1){
+                    if (proceso == 1) {
                         req = actireq.get(procesoSel);
-                    }else{
+                    } else {
                         req = rendireq.get(procesoSel);
                     }
-                    
+
                 } catch (Exception e) {
                     // System.out.println("ex: "+e);
                 }
-                if(proceso==1){
-                    new requisitos( idioma, tblActividades.getSelectedRow(), procesoSel, req, actireq, null, this, 1).setVisible(true);
-                }else{
-                    new requisitos( idioma, tblActividades.getSelectedRow(), procesoSel, req, rendireq, null, this, 2).setVisible(true);
+                if (proceso == 1) {
+                    new requisitos(idioma, tblActividades.getSelectedRow(), procesoSel, req, actireq, null, this, 1).setVisible(true);
+                } else {
+                    new requisitos(idioma, tblActividades.getSelectedRow(), procesoSel, req, rendireq, null, this, 2).setVisible(true);
                 }
-                
+
                 //   }
             }
 
@@ -618,8 +624,9 @@ public class vistaPlantillasTT extends JFrame {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-
-        cambio();
+        if (new back().backConf(idioma, this)) {
+            cambio();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void txtNombreFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNombreFocusGained
@@ -735,10 +742,15 @@ public class vistaPlantillasTT extends JFrame {
         tblRendimiento.editCellAt(modelo1.getRowCount() - 1, 0);
         Component aComp = tblRendimiento.getEditorComponent();
         aComp.requestFocus();
-        if (modelo1.getRowCount() > 1 || modelo.getRowCount()>1) {
+        if (modelo1.getRowCount() > 1 || modelo.getRowCount() > 1) {
             btnAsignarPre.setEnabled(true);
         }
     }//GEN-LAST:event_btnAddPruebaActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void comprobarTabla() {
         if (tblActividades.isEditing()) {
@@ -830,27 +842,26 @@ public class vistaPlantillasTT extends JFrame {
 
                             //llenarTabla
                         } catch (Exception e) {
-                            // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
+                            JOptionPane.showMessageDialog(context, "Error: " + e);
                         }
                     } else {
                         if (idioma.equals("english")) {
-                            //  Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
+                            JOptionPane.showMessageDialog(context, "An error has ocurred while reading data base");
                         } else {
-                            // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
+                            JOptionPane.showMessageDialog(context, "Ha ocurrido un error al leer la base de datos");
                         }
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                 }
             });
 
         } catch (Exception e) {
-            //  Context context = getApplicationContext();
-            // Toast toast = Toast.makeText(context, "Notifica el siguiente error1:" + e, Toast.LENGTH_SHORT);
-            // toast.show();
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
     }
 
@@ -863,20 +874,21 @@ public class vistaPlantillasTT extends JFrame {
                     if (!snapshot.exists()) {
                         insert(false);
                     } else {
-                        //  btnGuardar.setEnabled(true);
-                        // mostrarTexto("El ID de plantilla ya existe ", "Template's ID already exists");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "Template's ID already exists");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "Ya existe el ID de la plantilla");
+                        }
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    //  Toast.makeText(getApplicationContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                 }
             });
         } catch (Exception e) {
-            // Context context = getApplicationContext();
-            // Toast toast = Toast.makeText(context, "Notifica el siguiente error1:" + e, Toast.LENGTH_SHORT);
-            //  toast.show();
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
     }
 
@@ -909,17 +921,15 @@ public class vistaPlantillasTT extends JFrame {
                     }
                 });
             }
-            if (update) {
-                //  mostrarTexto("Plantilla actualizada exitosamente", "Template updated succesfully");
+            if (idioma.equals("english")) {
+                JOptionPane.showMessageDialog(context, "Template saved succesfully");
             } else {
-                // mostrarTexto("Plantilla creada exitosamente", "Template created succesfully");
+                JOptionPane.showMessageDialog(context, "Plantilla almacenada existosamente");
             }
             cambio();
 
         } catch (Exception e) {
-            // Context context = getApplicationContext();
-            //  Toast toast = Toast.makeText(context, "Notifica el siguiente error20: " + e, Toast.LENGTH_SHORT);
-            //  toast.show();
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
 
     }

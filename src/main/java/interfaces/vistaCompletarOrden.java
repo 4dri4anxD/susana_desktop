@@ -11,11 +11,15 @@ import datos.temporalStorage;
 import disenos.colores;
 import disenos.disenos;
 import disenos.ventanas.configuracionVentana;
+import helpers.back;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
 import static java.awt.Frame.WAIT_CURSOR;
 import java.awt.Image;
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -24,6 +28,12 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import obtenerDatos.checkAC;
+import obtenerDatos.checkAF;
+import obtenerDatos.checkAS;
+import obtenerDatos.checkAT;
+import obtenerDatos.checkCommentsC;
 import org.json.simple.JSONObject;
 
 public class vistaCompletarOrden extends JFrame {
@@ -61,6 +71,19 @@ public class vistaCompletarOrden extends JFrame {
         if (storage.getUbicacionTC().size() == 0) {
             System.out.println("lEI");
             readFromSerial();
+        } else {
+            calcularPorcentajeTC(storage.getAprobadoTC(), storage.getRevsolTC());
+            calcularPorcentajeTS(storage.getCompletadoTS());
+            calcularPorcentajeTF(storage.getCompletadoTF());
+            calcularPorcentajeTT(storage.getRealizadoTT(), storage.getPonderacionTT(), storage.getAprobacionTT());
+            pbCalidad.setValue((int) storage.getPorcentajeTC());
+            //  lblPCalidad.setText(storage.getPorcentajeTC() + "%");
+            pbTesting.setValue((int) storage.getPorcentajeTT());
+            //  lblPPruebas.setText(storage.getPorcentajeTT() + "%");
+            pbShipment.setValue((int) storage.getPorcentajeTS());
+            //  lblPEnvios.setText(storage.getPorcentajeTS() + "%");
+            pbFinal.setValue((int) storage.getPorcentajeTF());
+            //  lblPFinal.setText(storage.getPorcentajeTF() + "%");
         }
 
         iniciarDiseno();
@@ -175,7 +198,12 @@ public class vistaCompletarOrden extends JFrame {
         lblTF = new javax.swing.JLabel();
         pbFinal = new javax.swing.JProgressBar();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Menu usuarios");
 
@@ -342,7 +370,6 @@ public class vistaCompletarOrden extends JFrame {
 
         lblTC.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblTC.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTCMouseClicked(evt);
@@ -424,7 +451,6 @@ public class vistaCompletarOrden extends JFrame {
 
         lblTT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTT.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblTT.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTT.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTTMouseClicked(evt);
@@ -505,7 +531,6 @@ public class vistaCompletarOrden extends JFrame {
 
         lblTS.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTS.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblTS.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTS.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTSMouseClicked(evt);
@@ -586,7 +611,6 @@ public class vistaCompletarOrden extends JFrame {
 
         lblTF.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTF.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        lblTF.setPreferredSize(new java.awt.Dimension(0, 0));
         lblTF.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 lblTFMouseClicked(evt);
@@ -686,77 +710,55 @@ public class vistaCompletarOrden extends JFrame {
         // TODO add your handling code here:
         //si se guarda el trabajo
         //se actualiza la lista de userSel
-        /*
-        System.out.println("--------------------------------------------------------------------------" + serie);
-        if (serie == 0) {
-            System.out.println("Insert");
-            //insert
-            if (!txtSerie.getText().toString().equals(tSerie)) {
-                if (txtPlazo.getDate() != null) {
-                    if (!txtNombre.getText().toString().equals(tNombre)) {
-                        if (!storage.getResponsableTC().equals("")) {
-                            if (!storage.getResponsableTT().equals("")) {
-                                if (!storage.getResponsableTS().equals("")) {
-                                    if (!storage.getResponsableTF().equals("")) {
-                                        System.out.println("Seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerie: " + serie);
-                                        //comrpobar que no exista ya la orden
-                                        leerT();
-                                    } else {
-                                        System.out.println("Final");
-                                        //Seleccione una plantilla para el checklist de final
-                                        //btnGuardar.setEnabled(true);
-                                        // new showToast(getString(R.string.lblSelectFinalCheckListVistaTrabajosSpn), getString(R.string.lblSelectFinalCheckListVistaTrabajosEng), idioma, this);
-                                    }
-                                } else {
-                                    System.out.println("Shipment");
-                                    //Seleccione una plantilla para el checklist de shipment
-                                    // btnGuardar.setEnabled(true);
-                                    // new showToast(getString(R.string.lblSelectShipmentCheckListVistaTrabajosSpn), getString(R.string.lblSelectShipmentCheckListVistaTrabajosEng), idioma, this);
-                                }
-                            } else {
-                                System.out.println("Testing");
-                                //Seleccione una plantilla para el checklist de testing
-                                //  btnGuardar.setEnabled(true);
-                                //  new showToast(getString(R.string.lblSelectTestingCheckListVistaTrabajosSpn), getString(R.string.lblSelectTestingCheckListVistaTrabajosEng), idioma, this);
-                            }
-                        } else {
-                            System.out.println("Calidad");
-                            //Seleccione una plantilla para el checklist de calidad
-                            // btnGuardar.setEnabled(true);
-                            //  new showToast(getString(R.string.lblSelectQualityCheckListVistaTrabajosSpn), getString(R.string.lblSelectQualityCheckListVistaTrabajosEng), idioma, this);
-                        }
-                    } else {
-                        System.out.println("Campo modelo");
-                        //llene el campo de modelo
-                        //  btnGuardar.setEnabled(true);
-                        //  new showToast(getString(R.string.lblModelBlankVistaTrabajosSpn), getString(R.string.lblModelBlankVistaTrabajosEng), idioma, this);
-                    }
-                } else {
-                    System.out.println("Campo fecha");
-                    //llene el campo de fecha
-                    // btnGuardar.setEnabled(true);
-                    //  new showToast(getString(R.string.lblDateBlankVistaTrabajosSpn), getString(R.string.lblDateBlankVistaTrabajosEng), idioma, this);
-                }
-            } else {
-                System.out.println("Campos erie");
-                //llene el campo de serie
-                // btnGuardar.setEnabled(true);
-                // new showToast(getString(R.string.lblSerialBlankVistaTrabajosSpn), getString(R.string.lblSerialBlankVistaTrabajosEng), idioma, this);
-            }
-        } else {
-            //update
-            update();
-            System.out.println("Uptodate");
-            //   new info().setXY(this.getX(), this.getY());
-            //  this.setCursor(new Cursor(WAIT_CURSOR));
-        }
-        System.out.println("Salio"); */
+
+        /* 
+        //TC
+        System.out.println("Actividades: "+storage.getUbicacionTC());
+        System.out.println("Revsol: "+storage.getRevsolTC());
+        System.out.println("Arpobado: "+storage.getAprobadoTC());
+        System.out.println("Requisitos: "+storage.getRequisitosTC());
+        System.out.println("CoMENTARIOS: "+storage.getComentariosTC());
+        System.out.println("Mensajes: "+storage.getMensajeTC());
+        System.out.println("Usuarios: "+storage.getUsuariosTC());
+        System.out.println("--------------------------------------------------------------- TC");
+        //TT
+        System.out.println("Actividades: "+storage.getActividadesTT());
+        System.out.println("Realizado: "+storage.getRealizadoTT());
+        System.out.println("Arpobacion: "+storage.getAprobacionTT());
+        System.out.println("Requisitos: "+storage.getRequisitosTT());
+        System.out.println("CoMENTARIOS: "+storage.getComentarioTT());
+        System.out.println("Usuarios: "+storage.getUsuariosTT());
+        System.out.println("Rendimiento: "+storage.getRendimientoTT());
+        System.out.println("Ponderacion: "+storage.getPonderacionTT());
+        System.out.println("Requisitos1: "+storage.getRequisitosTT1());
+        System.out.println("CoMENTARIOS1: "+storage.getComentarioTT1());
+        System.out.println("Usuarios1: "+storage.getUsuarios1TT());
+        System.out.println("--------------------------------------------------------------- TT");
+        //TS
+        System.out.println("Accesorios: "+storage.getAccesoriosTS());
+        System.out.println("Completado: "+storage.getCompletadoTS());
+        System.out.println("Requisitos: "+storage.getRequisitosTS());
+        System.out.println("CoMENTARIOS: "+storage.getComentarioTS());
+        System.out.println("Mensajes: "+storage.getMensajeTS());
+        System.out.println("Usuarios: "+storage.getUsuariosTS());
+        System.out.println("--------------------------------------------------------------- TS");
+        //TF
+        System.out.println("Actividades: "+storage.getActividadesTF());
+        System.out.println("Completado: "+storage.getCompletadoTF());
+        System.out.println("Requisitos: "+storage.getRequisitosTF());
+        System.out.println("CoMENTARIOS: "+storage.getComentarioTF());
+        System.out.println("Usuarios: "+storage.getUsuariosTF());
+        System.out.println("--------------------------------------------------------------- TF");*/
+        insert();
+
 
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        atras();
+        if (new back().backConf(idioma, this)) {
+            atras();
+        }
         //  cambio1();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
@@ -860,6 +862,11 @@ public class vistaCompletarOrden extends JFrame {
         cambio(4);
     }//GEN-LAST:event_pbFinalMouseClicked
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
+
     private void atras() {
         new info().setXY(this.getX(), this.getY());
         storage.inicializarTodo();
@@ -886,6 +893,259 @@ public class vistaCompletarOrden extends JFrame {
                 break;
         }
         this.dispose();
+    }
+
+    private void insert() {
+
+        insertTC(con.child("Trabajos").child("" + serie).child("checkTC"));
+        insertTT(con.child("Trabajos").child("" + serie).child("checkTT"));
+        insertTS(con.child("Trabajos").child("" + serie).child("checkTS"));
+        insertTF(con.child("Trabajos").child("" + serie).child("checkTF"));
+        insertTrabajo(con.child("Trabajos").child("" + serie));
+        storage.inicializarTodo();
+        atras();
+    }
+
+    private void insertTC(DatabaseReference db) {
+        ArrayList<String> usu = storage.getUsuariosTC();
+        ArrayList<String> mensaje = storage.getMensajeTC();
+        ArrayList<Integer> req = storage.getRequisitosTC();
+        ArrayList<Boolean> aprobado = storage.getAprobadoTC();
+        ArrayList<Boolean> revsol = storage.getRevsolTC();
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+
+        taskMap.put("porcentaje", storage.getPorcentajeTC());
+        db.updateChildren(taskMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+        db = db.child("actividades");
+        checkAC checkAC = null;
+        checkCommentsC com = null;
+        int cont = 0;
+
+        for (String actividad : storage.getUbicacionTC()) {
+            String mensaj = "";
+            try {
+                mensaj = mensaje.get(cont);
+            } catch (Exception e) {
+            }
+            checkAC = new checkAC(actividad, usu.get(cont), revsol.get(cont), aprobado.get(cont), req.get(cont), mensaj);
+            db.child("" + cont).setValue(checkAC, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+            if (storage.getComentariosTC().get(actividad) != null) {
+                int i = 0;
+                for (String comentario : storage.getComentariosTC().get(actividad)) {
+                    com = new checkCommentsC(comentario);
+                    db.child("" + cont).child("comentario").child("" + i).setValue(com, new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError de, DatabaseReference dr) {
+                        }
+                    });
+                    i++;
+                }
+            }
+
+            cont++;
+        }
+    }
+
+    private void insertTT(DatabaseReference db) {
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+        taskMap.put("porcentaje", storage.getPorcentajeTT());
+        db.updateChildren(taskMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+        db = db.child("actividades");
+        checkAT checkAT = null;
+        ArrayList<String> usu = storage.getUsuariosTT();
+        ArrayList<String> usu1 = storage.getUsuarios1TT();
+        ArrayList<String> rend = storage.getRendimientoTT();
+        ArrayList<String> act = storage.getActividadesTT();
+        ArrayList<Integer> req = storage.getRequisitosTT();
+        ArrayList<Integer> req1 = storage.getRequisitosTT1();
+        ArrayList<Boolean> aproba = storage.getAprobacionTT();
+        ArrayList<Boolean> real = storage.getRealizadoTT();
+        ArrayList<String> pondera = storage.getPonderacionTT();
+        ArrayList<String> comenta = storage.getComentarioTT();
+        ArrayList<String> comenta1 = storage.getComentarioTT1();
+        int sizeAct = act.size(), sizeRend = rend.size();
+        int max = (sizeAct > sizeRend) ? sizeAct : sizeRend;
+
+        for (int cont = 0; cont < max; cont++) {
+            String actividad = "", usuario = "", rendimiento = "", usuario1 = "", ponderacion = "", comentario = "", comentario1 = "";
+            int requisito = 2, requisito1 = 2;
+            boolean realizado = false, aprobacion = false;
+
+            if (cont < sizeAct) {
+                actividad = act.get(cont);
+                usuario = usu.get(cont);
+                requisito = req.get(cont);
+                try {
+                    comentario = comenta.get(cont);
+                } catch (Exception e) {
+                }
+
+                try {
+                    realizado = real.get(cont);
+                } catch (Exception e) {
+                }
+                try {
+                    aprobacion = aproba.get(cont);
+                } catch (Exception e) {
+                }
+            }
+            if (cont < sizeRend) {
+                rendimiento = rend.get(cont);
+                usuario1 = usu1.get(cont);
+                requisito1 = req1.get(cont);
+                try {
+                    comentario1 = comenta1.get(cont);
+                } catch (Exception e) {
+                }
+                try {
+                    ponderacion = pondera.get(cont);
+                } catch (Exception e) {
+                    ponderacion = "N/A";
+                }
+            }
+            checkAT = new checkAT(actividad, usuario, realizado, aprobacion, requisito, comentario, rendimiento, usuario1, ponderacion, requisito1, comentario1);
+            db.child("" + cont).setValue(checkAT, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+        }
+    }
+
+    private void insertTS(DatabaseReference db) {
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+        taskMap.put("porcentaje", storage.getPorcentajeTS());
+        db.updateChildren(taskMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+        db = db.child("actividades");
+        checkAS checkAS = null;
+        int cont = 0;
+        ArrayList<String> usu = storage.getUsuariosTS();
+        ArrayList<Integer> req = storage.getRequisitosTS();
+        ArrayList<String> coment = storage.getComentarioTS();
+        ArrayList<Integer> completa = storage.getCompletadoTS();
+        for (String actividad : storage.getAccesoriosTS()) {
+            checkAS = new checkAS(actividad, usu.get(cont), completa.get(cont), req.get(cont), coment.get(cont));//.child(serie)
+            db.child("" + cont).setValue(checkAS, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+            cont++;
+        }
+    }
+
+    private void insertTF(DatabaseReference db) {
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+        taskMap.put("porcentaje", storage.getPorcentajeTF());
+        db.updateChildren(taskMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+        db = db.child("actividades");
+        checkAF checkAF = null;
+        int cont = 0;
+        ArrayList<String> usu = storage.getUsuariosTF();
+        ArrayList<Integer> req = storage.getRequisitosTF();
+        ArrayList<Integer> comp = storage.getCompletadoTF();
+        ArrayList<String> come = storage.getComentarioTF();
+        for (String actividad : storage.getActividadesTF()) {
+            checkAF = new checkAF(actividad, usu.get(cont), comp.get(cont), req.get(cont), come.get(cont));//.child(serie)
+            db.child("" + cont).setValue(checkAF, new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+            cont++;
+        }
+    }
+
+    private void insertTrabajo(DatabaseReference db) {
+        Map<String, Object> taskMap = new HashMap<String, Object>();
+        double porcentaje = (storage.getPorcentajeTC() + storage.getPorcentajeTS() + storage.getPorcentajeTT() + storage.getPorcentajeTF()) / 4;
+        BigDecimal bd = new BigDecimal(porcentaje).setScale(2, RoundingMode.HALF_UP);
+        porcentaje = bd.doubleValue();
+        taskMap.put("progreso", porcentaje);
+        db.updateChildren(taskMap, new DatabaseReference.CompletionListener() {
+            @Override
+            public void onComplete(DatabaseError de, DatabaseReference dr) {
+            }
+        });
+    }
+
+    private void calcularPorcentajeTT(ArrayList<Boolean> realizado, ArrayList<String> ponderacion, ArrayList<Boolean> aprobacion) {
+        double porcentaje = 0;
+        int tope = aprobacion.size();
+        int total = aprobacion.size() + ponderacion.size();
+        for (int i = 0; i < tope; i++) {
+            if (aprobacion.get(i) && realizado.get(i)) {
+                porcentaje = porcentaje + ((1.0 / total) * 100.0);
+            }
+        }
+        tope = ponderacion.size();
+        for (int i = 0; i < tope; i++) {
+            if (!ponderacion.get(i).equals("N/A")) {
+                porcentaje = porcentaje + ((1.0 / total) * 100.0);
+            }
+        }
+        BigDecimal bd = new BigDecimal(porcentaje).setScale(2, RoundingMode.HALF_UP);
+        porcentaje = bd.doubleValue();
+        storage.setPorcentajeTT(porcentaje);
+    }
+
+    private void calcularPorcentajeTC(ArrayList<Boolean> aprobado, ArrayList<Boolean> revsol) {
+        double porcentaje = 0;
+        int total = aprobado.size();
+        for (int i = 0; i < total; i++) {
+            if (aprobado.get(i) && revsol.get(i)) {
+                porcentaje = porcentaje + ((1.0 / total) * 100.0);
+            }
+        }
+        BigDecimal bd = new BigDecimal(porcentaje).setScale(2, RoundingMode.HALF_UP);
+        porcentaje = bd.doubleValue();
+        storage.setPorcentajeTC(porcentaje);
+    }
+
+    private void calcularPorcentajeTS(ArrayList<Integer> completado) {
+        double porcentaje = 0;
+        int total = completado.size();
+        for (int i = 0; i < total; i++) {
+            if (completado.get(i) != 0) {
+                porcentaje = porcentaje + ((1.0 / total) * 100.0);
+            }
+        }
+        BigDecimal bd = new BigDecimal(porcentaje).setScale(2, RoundingMode.HALF_UP);
+        porcentaje = bd.doubleValue();
+        storage.setPorcentajeTS(porcentaje);
+    }
+
+    private void calcularPorcentajeTF(ArrayList<Integer> completado) {
+        double porcentaje = 0;
+        int total = completado.size();
+        for (int i = 0; i < total; i++) {
+            if (completado.get(i) == 1) {
+                porcentaje = porcentaje + ((1.0 / total) * 100.0);
+            }
+        }
+        BigDecimal bd = new BigDecimal(porcentaje).setScale(2, RoundingMode.HALF_UP);
+        porcentaje = bd.doubleValue();
+        storage.setPorcentajeTF(porcentaje);
     }
 
     private void fillTT(JSONObject allData, String primera, String segunda, String tercera, String cuarta, String act, String realizado, String aprobacion, String requisito, String comentario, String rendimiento, String ponderacion, String requisito1, String comentario1) {
@@ -965,8 +1225,8 @@ public class vistaCompletarOrden extends JFrame {
                 usuarios.add(us);
                 //   if (us.toLowerCase().equals(nomU.toLowerCase())) {
                 //solo las del usuario
-                System.out.println("Actividad: "+jsonTC.get(act).toString());
-                System.out.println("act: "+act);
+                System.out.println("Actividad: " + jsonTC.get(act).toString());
+                System.out.println("act: " + act);
                 activid.add(jsonTC.get(act).toString());
                 mensaje.add(jsonTC.get(mensaj).toString());
                 revsol.add(Boolean.parseBoolean(jsonTC.get(rev).toString()));
@@ -986,7 +1246,7 @@ public class vistaCompletarOrden extends JFrame {
 
                 //  }
             }
-            System.out.println("Activid: "+activid);
+            System.out.println("Activid: " + activid);
             storage.setUsuariosTC(usuarios);
             storage.setUbicacionTC(activid);
             storage.setPorcentajeTC(Double.parseDouble(check.get("porcentaje").toString()));
@@ -1054,15 +1314,15 @@ public class vistaCompletarOrden extends JFrame {
                 usuarios.add(us);
                 //  if (us.toLowerCase().equals(nomU.toLowerCase())) {
                 actividad.add(jsonTC.get(act).toString());
-                 System.out.println("Completado: "+jsonTC.get(completado));
+                System.out.println("Completado: " + jsonTC.get(completado));
                 complet.add(Integer.parseInt(jsonTC.get(completado).toString()));
-                System.out.println("Requisito: "+jsonTC.get(requisito));
+                System.out.println("Requisito: " + jsonTC.get(requisito));
                 requi.add(Integer.parseInt(jsonTC.get(requisito).toString()));
                 comentar.add(jsonTC.get(comentario).toString());
                 //  }
             }
             storage.setPorcentajeTS(Double.parseDouble(check.get("porcentaje").toString()));
-            System.out.println("Porcentaje: "+check.get("porcentaje").toString());
+            System.out.println("Porcentaje: " + check.get("porcentaje").toString());
             storage.setAccesoriosTS(actividad);
             storage.setUsuariosTS(usuarios);
             storage.setCompletadoTS(complet);
@@ -1096,11 +1356,13 @@ public class vistaCompletarOrden extends JFrame {
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //  Toast.makeText(getApplicationContext(), "De15 " + error, Toast.LENGTH_SHORT).show();
                 }
 
             });
         } catch (Exception t) {
+            JOptionPane.showMessageDialog(context, "Error: " + t);
             //  Context context = getApplicationContext();
             //   Toast toast = Toast.makeText(context, "Notifica el siguiente error8:" + t, Toast.LENGTH_SHORT);
             //   toast.show();

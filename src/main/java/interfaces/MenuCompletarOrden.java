@@ -10,6 +10,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import disenos.readRecordTableBackground;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -72,7 +73,6 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
     }
 
     public void iniciarDiseno() {//decorar los componentes del frame
-        DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
         //centrar el texto en las celdas de la tabla
         modelo = (DefaultTableModel) tablaUsers.getModel();
 
@@ -132,7 +132,12 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsers = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Menu usuarios");
 
@@ -355,9 +360,9 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
             int serie = Integer.parseInt(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString());
             String plantilla = modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString();
             //new VistaCheckLists(con, user, priv, idioma, modo, serie, plantilla).setVisible(true);
-            
+
             //DatabaseReference con, String user, int priv, String idioma, int serie, int modo
-            new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla,modo).setVisible(true);
+            new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();
         } catch (Exception e) {
             if (idioma.equals("English")) {
@@ -405,8 +410,12 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
         }
     }//GEN-LAST:event_txtBuscarKeyTyped
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma,this);
+    }//GEN-LAST:event_formWindowClosing
+
     private void llenarTabla() {
-        System.out.println("Progreso: " + progreso);
         tablaUsers.setDefaultRenderer(Object.class, new readRecordTableBackground(progreso));
         for (int i = 0; i < serie.size(); i++) {
             modelo.addRow(new Object[]{serie.get(i), plantilla.get(i), progreso.get(i) + "%", fecha.get(i)});
@@ -433,16 +442,10 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
                                 bandera = true;
                             }
                         }
-
-                        // return actividadCompletada(jsonTC, primera);
-                        //  bandera= actividadCompletada(jsonTC, primera);
                     }
-
-                    // return true;
                 }
             }
             return bandera;
-            //  return false;
         } catch (Exception e) {
             //   System.out.println("erroooooooooooooooooooooooooooor: "+e);
             return false;
@@ -503,7 +506,6 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        System.out.println("Existe3eeeeeeee");
                         ordenes log;
                         for (DataSnapshot info : snapshot.getChildren()) {
                             log = info.getValue(ordenes.class);
@@ -530,7 +532,12 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
                         llenarTabla();
 
                     } else {
-                        System.out.println("No existeeee");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "There are no orders involving you");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "No existen ordenes en las que participes");
+                        }
+
                         //No hay trabajos agregados aun
                         // new showToast(getString(R.string.noTrabajosSpn), getString(R.string.noTrabajosEng), idioma, getApplicationContext());
                     }
@@ -538,12 +545,14 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getApplicationContext());
 
                 }
             });
         } catch (Exception e) {
-            e.printStackTrace();
+            JOptionPane.showMessageDialog(context, "Error: " + e);
+            //  e.printStackTrace();
         }
     }
 
@@ -575,6 +584,11 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
                         llenarTabla();
 
                     } else {
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "There are no active orders");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "No hay ordenes activas");
+                        }
 
                         //No hay trabajos agregados aun
                         // new showToast(getString(R.string.noTrabajosSpn), getString(R.string.noTrabajosEng), idioma, getApplicationContext());
@@ -583,12 +597,14 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //  new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getApplicationContext());
 
                 }
             });
 
         } catch (Exception t) {
+            JOptionPane.showMessageDialog(context, "Error: " + t);
             //  Context context = getApplicationContext();
             //////  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + t, Toast.LENGTH_SHORT);
             // toast.show();
@@ -610,11 +626,11 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        
-                        ArrayList<String> seri=new ArrayList();
-                        ArrayList<String> plantill=new ArrayList();
-                        ArrayList<Integer> progres=new ArrayList();
-                        ArrayList<String> fech=new ArrayList();
+
+                        ArrayList<String> seri = new ArrayList();
+                        ArrayList<String> plantill = new ArrayList();
+                        ArrayList<Integer> progres = new ArrayList();
+                        ArrayList<String> fech = new ArrayList();
                         boolean res = false;
                         ordenes log;
                         log = snapshot.getValue(ordenes.class);
@@ -651,11 +667,20 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
                             borrarTabla();
                             llenarTabla();
                         } else {
-                           //no se encontro
+                            if (idioma.equals("english")) {
+                                JOptionPane.showMessageDialog(context, "No results were found");
+                            } else {
+                                JOptionPane.showMessageDialog(context, "No se encontraron resultados");
+                            }
+                            //no se encontro
                         }
 
                     } else {
-                        System.out.println("No aqui");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "No results were found");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "No se encontraron resultados");
+                        }
                         //No hay trabajos agregados aun
                         // new showToast(getString(R.string.noTrabajosEncontradosSpn), getString(R.string.noTrabajosEncontradosEng), idioma, getApplicationContext());
                     }
@@ -663,12 +688,13 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
                     // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getApplicationContext());
                 }
             });
 
         } catch (Exception e) {
-            System.out.println("ERROOOOOOOOOOOOOO: " + e);
+           JOptionPane.showMessageDialog(context, "Error: "+e);
             //  e.printStackTrace();
         }
     }

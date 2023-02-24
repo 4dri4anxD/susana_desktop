@@ -8,24 +8,26 @@ package disenos;
 import java.awt.Color;
 import java.awt.Component;
 import java.util.ArrayList;
+import javax.swing.JComboBox;
 import javax.swing.JComponent;
+import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.DefaultTableCellRenderer;
 
-public class readRecordTableBackground extends DefaultTableCellRenderer {//clase para pintar de colores la tabla de la interfaz vistaActividades1
+public class enableActivityTable extends DefaultTableCellRenderer {//clase para pintar de colores la tabla de la interfaz vistaActividades1
 
     //declaracion de variables globales
-    private ArrayList<Integer> progreso;//filas con procesos ya terminados
+    private ArrayList<Boolean> habilitar;//filas con procesos ya terminados
     private Component cellComponent;
 
-    public readRecordTableBackground( ArrayList<Integer> progreso) {
-        this.progreso = progreso;
-        System.out.println("Progreso: "+progreso);
+    public enableActivityTable(ArrayList<Boolean> habilitar) {
+        this.habilitar = habilitar;
     }
 
     public Component getTableCellRendererComponent(JTable table, Object color, boolean isSelected, boolean hasFocus, int row, int column) {
         cellComponent = super.getTableCellRendererComponent(table, color, isSelected, hasFocus, row, column);
-        if (progreso.get(row)==100) {//si el proceso de la fila ya se realizo
+
+        if (!habilitar.get(row)) {//si el proceso de la fila ya se realizo
             if (isSelected) {//se pinta de gris asi este seleccionado o no
                 cellComponent.setBackground(Color.LIGHT_GRAY);
                 cellComponent.setForeground(Color.WHITE);
@@ -33,6 +35,7 @@ public class readRecordTableBackground extends DefaultTableCellRenderer {//clase
                 cellComponent.setBackground(Color.LIGHT_GRAY);
                 cellComponent.setForeground(Color.BLACK);
             }
+            
         } else {//si el proceso aun no se completa
             if (isSelected) {//se pinta de azul la fila si se selecciona
                 cellComponent.setBackground(colores.azul);
@@ -43,8 +46,7 @@ public class readRecordTableBackground extends DefaultTableCellRenderer {//clase
             }
         }
         int align = DefaultTableCellRenderer.CENTER;
-        ((DefaultTableCellRenderer)cellComponent).setHorizontalAlignment(align);
-        ((JComponent) table.getDefaultRenderer(Boolean.class)).setOpaque(true);
+        ((DefaultTableCellRenderer) cellComponent).setHorizontalAlignment(align);
         return cellComponent;
     }
 }

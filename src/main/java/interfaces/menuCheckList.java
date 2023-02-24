@@ -5,6 +5,7 @@ import configuracion.info;
 import disenos.colores;
 import disenos.disenos;
 import disenos.ventanas.configuracionVentana;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -106,7 +107,12 @@ public class menuCheckList extends JFrame {
         btnPruebas = new javax.swing.JButton();
         btnFinal = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnlFondo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -364,6 +370,11 @@ public class menuCheckList extends JFrame {
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+       // TODO add your handling code here:
+        new windowClosing(idioma,this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void mostrar() {
         btnFinal.setText("Final");

@@ -135,8 +135,11 @@ public class disenos {//clase que sirve para establecer el diseno de algunos com
         } else if (tipo == 5) {
             label.setFont(new Font("Lato", Font.BOLD, 20));
             label.setForeground(colores.getBlanco());
-        } else {
+        } else if (tipo == 6) {
             label.setFont(new Font("Lato", Font.BOLD, 20));
+            label.setForeground(colores.getNegro());
+        }else{
+            label.setFont(new Font("Lato", Font.BOLD, 14));
             label.setForeground(colores.getNegro());
         }
 

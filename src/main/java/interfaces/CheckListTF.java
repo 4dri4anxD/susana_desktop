@@ -3,24 +3,41 @@ package interfaces;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
 import datos.temporalStorage;
+import disenos.colores;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.enableActivityTable;
 import disenos.ventanas.configuracionVentana;
+import helpers.back;
+import helpers.windowClosing;
+import java.awt.Color;
+import java.awt.Component;
 import java.awt.Cursor;
+import java.awt.Font;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import javax.swing.DefaultCellEditor;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
+import javax.swing.JComboBox;
+import javax.swing.JComponent;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
+import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
@@ -34,12 +51,15 @@ public class CheckListTF extends JFrame {
     private temporalStorage storage;
     private ArrayList<String> actividades, mensajes;
     private ArrayList<Integer> completado;
+    private ArrayList<Boolean> habilitar;
     private CheckListTF context;
+    private boolean val;
 
     public CheckListTF(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {
         initComponents();
         new configuracionVentana(this);
         modelo = (DefaultTableModel) tblActividades.getModel();
+
         context = this;
         this.idioma = idioma;
         this.modo = modo;
@@ -49,7 +69,10 @@ public class CheckListTF extends JFrame {
         this.con = con;
         this.priv = priv;
 
+        val = true;
+
         actividades = new ArrayList();
+        habilitar = new ArrayList();
         mensajes = new ArrayList();
         completado = new ArrayList();
 
@@ -60,9 +83,40 @@ public class CheckListTF extends JFrame {
         actividades.addAll(storage.getActividadesTF());
         mensajes.addAll(storage.getComentarioTF());
 
+        getPermitidos();
+        procesosTabla();
+
         iniciarDiseno();
         ponerTabla();
         mostrar();
+
+    }
+
+    private void procesosTabla() {
+        String t[] = {"Actividades", "Terminado"};
+        modelo = new DefaultTableModel(null, t) {//se crea un modelo para inhabilitar la edicion  de filas con procesos ya completados
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                if (columnIndex == 1) {
+                    if (habilitar.get(rowIndex)) {
+                        return true;
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                if (columnIndex == 0) {
+                    return Object.class;
+                }
+                return Boolean.class;
+            }
+        };
+        tblActividades.setModel(modelo);
+        tblActividades.setDefaultRenderer(Object.class, new enableActivityTable(habilitar));
 
         tblActividades.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
@@ -70,19 +124,21 @@ public class CheckListTF extends JFrame {
                 Point point = mouseEvent.getPoint();
                 int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    String titulo, cuerpo;
-                    if (idioma.equals("english")) {
-                        titulo = "Message";
-                        cuerpo = "Write a comment";
-                    } else {
-                        titulo = "Mensaje";
-                        cuerpo = "Escriba un comentario";
-                    }
-                    String mensaje = mensajes.get(row);
-                    String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
-                    if (resp != null) {
-                        if (!resp.equals("")) {
-                            mensajes.set(row, resp);
+                    if (habilitar.get(table.getSelectedRow())) {
+                        String titulo, cuerpo;
+                        if (idioma.equals("english")) {
+                            titulo = "Message";
+                            cuerpo = "Write a comment";
+                        } else {
+                            titulo = "Mensaje";
+                            cuerpo = "Escriba un comentario";
+                        }
+                        String mensaje = mensajes.get(row);
+                        String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                        if (resp != null) {
+                            if (!resp.equals("")) {
+                                mensajes.set(row, resp);
+                            }
                         }
                     }
 
@@ -91,7 +147,44 @@ public class CheckListTF extends JFrame {
         });
     }
 
-    public void iniciarDiseno() {//decorar los componentes del frame
+    private void getPermitidos() {
+        int i = 0;
+        LinkedHashMap<String, ArrayList<String>> procesosRequeridos = new LinkedHashMap();
+        ArrayList<Integer> requisitos = new ArrayList();
+        requisitos.addAll(storage.getRequisitosTF());
+        for (Integer req : requisitos) {
+            ArrayList<String> g = new ArrayList();
+            String b = Integer.toBinaryString(req);//se convierte el numero de "requisito" en binario
+            for (int k = 0; k < b.length(); k++) {//se recorren los bits de requisito
+                if (b.charAt(k) == '1') {//si bit leido es un 1
+                    g.add(storage.getActividadesTF().get(((b.length() - 1) - k)));
+                }
+            }
+            procesosRequeridos.put(actividades.get(i), g);//se coloca el nombre del proceso actual, y la lista de nombres de los procesos requeridos para poder empezar a hacer este
+            i++;
+        }
+        for (String key : procesosRequeridos.keySet()) {
+            if (procesosRequeridos.get(key).size() > 0) {
+                boolean permit = true;
+                for (String value : procesosRequeridos.get(key)) {
+                    int index = storage.getActividadesTF().indexOf(value);
+                    if (storage.getCompletadoTF().get(index) == 0) {
+                        permit = false;
+                    }
+                }
+                habilitar.add(permit);
+                // permitido.put(key, permit);
+            } else {
+                //  permitido.put(key, true);
+                habilitar.add(true);
+            }
+        }
+
+    }
+
+    private void iniciarDiseno() {//decorar los componentes del frame
+        tblActividades.setBackground(colores.grisTenue);
+        tblActividades.setSelectionBackground(colores.grisTenue);
 
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
@@ -135,7 +228,12 @@ public class CheckListTF extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblActividades = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Check shipment");
 
@@ -204,6 +302,12 @@ public class CheckListTF extends JFrame {
                 .addContainerGap())
         );
 
+        pnlCuerpo.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                pnlCuerpoComponentResized(evt);
+            }
+        });
+
         tblActividades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
 
@@ -212,21 +316,17 @@ public class CheckListTF extends JFrame {
                 "Procesos", "Terminado"
             }
         ) {
-            Class[] types = new Class [] {
-                java.lang.String.class, java.lang.Boolean.class
-            };
             boolean[] canEdit = new boolean [] {
                 false, true
             };
-
-            public Class getColumnClass(int columnIndex) {
-                return types [columnIndex];
-            }
 
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 return canEdit [columnIndex];
             }
         });
+        tblActividades.setGridColor(new java.awt.Color(0, 0, 0));
+        tblActividades.setSelectionBackground(new java.awt.Color(51, 102, 255));
+        tblActividades.setSelectionForeground(new java.awt.Color(0, 0, 0));
         tblActividades.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblActividadesMouseClicked(evt);
@@ -239,8 +339,8 @@ public class CheckListTF extends JFrame {
         });
         jScrollPane1.setViewportView(tblActividades);
         if (tblActividades.getColumnModel().getColumnCount() > 0) {
-            tblActividades.getColumnModel().getColumn(0).setPreferredWidth(200);
-            tblActividades.getColumnModel().getColumn(1).setPreferredWidth(20);
+            tblActividades.getColumnModel().getColumn(0).setPreferredWidth(100);
+            tblActividades.getColumnModel().getColumn(1).setPreferredWidth(30);
         }
 
         javax.swing.GroupLayout pnlCuerpoLayout = new javax.swing.GroupLayout(pnlCuerpo);
@@ -294,12 +394,12 @@ public class CheckListTF extends JFrame {
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
         for (int i = 0; i < modelo.getRowCount(); i++) {
-            if(Boolean.parseBoolean(modelo.getValueAt(i, 1).toString())){
-                completado.set(i,1);
-            }else{
+            if (Boolean.parseBoolean(modelo.getValueAt(i, 1).toString())) {
+                completado.set(i, 1);
+            } else {
                 completado.set(i, 0);
             }
-            
+
         }
         storage.setComentarioTF(mensajes);
         storage.setCompletadoTF(completado);
@@ -311,10 +411,14 @@ public class CheckListTF extends JFrame {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
-        this.dispose();
+        //   System.out.println("Wi: "+pnlCuerpo.getWidth());
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
+            this.dispose();
+        }
+
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
@@ -325,15 +429,39 @@ public class CheckListTF extends JFrame {
         // TODO add your handling code here:
     }//GEN-LAST:event_tblActividadesKeyTyped
 
+    private void pnlCuerpoComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCuerpoComponentResized
+        // TODO add your handling code here:
+        if (val) {//De una sola ejecucion
+            int anchoPanel = (int) (pnlCuerpo.getWidth() / 10);
+            TableColumnModel tableColumnModel = tblActividades.getColumnModel();
+            tableColumnModel.getColumn(0).setMaxWidth((anchoPanel * 8));
+            tableColumnModel.getColumn(1).setMaxWidth((anchoPanel * 2));
+            val = false;
+        }
+
+    }//GEN-LAST:event_pnlCuerpoComponentResized
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
+
     private void ponerTabla() {//poner las actividades del proceso seleccionado en la tabla
+        //   JCheckBox chk = new JCheckBox ();
+        // tblActividades.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(chk));
+        //  tblActividades.setDefaultRenderer(Object.class, new enableActivityTable(habilitar));
+        //   tblActividades.setDefaultRenderer(Boolean.class, new enableActivityTable(habilitar));
+
+        //  tblActividades.setDefaultRenderer(Object.class, new enableActivityTable(habilitar));
         for (int i = 0; i < actividades.size(); i++) {
-            if(completado.get(i)==1){
+            if (completado.get(i) == 1) {
                 modelo.addRow(new Object[]{actividades.get(i), true});
-            }else{
+
+            } else {
                 modelo.addRow(new Object[]{actividades.get(i), false});
+
             }
         }
-            
     }
 
     private void mostrar() {
@@ -354,6 +482,7 @@ public class CheckListTF extends JFrame {
             tableColumn.setHeaderValue("Actividades");
             tableHeader.repaint();
         }
+
     }
 
 

@@ -11,6 +11,8 @@ import obtenerDatos.ordenes;
 import datos.temporalStorage;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
+import helpers.back;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import static java.awt.Frame.WAIT_CURSOR;
@@ -29,6 +31,7 @@ import javax.swing.JComponent;
 import javax.swing.JFormattedTextField;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JSpinner;
 import javax.swing.JTextField;
 import notificacion.notificar;
@@ -70,8 +73,10 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         this.priv = priv;
         this.idioma = idioma;
         this.serie = serie;
-        
-        if(serie!=0)txtSerie.setEnabled(false);
+
+        if (serie != 0) {
+            txtSerie.setEnabled(false);
+        }
 
         iniciarDiseno();
 
@@ -254,7 +259,12 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         lblTF = new javax.swing.JLabel();
         lblRF = new javax.swing.JLabel();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Menu usuarios");
 
@@ -719,16 +729,18 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
   private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
       // TODO add your handling code here:
-      cambio1();
+      if (new back().backConf(idioma, this)) {
+          cambio1();
+      }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
         //si se guarda el trabajo
         //se actualiza la lista de userSel
-        System.out.println("--------------------------------------------------------------------------" + serie);
+
         if (serie == 0) {
-            System.out.println("Insert");
+
             //insert
             if (!txtSerie.getText().toString().equals(tSerie)) {
                 if (txtPlazo.getDate() != null) {
@@ -737,59 +749,70 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                             if (!storage.getResponsableTT().equals("")) {
                                 if (!storage.getResponsableTS().equals("")) {
                                     if (!storage.getResponsableTF().equals("")) {
-                                        System.out.println("Seeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeerie: " + serie);
+
                                         //comrpobar que no exista ya la orden
                                         leerT();
                                     } else {
-                                        System.out.println("Final");
+                                        if (idioma.equals("english")) {
+                                            JOptionPane.showMessageDialog(context, "Choose a template for final checklist");
+                                        } else {
+                                            JOptionPane.showMessageDialog(context, "Seleccione una plantilla para el checklist final");
+                                        }
+
                                         //Seleccione una plantilla para el checklist de final
-                                        //btnGuardar.setEnabled(true);
-                                        // new showToast(getString(R.string.lblSelectFinalCheckListVistaTrabajosSpn), getString(R.string.lblSelectFinalCheckListVistaTrabajosEng), idioma, this);
                                     }
                                 } else {
-                                    System.out.println("Shipment");
+                                    if (idioma.equals("english")) {
+                                        JOptionPane.showMessageDialog(context, "Choose a template for shipment checklist");
+                                    } else {
+                                        JOptionPane.showMessageDialog(context, "Seleccione una plantilla para el checklist de envio");
+                                    }
                                     //Seleccione una plantilla para el checklist de shipment
-                                    // btnGuardar.setEnabled(true);
-                                    // new showToast(getString(R.string.lblSelectShipmentCheckListVistaTrabajosSpn), getString(R.string.lblSelectShipmentCheckListVistaTrabajosEng), idioma, this);
                                 }
                             } else {
-                                System.out.println("Testing");
+                                if (idioma.equals("english")) {
+                                    JOptionPane.showMessageDialog(context, "Choose a template for testing checklist");
+                                } else {
+                                    JOptionPane.showMessageDialog(context, "Seleccione una plantilla para el checklist de pruebas");
+                                }
                                 //Seleccione una plantilla para el checklist de testing
-                                //  btnGuardar.setEnabled(true);
-                                //  new showToast(getString(R.string.lblSelectTestingCheckListVistaTrabajosSpn), getString(R.string.lblSelectTestingCheckListVistaTrabajosEng), idioma, this);
                             }
                         } else {
-                            System.out.println("Calidad");
+                            if (idioma.equals("english")) {
+                                JOptionPane.showMessageDialog(context, "Choose a template for quality checklist");
+                            } else {
+                                JOptionPane.showMessageDialog(context, "Seleccione una plantilla para el checklist de calidad");
+                            }
                             //Seleccione una plantilla para el checklist de calidad
-                            // btnGuardar.setEnabled(true);
-                            //  new showToast(getString(R.string.lblSelectQualityCheckListVistaTrabajosSpn), getString(R.string.lblSelectQualityCheckListVistaTrabajosEng), idioma, this);
                         }
                     } else {
-                        System.out.println("Campo modelo");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "Fill model's blank");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "Llene el campo de modelo");
+                        }
                         //llene el campo de modelo
-                        //  btnGuardar.setEnabled(true);
-                        //  new showToast(getString(R.string.lblModelBlankVistaTrabajosSpn), getString(R.string.lblModelBlankVistaTrabajosEng), idioma, this);
                     }
                 } else {
-                    System.out.println("Campo fecha");
+                    if (idioma.equals("english")) {
+                        JOptionPane.showMessageDialog(context, "Fill date's blank");
+                    } else {
+                        JOptionPane.showMessageDialog(context, "Llene el campo de fecha");
+                    }
                     //llene el campo de fecha
-                    // btnGuardar.setEnabled(true);
-                    //  new showToast(getString(R.string.lblDateBlankVistaTrabajosSpn), getString(R.string.lblDateBlankVistaTrabajosEng), idioma, this);
                 }
             } else {
-                System.out.println("Campos erie");
+                if (idioma.equals("english")) {
+                    JOptionPane.showMessageDialog(context, "Fill serial number's blank");
+                } else {
+                    JOptionPane.showMessageDialog(context, "Llene el campo de numero de serie");
+                }
                 //llene el campo de serie
-                // btnGuardar.setEnabled(true);
-                // new showToast(getString(R.string.lblSerialBlankVistaTrabajosSpn), getString(R.string.lblSerialBlankVistaTrabajosEng), idioma, this);
             }
         } else {
             //update
             update();
-            System.out.println("Uptodate");
-            //   new info().setXY(this.getX(), this.getY());
-            //  this.setCursor(new Cursor(WAIT_CURSOR));
         }
-        System.out.println("Salio");
 
 
     }//GEN-LAST:event_btnAddActionPerformed
@@ -934,6 +957,11 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         cambio(4);
     }//GEN-LAST:event_lblRFMouseClicked
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
+
     private void cambio1() {
         new info().setXY(this.getX(), this.getY());
         storage.inicializarTodo();
@@ -965,24 +993,21 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                         storage.setSerie(Integer.parseInt(txtSerie.getText()));
                         insert(true);
                     } else {
-                        System.out.println("Ya existexd");
-                        //  btnGuardar.setEnabled(true);
-                        // new showToast(getString(R.string.lblVistaTrabajosExistsSpn), getString(R.string.lblVistaTrabajosExistsEng), idioma, vistaAgregarModificarOrdenes.this);
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "Serial number already exists");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "Ya existe el numero de serie");
+                        }
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    System.out.println("Cancelado: " + error);
-                    // btnGuardar.setEnabled(true);
-                    //  new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + " :" + error, getString(R.string.lblErrorWhileReadingDBEng) + " :" + error, idioma, vistaAgregarModificarOrdenes.this);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                 }
             });
         } catch (Exception e) {
-            System.out.println("Exc: " + e);
-            // btnGuardar.setEnabled(true);
-            // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + " :" + e, getString(R.string.lblErrorWhileReadingDBEng) + " :" + e, idioma, vistaAgregarModificarOrdenes.this);
-
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
 
     }
@@ -1235,6 +1260,11 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
     private void sendNot(ArrayList<String> InUsers, boolean nuevo) {
         try {
+            if (idioma.equals("english")) {
+                JOptionPane.showMessageDialog(context, "Order saved succesfully");
+            } else {
+                JOptionPane.showMessageDialog(context, "Orden almacenada exitosamente");
+            }
             String titulo, contenido;//topic
             if (nuevo) {
                 titulo = "Se ha generado una nueva orden: " + storage.getSerie();
@@ -1242,7 +1272,6 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                 titulo = "Se ha modificado la orden: " + storage.getSerie();
             }
             contenido = "Haga click para abrir la aplicacion";
-            //topic = "supervisor";
             for (String user : InUsers) {
                 if (!user.equals(this.user)) {
                     Query query = con.child("keys").orderByChild("usuario").equalTo(user);
@@ -1262,13 +1291,14 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
                         @Override
                         public void onCancelled(DatabaseError error) {
-                            // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getApplicationContext());
+                            JOptionPane.showMessageDialog(context, "Error: " + error);
                         }
                     });
                 }
             }
+
         } catch (Exception e) {
-            //  new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + " :" + e, getString(R.string.lblErrorWhileReadingDBEng) + " :" + e, idioma, vistaAgregarModificarOrdenes.this);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
 
     }
@@ -1287,8 +1317,8 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
         this.setCursor(new Cursor(WAIT_CURSOR));
         new info().setXY(this.getX(), this.getY());
-        boolean val = (serie==0) ? true : false;
-        
+        boolean val = (serie == 0) ? true : false;
+
         switch (check) {
             case 1:
                 new crearTC(con, user, priv, idioma, serie, val).setVisible(true);
@@ -1311,7 +1341,6 @@ public class vistaAgregarModificarOrdenes extends JFrame {
 
     private void leerExistente() {
         try {
-            //  HashMap<String, ArrayList<String>> hm = new HashMap<>();
             Query query = con.child(json.getString("trabajosTable")).child("" + serie);
             //.child(bus);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -1319,11 +1348,6 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                 public void onDataChange(DataSnapshot snapshot) {
                     try {
                         if (snapshot.exists()) {
-                            //   storage.inicializarTC();
-                            //   storage.inicializarBasico();
-                            //   storage.inicializarTS();
-                            // //   storage.inicializarTT();
-                            //   storage.inicializarTF();
                             ordenes log;
                             log = snapshot.getValue(ordenes.class);
                             //Basico
@@ -1343,8 +1367,12 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                             //TF
                             fillTF(allData);
                         } else {
-                            //No hay trabajos agregados aun
-                            // new showToast(getString(R.string.noTrabajosEncontradosSpn), getString(R.string.noTrabajosEncontradosEng), idioma, getApplicationContext());
+                            if (idioma.equals("english")) {
+                                JOptionPane.showMessageDialog(context, "Error while reading the order");
+                            } else {
+                                JOptionPane.showMessageDialog(context, "Error al leer la orden");
+                            }
+
                         }
                         if (idioma.equals("English")) {
                             ingles();//cambia la interfaz a ingles
@@ -1361,18 +1389,20 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                         // mostrar(idioma);
 
                     } catch (Exception ex) {
-                        System.out.println("Excepction: " + ex);
+                        JOptionPane.showMessageDialog(context, "Error: " + ex);
+                        //  System.out.println("Excepction: " + ex);
                         //  Logger.getLogger(vistaActividades.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getApplicationContext());
                 }
             });
         } catch (Exception e) {
-
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             //  new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + " :" + e, getString(R.string.lblErrorWhileReadingDBEng) + " :" + e, idioma, vistaAgregarModificarOrdenes.this);
         }
     }
@@ -1653,7 +1683,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                 lblTC.setText(storage.getPlantillaTC());
             }
         } catch (Exception e) {
-            //  Toast.makeText(this, "There was an error while reading data in " + interf + " interface", Toast.LENGTH_SHORT).show();
+            JOptionPane.showMessageDialog(context, "There was an error while reading data in " + interf + " interface");
 
         }
     }
@@ -1703,8 +1733,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                 lblTC.setText(storage.getPlantillaTC());
             }
         } catch (Exception e) {
-            //  Toast.makeText(this, "There was an error while reading data in " + interf + " interface", Toast.LENGTH_SHORT).show();
-
+            JOptionPane.showMessageDialog(context, "Hubo un error al leer la informacion de la interfaz: " + interf);
         }
 
     }

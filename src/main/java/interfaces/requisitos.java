@@ -5,6 +5,7 @@ import configuracion.info;
 import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.back;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -21,12 +22,12 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
     //declaracion de variables globales
     private final DefaultTableModel modelo;
     private final String idioma, actividad;
-    private final int pos, requisito,val;
+    private final int pos, requisito, val;
     private final vistaPlantillas vista;
-    private final LinkedHashMap<String, Integer> req,actireq;
+    private final LinkedHashMap<String, Integer> req, actireq;
     private final vistaPlantillasTT testing;
 
-    public requisitos( String idioma, int pos, String actividad, int requisito, LinkedHashMap<String, Integer> actireq,
+    public requisitos(String idioma, int pos, String actividad, int requisito, LinkedHashMap<String, Integer> actireq,
             vistaPlantillas vista, vistaPlantillasTT testing, int val) {//constructor
         initComponents();
         //poner icono
@@ -36,7 +37,7 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
         this.actividad = actividad;
         this.requisito = requisito;
         this.pos = pos;
-        this.val=val;
+        this.val = val;
         this.actireq = actireq;
         this.testing = testing;
         // this.lista = lista;
@@ -321,7 +322,7 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
         if (testing == null) {
             vista.setRequisito(actividad, req);//se guarda el valor del requisito
         } else {
-            testing.setRequisito(actividad, req,val);//se guarda el valor del requisito
+            testing.setRequisito(actividad, req, val);//se guarda el valor del requisito
         }
 
         new info().setXY(this.getX(), this.getY());
@@ -331,9 +332,11 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        this.dispose();
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            this.dispose();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tablaPermisosMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaPermisosMouseClicked

@@ -1,38 +1,24 @@
 package com.mycompany.susana1;
 
+import alerts.alert;
 import interfaces.login;
 
-//falta el apartado de los usuarios checkeando las actividades (vistaCompletarOrden)
-//poner mensajes de error en toda la interfaz de creacion de ordenes y creacion de plantillas
+//revisar linea 137 de la clase tblUsersActividades
+//Cambair resolucion de imagenes
+//Hacer prueba general, especial enfasis en el apartado de trabjar en la orden 66666 pq el checklistTT me da de progreso 0
+
+
 //quitar textos y agregarlos al jsonxdd
-//Ando en vistaCompletarOrden
-//Especificamente creando la clase ChecListTT para checkear en testing
-//Falta en las 4 forms (CheckListTC,TT,TS,TF) habilitar o desahbilitar ciertos procesos segun los requeridos
-
+//ver si en los checkListTF,C,S,T se puede pintar de color la celda del JCheckBox
 //busquedas en plantillas indiferentes de minusculas o mayusculas
-
-
-//administrar el windows onclose
-//Borrar datos en package datos 
-//Ver que eliminar de disenos
-//Poner alertaal cerrar una ventana en todas las ventanas
-//poner alerta al regresar en todas las interfaxes
+//Ver si funciona bien en ingles
 //estilizar alertas
 //Comporbar que el usuario existe en la bd al cambiar de interfaz
-//Poner mensajes de error en la interfaz menuActivudades, vistaActividades y vistaTC, TT,TS y TF
-//tambien hacer la de crearTT
 //Ajustar a pantalla completa las ventanas en laptops (ya mas o menos)
-//Cambiar resolucion de imagenes
 //Poner la nueva ventana del tamaño de la anterior
 //Revisar estilizacion de ventanas, iconos y todo esp
-//Eliminar clases innecesarios
 //Cambiar textos por lo que hay en strings
-// si se cierra esa pestana se ciera todo en addComentarios
-
-
-
-
-//librerias para abrir el archivo json y encriptarlo
+//librerias para abrir el archivo json y encriptarlo (que?xd)
 /* 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -48,7 +34,7 @@ public class main {
     public static void main(String[] args) {
 
         new login(null).setVisible(true);
-
+        
         //Si por alguna razon se pierde el archivo con las credenciales de la base de datos:
         //el siguiente codigo es para encriptar el contenido del archivo json
         /*  FileInputStream serviceAccount;

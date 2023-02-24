@@ -10,12 +10,15 @@ import configuracion.info;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import static java.awt.Frame.WAIT_CURSOR;
 import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -30,6 +33,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import obtenerDatos.ultimomsj;
 import obtenerDatos.users;
+import org.json.simple.JSONObject;
 
 public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en la base de datos
 
@@ -136,7 +140,12 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         ));
         jScrollPane2.setViewportView(jTable1);
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnlFondo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -169,7 +178,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -206,14 +215,14 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
@@ -247,7 +256,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -291,7 +300,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                 "Usuarios"
             }
         ));
-        tablaUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablaUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(tablaUsers);
 
         javax.swing.GroupLayout pnlCuerpoLayout = new javax.swing.GroupLayout(pnlCuerpo);
@@ -410,7 +419,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                 null, options, options[0]) == 0) {
             try {
                 if (!modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString().equals("admin")) {
-                    delete1(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(), tablaUsers.getSelectedRow());
+                    delete(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(), tablaUsers.getSelectedRow());
                 } else {
                     if (idioma.equals("English")) {
                         JOptionPane.showMessageDialog(context, "SuperUser cannot be deleted");
@@ -476,6 +485,11 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             evt.consume();
         }
     }//GEN-LAST:event_txtBuscarKeyTyped
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma,this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void buscar() {//buscar por nombre de usuario
         int tabla = modelo.getRowCount();
@@ -573,104 +587,87 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             });
 
         } catch (Exception e) {
-            System.out.println("Ex: " + e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
+            // System.out.println("Ex: " + e);
         }
     }
 
-    private void delete(String usuario, int row) {//no esta habilitado porque no elimina las imagenes
+    private void changeUser(JSONObject allData, String primera, String responsable, String segunda, String tercera, String usuario, String serie) {
         try {
-            Query query = con.child("usuarios").orderByChild("user").equalTo(usuario).limitToLast(1);
-            query.addListenerForSingleValueEvent(new ValueEventListener() {
-                @Override
-                public void onDataChange(DataSnapshot snapshot) {
-                    if (snapshot.exists()) {
-                        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                            String id = childSnapshot.getKey();
-                            try {
-                                con.child("usuarios").child(id).removeValue(new CompletionListener() {
-                                    @Override
-                                    public void onComplete(DatabaseError de, DatabaseReference dr) {
-                                        if (idioma.equals("English")) {
-                                            JOptionPane.showMessageDialog(context, "User deleted");
-                                        } else {
-                                            JOptionPane.showMessageDialog(context, "Usuario eliminado");
-                                        }
-                                    }
-                                });
-                                delete1(usuario, row);
-                                modelo.removeRow(row);
-                            } catch (Exception e) {
-                            }
-                        }
+            HashMap check = (HashMap) allData.get(primera);
+            String respo = check.get(responsable).toString();
+            if (respo.equals(usuario)) {
+                con.child("Trabajos")
+                        .child(serie).child(primera).child(responsable).setValue("dummy", new DatabaseReference.CompletionListener() {
+                    @Override
+                    public void onComplete(DatabaseError de, DatabaseReference dr) {
                     }
+                });
+            }
+            ArrayList actividades = (ArrayList) check.get(segunda);
+            for (int i = 0; i < actividades.size(); i++) {
+                HashMap jsonTC = (HashMap) actividades.get(i);
+                String us = jsonTC.get(tercera).toString();
+                if (us.equals(usuario)) {
+                    //cambiar este usuario por otro, ya sea superuser o dummy
+                    con.child("Trabajos")
+                            .child(serie).child(primera).child(segunda)
+                            .child("" + i).child(tercera).setValue("dummy", new DatabaseReference.CompletionListener() {
+                        @Override
+                        public void onComplete(DatabaseError de, DatabaseReference dr) {
+                        }
+                    });
                 }
-
-                @Override
-                public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
-                }
-            });
+            }
         } catch (Exception e) {
             JOptionPane.showMessageDialog(context, "Error: " + e);
+            // System.out.println("Error: " + e);
         }
     }
 
-    private void delete1(String usuario, int row) {//seguir eliminando cosas
+    private void delete(String usuario, int pos) {
         try {
-            Query query = con.child("proUS").orderByChild("usuario").equalTo(usuario);
+            Query query = con.child("Trabajos");
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
                     if (snapshot.exists()) {
-                        boolean v = true;
-                     //   proUS log;
                         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                           // log = childSnapshot.getValue(proUS.class);
-                         //   if (log.getProgreso() != 100) {
-                                v = false;
-                          //  }
-                        }
-                        if (!v) {
-                            if (idioma.equals("English")) {
-                                JOptionPane.showMessageDialog(context, "Make sure that the user is not working on a drone");
-                            } else {
-                                JOptionPane.showMessageDialog(context, "Asegurese de que el usuario no se encuentre trabajando en un dron");
-                            }
-                        } else {
                             try {
-                                Query query = con.child("usuarios").orderByChild("user").equalTo(usuario).limitToLast(1);
-                                query.addListenerForSingleValueEvent(new ValueEventListener() {
-                                    @Override
-                                    public void onDataChange(DataSnapshot snapshot) {
-                                        if (snapshot.exists()) {
-                                            for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                                                String id = childSnapshot.getKey();
-                                                try {
-                                                    con.child("usuarios").child(id).removeValue(new CompletionListener() {
-                                                        @Override
-                                                        public void onComplete(DatabaseError de, DatabaseReference dr) {
-                                                            if (idioma.equals("English")) {
-                                                                JOptionPane.showMessageDialog(context, "User deleted");
-                                                            } else {
-                                                                JOptionPane.showMessageDialog(context, "Usuario eliminado");
-                                                            }
-                                                        }
-                                                    });
-                                                    modelo.removeRow(row);
-                                                } catch (Exception e) {
-                                                }
-                                            }
-                                        }
-                                    }
 
-                                    @Override
-                                    public void onCancelled(DatabaseError error) {
-                                    }
-                                });
+                                String check1 = "checkTC";
+                                Map<String, Object> value = (Map<String, Object>) childSnapshot.getValue();
+                                JSONObject allData = new JSONObject(value);
+                                //TC
+                                changeUser(allData, "checkTC",
+                                        "responsable",
+                                        "actividades",
+                                        "usuario", usuario, childSnapshot.getKey());
+                                //TT actividades
+                                changeUser(allData, "checkTT",
+                                        "responsable",
+                                        "actividades",
+                                        "usuario", usuario, childSnapshot.getKey());
+                                //TT Rendimiento
+                                changeUser(allData, "checkTT",
+                                        "responsable",
+                                        "rendimiento",
+                                        "usuario", usuario, childSnapshot.getKey());
+                                //TS
+                                changeUser(allData, "checkTS",
+                                        "responsable",
+                                        "actividades",
+                                        "usuario", usuario, childSnapshot.getKey());
+                                //TF
+                                changeUser(allData, "checkTF",
+                                        "responsable",
+                                        "actividades",
+                                        "usuario", usuario, childSnapshot.getKey());
+
                             } catch (Exception e) {
+                                JOptionPane.showMessageDialog(context, "Error: " + e);
                             }
                         }
-                    } else {
                         try {
                             Query query = con.child("usuarios").orderByChild("user").equalTo(usuario).limitToLast(1);
                             query.addListenerForSingleValueEvent(new ValueEventListener() {
@@ -680,18 +677,18 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                                         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                                             String id = childSnapshot.getKey();
                                             try {
-                                                con.child("usuarios").child(id).removeValue(new CompletionListener() {
+                                                con.child("usuarios").child(id).removeValue(new DatabaseReference.CompletionListener() {
                                                     @Override
                                                     public void onComplete(DatabaseError de, DatabaseReference dr) {
-                                                        if (idioma.equals("English")) {
-                                                            JOptionPane.showMessageDialog(context, "User deleted");
-                                                        } else {
-                                                            JOptionPane.showMessageDialog(context, "Usuario eliminado");
-                                                        }
                                                     }
                                                 });
-                                                modelo.removeRow(row);
+                                                //remover posicion de tabla
+                                                modelo.removeRow(pos);
+                                                //   localDataSet2.remove(usuario);
+                                                //  notifyDataSetChanged();
+                                                //  val = false;
                                             } catch (Exception e) {
+                                                JOptionPane.showMessageDialog(context, "Error: " + e);
                                             }
                                         }
                                     }
@@ -700,21 +697,26 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                                 @Override
                                 public void onCancelled(DatabaseError error) {
                                     JOptionPane.showMessageDialog(context, "Error: " + error);
+                                    // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                                 }
                             });
                         } catch (Exception e) {
                             JOptionPane.showMessageDialog(context, "Error: " + e);
+                            // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+                            //  toast.show();
                         }
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
+            JOptionPane.showMessageDialog(context, "Error: "+e);
+            ////  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            // toast.show();
         }
         try {
             Query query = con.child("keys").orderByChild("usuario").equalTo(usuario);
@@ -725,12 +727,13 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                         for (DataSnapshot childSnapshot : snapshot.getChildren()) {
                             String id = childSnapshot.getKey();
                             try {
-                                con.child("keys").child(id).removeValue(new CompletionListener() {
+                                con.child("keys").child(id).removeValue(new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError de, DatabaseReference dr) {
                                     }
                                 });
                             } catch (Exception e) {
+                                JOptionPane.showMessageDialog(context, "Error: "+e);
                             }
                         }
                     }
@@ -738,15 +741,18 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
+
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
+            JOptionPane.showMessageDialog(context, "Error: "+e);
+            ////  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            //  toast.show();
         }
         try {
             Query query = con.child("ultimomsj");
-            ArrayList<String> rutas = new ArrayList<String>();
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -759,31 +765,32 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                                 try {
                                     if (msj.getGrupo() == 0) {
                                         chat = msj.getChat();
-                                        con.child("ultimomsj").child(childSnapshot.getKey()).removeValue(new CompletionListener() {
+                                        con.child("ultimomsj").child(childSnapshot.getKey()).removeValue(new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError de, DatabaseReference dr) {
                                             }
                                         });
-                                        con.child("chat").child(chat).removeValue(new CompletionListener() {
+                                        con.child("chat").child(chat).removeValue(new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError de, DatabaseReference dr) {
                                             }
                                         });
                                     } else {
                                         chat = msj.getChat();
+                                        removerMiembroGrupo(chat, usuario);
                                     }
                                 } catch (Exception e) {
                                 }
                             } else if (msj.getDestinatario().equals(usuario)) {
                                 try {
                                     chat = msj.getChat();
-                                    con.child("ultimomsj").child(childSnapshot.getKey()).removeValue(new CompletionListener() {
+                                    con.child("ultimomsj").child(childSnapshot.getKey()).removeValue(new DatabaseReference.CompletionListener() {
                                         @Override
                                         public void onComplete(DatabaseError de, DatabaseReference dr) {
                                         }
                                     });
                                     if (msj.getGrupo() == 0) {
-                                        con.child("chat").child(chat).removeValue(new CompletionListener() {
+                                        con.child("chat").child(chat).removeValue(new DatabaseReference.CompletionListener() {
                                             @Override
                                             public void onComplete(DatabaseError de, DatabaseReference dr) {
                                             }
@@ -793,24 +800,30 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                                 }
                             }
                             if (msj.getGrupo() == 0) {
+                                // borrarDoc(chat);
                             } else {
                                 chat = msj.getChat();
+                                removerMiembroGrupo(chat, usuario);
                             }
                         }
+                        // borrarFoto(usuario);
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    //  Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
+            JOptionPane.showMessageDialog(context, "Error: "+e);
+            // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            //  toast.show();
         }
     }
 
-    private void contarMiembrosGrupo(String chat) {//para ver si se elimina el grupo del chat al eliminar un usuario
+    private void contarMiembrosGrupo(String chat) {
         ArrayList miembrps = new ArrayList();
         try {
             Query query = con.child("grupos").child(chat).child("admin");
@@ -839,11 +852,14 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
+            JOptionPane.showMessageDialog(context, "Error: "+e);
+            //Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            // toast.show();
         }
         try {
             Query query = con.child("grupos").child(chat).child("miembros");
@@ -872,22 +888,25 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: " + error);
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
+            JOptionPane.showMessageDialog(context, "Error: "+e);
+            //  //Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            //  toast.show();
         }
     }
 
     private void eliminarGrupo(String chat) {
         try {
-            con.child("grupos").child(chat).removeValue(new CompletionListener() {
+            con.child("grupos").child(chat).removeValue(new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError de, DatabaseReference dr) {
                 }
             });
-            con.child("chat").child(chat).removeValue(new CompletionListener() {
+            con.child("chat").child(chat).removeValue(new DatabaseReference.CompletionListener() {
                 @Override
                 public void onComplete(DatabaseError de, DatabaseReference dr) {
                 }
@@ -900,7 +919,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                     public void onDataChange(DataSnapshot snapshot) {
                         if (snapshot.exists()) {
                             for (DataSnapshot childSnapshot : snapshot.getChildren()) {
-                                con.child("ultimomsj").child(childSnapshot.getKey()).removeValue(new CompletionListener() {
+                                con.child("ultimomsj").child(childSnapshot.getKey()).removeValue(new DatabaseReference.CompletionListener() {
                                     @Override
                                     public void onComplete(DatabaseError de, DatabaseReference dr) {
                                     }
@@ -911,16 +930,159 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                     @Override
                     public void onCancelled(DatabaseError error) {
-                        JOptionPane.showMessageDialog(context, "Error: " + error);
+                        JOptionPane.showMessageDialog(context, "Error: "+error);
+                        //   Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(context, "Error: " + e);
+                JOptionPane.showMessageDialog(context, "Error: "+e);
+
+                // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+                //  toast.show();
             }
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: "+e);
         }
+        //  EliminarFotos(chat);
     }
-  
+
+    /* private void EliminarFotos(String chat) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference islandRef = storageRef.child("chats/" + chat);
+        islandRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference item : listResult.getItems()) {
+                            StorageReference isl = storageRef.child(item.getPath());
+                            isl.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // File deleted successfully
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                }
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Uh-oh, an error occurred!
+                    }
+                });
+    } */
+    private void removerMiembroGrupo(String chat, String usuario) {
+        try {
+            Query query = con.child("grupos").child(chat).child("admin").orderByChild("nombre").equalTo(usuario);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // grupos msj;
+                        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                            con.child("grupos").child(chat).child("admin").child(childSnapshot.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                                }
+                            });
+                            contarMiembrosGrupo(chat);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: "+e);
+            // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            // toast.show();
+        }
+        try {
+            Query query = con.child("grupos").child(chat).child("miembros").orderByChild("nombre").equalTo(usuario);
+            query.addListenerForSingleValueEvent(new ValueEventListener() {
+                @Override
+                public void onDataChange(DataSnapshot snapshot) {
+                    if (snapshot.exists()) {
+                        // grupos msj;
+                        for (DataSnapshot childSnapshot : snapshot.getChildren()) {
+                            con.child("grupos").child(chat).child("miembros").child(childSnapshot.getKey()).removeValue(new DatabaseReference.CompletionListener() {
+                                @Override
+                                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                                }
+                            });
+                            contarMiembrosGrupo(chat);
+                        }
+                    }
+                }
+
+                @Override
+                public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
+                }
+            });
+        } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: "+e);
+            //  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
+            //  toast.show();
+        }
+
+    }
+
+    /*private void borrarFoto(String user) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference isla = storageRef.child("fotoUser/" + user + ".jpg");
+        isla.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+            @Override
+            public void onSuccess(Void aVoid) {
+                // File deleted successfully
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                // Uh-oh, an error occurred!
+            }
+        });
+
+    }
+
+    private void borrarDoc(String ruta) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference();
+        StorageReference islandRef = storageRef.child("chats/" + ruta);
+        islandRef.listAll()
+                .addOnSuccessListener(new OnSuccessListener<ListResult>() {
+                    @Override
+                    public void onSuccess(ListResult listResult) {
+                        for (StorageReference item : listResult.getItems()) {
+                            StorageReference isl = storageRef.child(item.getPath());
+                            isl.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    // File deleted successfully
+                                }
+                            }).addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception exception) {
+                                }
+                            });
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        // Uh-oh, an error occurred!
+                    }
+                });
+    }*/
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAdd;

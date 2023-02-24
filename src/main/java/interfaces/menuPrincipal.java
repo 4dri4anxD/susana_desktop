@@ -1,12 +1,13 @@
-
 package interfaces;
 
+import alerts.alert;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.xmlManagment;
 import configuracion.info;
 import disenos.colores;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import static java.awt.Frame.WAIT_CURSOR;
@@ -26,37 +27,39 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
     private DatabaseReference con;
     private String user, idioma;
     private int priv;
+    private menuPrincipal context;
+    //  private alert alerta;
 
     public menuPrincipal(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
         new configuracionVentana(this);
-       
+        context = this;
+        //   alerta=new alert();
         //inicializacion de variables
         this.con = con;
         this.user = user;
         this.priv = priv;
         this.idioma = idioma;
-        
+
         iniciarDiseno();
         idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
-        
+
         if (idioma.equals("English")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
         }
-        
+
         permisos();
         lblBienvenida.setText(lblBienvenida.getText() + " " + user);
-        
-        
+
     }
 
     public void iniciarDiseno() {//decoracion de los componentes del frame
         colorSel = colores.getGrisSel();
         color1 = colores.getGris();
         color2 = colores.getGris2();
-        
+
         lblBienvenida.setHorizontalAlignment(JLabel.LEFT);
         lblTitulo.setHorizontalAlignment(JLabel.CENTER);
 
@@ -74,7 +77,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         new disenos().botones(btnChat, 4);
         new disenos().botones(btnOpciones, 1);
         new disenos().botones(btnAtras, 1);
-        
+
         alto = btnAct.getHeight();
         ancho = btnAct.getWidth();
 
@@ -84,7 +87,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         ponerImg(btnUsers, "img/grupo2.png");
         ponerImg1(btnOpciones, "img/conf2.png");
         ponerImg1(btnAtras, "img/atras2.png");
-        
+
         btnOpciones.setOpaque(true);
         btnAtras.setOpaque(true);
     }
@@ -109,7 +112,6 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     }
 
-    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -127,9 +129,12 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         btnUsers = new javax.swing.JButton();
         btnPlantillas = new javax.swing.JButton();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setName("frame1"); // NOI18N
-        setPreferredSize(new java.awt.Dimension(965, 752));
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnlFondo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -327,6 +332,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
+        //  alerta.show("Warning", "Select an activity", idioma, true);
         new info().setXY(this.getX(), this.getY());
         new login(con).setVisible(true);
         this.dispose();
@@ -390,7 +396,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         // TODO add your handling code here:
         new info().setXY(this.getX(), this.getY());
         new menuCheckList(con, user, priv, idioma).setVisible(true);
-      //  new menuPlantillas(con, user, priv, idioma).setVisible(true);
+        //  new menuPlantillas(con, user, priv, idioma).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnPlantillasActionPerformed
 
@@ -406,7 +412,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
             o3 = "Work";
         } else {
             texto1 = "¿Qué quiere hacer?";
-            texto2 = "Seleccionar accion Acción";
+            texto2 = "Seleccionar accion";
             o1 = "Agregar/Editar trabajo";
             o2 = "Ver trabajos";
             o3 = "Trabajar";
@@ -469,15 +475,22 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
     private void btnChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChatActionPerformed
         // TODO add your handling code here:
         if (idioma.equals("English")) {
-            JOptionPane.showMessageDialog(this, "Not available");
+            JOptionPane.showMessageDialog(context, "Not available");
+            // alerta.show("Warning", "Not available", idioma, false);
         } else {
-            JOptionPane.showMessageDialog(this, "No disponible");
+            JOptionPane.showMessageDialog(context, "No disponible");
+            // alerta.show("Advertencia", "No disponible", idioma, false);
         }
     }//GEN-LAST:event_btnChatActionPerformed
 
     private void pnlFondoMousePressed(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_pnlFondoMousePressed
         // TODO add your handling code here:
     }//GEN-LAST:event_pnlFondoMousePressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma,this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void permisos() {
         switch (priv) {

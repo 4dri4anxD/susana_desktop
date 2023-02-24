@@ -25,6 +25,9 @@ import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import configuracion.info;
+import helpers.back;
+import helpers.windowClosing;
+import javax.swing.JOptionPane;
 
 public class crearTT extends JFrame {
 
@@ -184,7 +187,12 @@ public class crearTT extends JFrame {
         lblPiloto = new javax.swing.JLabel();
         cmbPiloto = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("CheckList Final");
 
@@ -207,7 +215,7 @@ public class crearTT extends JFrame {
 
         pnlDer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -231,7 +239,7 @@ public class crearTT extends JFrame {
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -501,6 +509,7 @@ public class crearTT extends JFrame {
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             this.setCursor(new Cursor(DEFAULT_CURSOR));
         }
         //actualizar seleccion
@@ -511,10 +520,12 @@ public class crearTT extends JFrame {
         //   new info().setXY(this.getX(), this.getY());
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
-        new info().setXY(this.getX(), this.getY());
-        new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        this.dispose();
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            this.dispose();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblRendimientoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblRendimientoMouseClicked
@@ -545,6 +556,11 @@ public class crearTT extends JFrame {
     private void tblActividadesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblActividadesKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_tblActividadesKeyTyped
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void rellenar(int a) {
         listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTT(), valido, storage.getListaUsuarios(), a));

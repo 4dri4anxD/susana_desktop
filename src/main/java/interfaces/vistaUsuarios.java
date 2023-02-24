@@ -1,4 +1,3 @@
-
 package interfaces;
 
 import com.google.firebase.database.DataSnapshot;
@@ -12,6 +11,8 @@ import disenos.colores;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.back;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import static java.awt.Frame.WAIT_CURSOR;
@@ -46,10 +47,10 @@ public class vistaUsuarios extends JFrame {
     public vistaUsuarios(DatabaseReference con, String user, int priv, String idioma, String nombre) {
         initComponents();
         new configuracionVentana(this);
-        
+
         carga = 0;
         this.con = con;
-        valido=true;
+        valido = true;
         modelo = (DefaultTableModel) tablaPermisos.getModel();
         this.user = user;
         this.priv = priv;
@@ -135,7 +136,12 @@ public class vistaUsuarios extends JFrame {
         btnVer = new javax.swing.JButton();
         txtPass = new javax.swing.JPasswordField();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Menu usuarios");
 
@@ -156,7 +162,7 @@ public class vistaUsuarios extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -180,7 +186,7 @@ public class vistaUsuarios extends JFrame {
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -240,7 +246,7 @@ public class vistaUsuarios extends JFrame {
         ));
         jScrollPane1.setViewportView(tablaPermisos);
 
-        btnVer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnVer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnVer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnVerMouseClicked(evt);
@@ -354,10 +360,12 @@ public class vistaUsuarios extends JFrame {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        new menuUsuarios(con, user, priv, idioma).setVisible(true);
-        this.dispose();
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            new menuUsuarios(con, user, priv, idioma).setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void txtPassFocusGained(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPassFocusGained
@@ -462,6 +470,11 @@ public class vistaUsuarios extends JFrame {
             evt.consume();
         }
     }//GEN-LAST:event_txtPassKeyTyped
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void update() {
         Query query = con.child("usuarios").orderByChild("user").equalTo(nombre).limitToLast(1);
@@ -772,6 +785,7 @@ public class vistaUsuarios extends JFrame {
                         carga = 1;
                     }
                 }
+
                 @Override
                 public void onCancelled(DatabaseError error) {
                 }

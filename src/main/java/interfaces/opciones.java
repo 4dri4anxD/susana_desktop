@@ -5,6 +5,7 @@ import configuracion.info;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.windowClosing;
 import java.awt.Cursor;
 import static java.awt.Frame.WAIT_CURSOR;
 import java.awt.Image;
@@ -86,7 +87,12 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaOptions = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Menu usuarios");
 
@@ -107,7 +113,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -131,7 +137,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -164,7 +170,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
                 "Usuarios"
             }
         ));
-        tablaOptions.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tablaOptions.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         jScrollPane1.setViewportView(tablaOptions);
 
         javax.swing.GroupLayout pnlCuerpoLayout = new javax.swing.GroupLayout(pnlCuerpo);
@@ -227,6 +233,11 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         // TODO add your handling code here:
         new info().setXY(this.getX(), this.getY());
     }//GEN-LAST:event_btnAddActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma,this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void ingles() {//poner la interfaz en ingles
         lblTitulo.setText("Configuration");

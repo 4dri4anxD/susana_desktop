@@ -5,10 +5,10 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
-import datos.infoOrdenes;
 import datos.leerJSON;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
+import helpers.windowClosing;
 import java.awt.Image;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +30,6 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
 
     //declaracion de variables globales
     private String idioma;
-    private infoOrdenes info;
     private DefaultTableModel modelo;
     private DatabaseReference con;
     private JFrame context;
@@ -117,6 +116,11 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
                             modelo.addRow(new Object[]{a.get(i)});
                         }
                     } else {
+                        if(idioma.equals("english")){
+                            JOptionPane.showMessageDialog(context, "There are no orders");
+                        }else{
+                            JOptionPane.showMessageDialog(context, "No existen ordenes");
+                        }
                         //No hay trabajos agregados aun
                         //  new showToast(getString(R.string.noTrabajosSpn), getString(R.string.noTrabajosEng), idioma, getContext());
                     }
@@ -124,11 +128,13 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
                     //   new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getContext());
 
                 }
             });
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: "+e);
             // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + e, getString(R.string.lblErrorWhileReadingDBEng) + e, idioma, getContext());
         }
 
@@ -160,7 +166,12 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaExtras = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         tablaExtras.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -204,6 +215,11 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma,this);
+    }//GEN-LAST:event_formWindowClosing
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

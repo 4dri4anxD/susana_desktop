@@ -11,7 +11,9 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.back;
 import helpers.crearOrdenes;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Font;
@@ -82,9 +84,9 @@ public class crearTS extends JFrame {
                 actividades.addAll(storage.getAccesoriosTS());
                 requisitos.addAll(storage.getRequisitosTS());
             } catch (Exception e) {
-                System.out.println("erorrrrrrrrrrrrrr: " + e);
+                JOptionPane.showMessageDialog(context, "Error: " + e);
             }
-            
+
             fill(true);
             cmbPlantilla.setEnabled(valido);
             mensajeAdj = storage.getMensajeTS();
@@ -161,9 +163,8 @@ public class crearTS extends JFrame {
         new disenoTabla().cabecera(tblActividades);
         tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
         // System.out.println("Antres: "+chkAirTag.isSelected());
-        
-        // System.out.println("Chk desues: "+chkAirTag.isSelected());
 
+        // System.out.println("Chk desues: "+chkAirTag.isSelected());
     }
 
     private void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
@@ -223,7 +224,12 @@ public class crearTS extends JFrame {
         cmbCase = new javax.swing.JComboBox<>();
         chkAirTag = new javax.swing.JCheckBox();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("CheckList de Envios");
 
@@ -567,21 +573,29 @@ public class crearTS extends JFrame {
                 new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
                 this.dispose();
             } else {
+                if (idioma.equals("english")) {
+                    JOptionPane.showMessageDialog(context, "Fill product's blank");
+                } else {
+                    JOptionPane.showMessageDialog(context, "Llene el campo de producto");
+                }
                 //escriba el nomrbe del producto
             }
 
         } catch (Exception e) {
-            this.setCursor(new Cursor(DEFAULT_CURSOR));
+            JOptionPane.showMessageDialog(context, "Error: " + e);
+            //  this.setCursor(new Cursor(DEFAULT_CURSOR));
         }
         //actualizar seleccion
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
-        new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        this.dispose();
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            this.dispose();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
@@ -666,6 +680,11 @@ public class crearTS extends JFrame {
         }
 
     }//GEN-LAST:event_txtProductoKeyTyped
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void limpiarTabla() {
         co.limpiarTabla(modelo);
@@ -783,7 +802,7 @@ public class crearTS extends JFrame {
         }
         if (txtProducto.getText().equals("")) {
             txtProducto.setText(hintProducto);
-        }else{
+        } else {
             txtProducto.setForeground(Color.black);
         }
         txtProducto.requestFocus();

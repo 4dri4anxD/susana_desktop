@@ -10,6 +10,7 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -57,10 +58,10 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         //centrar el texto de las celdas de la tabla
         DefaultTableCellRenderer tcr = new DefaultTableCellRenderer();
         modelo = (DefaultTableModel) tablaUsers.getModel();
-       // tcr.setHorizontalAlignment(SwingConstants.CENTER);
-      //  for (int i = 0; i < modelo.getColumnCount(); i++) {
-       //     tablaUsers.getColumnModel().getColumn(i).setCellRenderer(tcr);
-      //  }
+        // tcr.setHorizontalAlignment(SwingConstants.CENTER);
+        //  for (int i = 0; i < modelo.getColumnCount(); i++) {
+        //     tablaUsers.getColumnModel().getColumn(i).setCellRenderer(tcr);
+        //  }
         tablaUsers.setDefaultRenderer(Object.class, new centerTextInTable());
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
         txtBuscar.setHorizontalAlignment(JLabel.CENTER);
@@ -123,7 +124,12 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         jScrollPane1 = new javax.swing.JScrollPane();
         tablaUsers = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         pnlFondo.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mousePressed(java.awt.event.MouseEvent evt) {
@@ -385,26 +391,26 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
             int sel = tablaUsers.getSelectedRow();
             if (sel == -1) {
                 new info().setXY(this.getX(), this.getY());
-                if(check==2){
+                if (check == 2) {
                     new vistaPlantillasTT(con, user, priv, idioma, null, check).setVisible(true);
-                }else{
+                } else {
                     new vistaPlantillas(con, user, priv, idioma, null, check).setVisible(true);
                 }
                 this.dispose();
             } else {
                 new info().setXY(this.getX(), this.getY());
-                if(check==2){
+                if (check == 2) {
                     new vistaPlantillasTT(con, user, priv, idioma, modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(),
-                        check).setVisible(true);
-                }else{
+                            check).setVisible(true);
+                } else {
                     new vistaPlantillas(con, user, priv, idioma, modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(),
-                        check).setVisible(true);
+                            check).setVisible(true);
                 }
-                
+
                 this.dispose();
             }
         } catch (Exception e) {
-            System.out.println("Error: " + e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
     }//GEN-LAST:event_btnAddActionPerformed
 
@@ -437,7 +443,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                 null, options, options[0]) == 0) {
             try {
                 String id = modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString();
-               // String plantilla = modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString();
+                // String plantilla = modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString();
                 eliminar(id, tablaUsers.getSelectedRow());
             } catch (NullPointerException e) {
                 if (idioma.equals("English")) {
@@ -506,6 +512,11 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         }
     }//GEN-LAST:event_txtBuscarKeyTyped
 
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma,this);
+    }//GEN-LAST:event_formWindowClosing
+
     private String getTableName() {
         String plantilla = "";
         switch (check) {
@@ -541,9 +552,9 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
             // localDataSet1.remove(position);
         } catch (Exception e) {
-
+            JOptionPane.showMessageDialog(context, "Error: "+e);
         }
-       
+
     }
 
     private void buscar(String bus) {//busca alguna plantilla si su nombre coincide en parte con la busqueda
@@ -562,13 +573,15 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                             // Toast.makeText(getApplicationContext(), "Notifica el siguiente error: " + e, Toast.LENGTH_LONG).show();
                         }
                     } else {
-                        if(modelo.getRowCount()<2){
+                        if (modelo.getRowCount() < 2) {
                             limpiarTabla();
                             leer();
                         }
                         if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "No results were found");
                             // Toast.makeText(getApplicationContext(), "No se encontraron resultados", Toast.LENGTH_SHORT).show();
                         } else {
+                            JOptionPane.showMessageDialog(context, "No se encontraron resultados");
                             // Toast.makeText(getApplicationContext(), "No results found", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -576,10 +589,12 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
                     // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: "+e);
             //Context context = getApplicationContext();
             // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             //  toast.show();
@@ -605,12 +620,15 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                             }
                             llenarTabla(keys);
                         } catch (Exception e) {
+                            JOptionPane.showMessageDialog(context, "Error: "+e);
                             // Toast.makeText(getApplicationContext(), "Notifica el siguiente error: " + e, Toast.LENGTH_LONG).show();
                         }
                     } else {
                         if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "There are no templates");
                             // Toast.makeText(getApplicationContext(), "There are no templates", Toast.LENGTH_LONG).show();
                         } else {
+                            JOptionPane.showMessageDialog(context, "No existen plantillas");
                             //Toast.makeText(getApplicationContext(), "No existen plantillas", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -618,11 +636,13 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
                 @Override
                 public void onCancelled(DatabaseError error) {
+                    JOptionPane.showMessageDialog(context, "Error: "+error);
                     // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                 }
             });
 
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: "+e);
             // Context context = getApplicationContext();
             //  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             //  toast.show();

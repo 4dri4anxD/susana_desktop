@@ -3,9 +3,13 @@ package interfaces;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
 import datos.temporalStorage;
+import disenos.colores;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.enableActivityTable;
 import disenos.ventanas.configuracionVentana;
+import helpers.back;
+import helpers.windowClosing;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.awt.Point;
@@ -36,11 +40,13 @@ public class CheckListTS extends JFrame {
     private ArrayList<String> actividades, mensajes;
     private ArrayList<Integer> completado;
     private CheckListTS context;
+    private ArrayList<Boolean> habilitar;
+    private boolean val;
 
     public CheckListTS(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {
         initComponents();
         new configuracionVentana(this);
-        modelo = (DefaultTableModel) tblActividades.getModel();
+        //  modelo = (DefaultTableModel) tblActividades.getModel();
         context = this;
         this.idioma = idioma;
         this.modo = modo;
@@ -50,9 +56,11 @@ public class CheckListTS extends JFrame {
         this.con = con;
         this.priv = priv;
 
+        val = true;
         actividades = new ArrayList();
         mensajes = new ArrayList();
         completado = new ArrayList();
+        habilitar = new ArrayList();
 
         storage = new temporalStorage();
         disenos = new disenos();
@@ -61,9 +69,40 @@ public class CheckListTS extends JFrame {
         actividades.addAll(storage.getAccesoriosTS());
         mensajes.addAll(storage.getComentarioTS());
 
+        getPermitidos();
+        procesosTabla();
+
         iniciarDiseno();
         ponerTabla();
         mostrar();
+
+    }
+
+    private void procesosTabla() {
+        String t[] = {"Actividades", "Realizado", "No aplica"};
+        modelo = new DefaultTableModel(null, t) {//se crea un modelo para inhabilitar la edicion  de filas con procesos ya completados
+            @Override
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                if (columnIndex == 1 || columnIndex == 2) {
+                    if (habilitar.get(rowIndex)) {
+                        return true;
+                    }
+                    return false;
+                } else {
+                    return false;
+                }
+            }
+
+            @Override
+            public Class getColumnClass(int columnIndex) {
+                if (columnIndex == 0) {
+                    return Object.class;
+                }
+                return Boolean.class;
+            }
+        };
+        tblActividades.setModel(modelo);
+        tblActividades.setDefaultRenderer(Object.class, new enableActivityTable(habilitar));
 
         tblActividades.addMouseListener(new MouseAdapter() {
             public void mousePressed(MouseEvent mouseEvent) {
@@ -71,19 +110,21 @@ public class CheckListTS extends JFrame {
                 Point point = mouseEvent.getPoint();
                 int row = table.rowAtPoint(point);
                 if (mouseEvent.getClickCount() == 2 && table.getSelectedRow() != -1) {
-                    String titulo, cuerpo;
-                    if (idioma.equals("english")) {
-                        titulo = "Message";
-                        cuerpo = "Write a comment";
-                    } else {
-                        titulo = "Mensaje";
-                        cuerpo = "Escriba un comentario";
-                    }
-                    String mensaje = mensajes.get(row);
-                    String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
-                    if (resp != null) {
-                        if (!resp.equals("")) {
-                            mensajes.set(row, resp);
+                    if (habilitar.get(table.getSelectedRow())) {
+                        String titulo, cuerpo;
+                        if (idioma.equals("english")) {
+                            titulo = "Message";
+                            cuerpo = "Write a comment";
+                        } else {
+                            titulo = "Mensaje";
+                            cuerpo = "Escriba un comentario";
+                        }
+                        String mensaje = mensajes.get(row);
+                        String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                        if (resp != null) {
+                            if (!resp.equals("")) {
+                                mensajes.set(row, resp);
+                            }
                         }
                     }
 
@@ -92,7 +133,43 @@ public class CheckListTS extends JFrame {
         });
     }
 
+    private void getPermitidos() {
+        int i = 0;
+        LinkedHashMap<String, ArrayList<String>> procesosRequeridos = new LinkedHashMap();
+        ArrayList<Integer> requisitos = new ArrayList();
+        requisitos.addAll(storage.getRequisitosTS());
+        for (Integer req : requisitos) {
+            ArrayList<String> g = new ArrayList();
+            String b = Integer.toBinaryString(req);//se convierte el numero de "requisito" en binario
+            for (int k = 0; k < b.length(); k++) {//se recorren los bits de requisito
+                if (b.charAt(k) == '1') {//si bit leido es un 1
+                    g.add(storage.getAccesoriosTS().get(((b.length() - 1) - k)));
+                }
+            }
+            procesosRequeridos.put(actividades.get(i), g);//se coloca el nombre del proceso actual, y la lista de nombres de los procesos requeridos para poder empezar a hacer este
+            i++;
+        }
+        for (String key : procesosRequeridos.keySet()) {
+            if (procesosRequeridos.get(key).size() > 0) {
+                boolean permit = true;
+                for (String value : procesosRequeridos.get(key)) {
+                    int index = storage.getAccesoriosTS().indexOf(value);
+                    if (storage.getCompletadoTS().get(index) == 0) {
+                        permit = false;
+                    }
+                }
+                habilitar.add(permit);
+            } else {
+                habilitar.add(true);
+            }
+        }
+
+    }
+
     public void iniciarDiseno() {//decorar los componentes del frame
+
+        tblActividades.setBackground(colores.grisTenue);
+        tblActividades.setSelectionBackground(colores.grisTenue);
 
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
@@ -140,7 +217,12 @@ public class CheckListTS extends JFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblActividades = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Check shipment");
 
@@ -221,6 +303,12 @@ public class CheckListTS extends JFrame {
                 .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
+
+        pnlCuerpo.addComponentListener(new java.awt.event.ComponentAdapter() {
+            public void componentResized(java.awt.event.ComponentEvent evt) {
+                pnlCuerpoComponentResized(evt);
+            }
+        });
 
         tblActividades.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -340,11 +428,11 @@ public class CheckListTS extends JFrame {
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();
-        }else{
+        } else {
             if (idioma.equals("English")) {
-                JOptionPane.showMessageDialog(context, "Select only one column at "+actividad);
+                JOptionPane.showMessageDialog(context, "Select only one column at " + actividad);
             } else {
-                JOptionPane.showMessageDialog(context, "Seleccione una sola columna en la actividad "+actividad);
+                JOptionPane.showMessageDialog(context, "Seleccione una sola columna en la actividad " + actividad);
             }
         }
     }//GEN-LAST:event_btnAddActionPerformed
@@ -375,10 +463,12 @@ public class CheckListTS extends JFrame {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
-        this.dispose();
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
+            this.dispose();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
@@ -415,6 +505,23 @@ public class CheckListTS extends JFrame {
     private void tblActividadesKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblActividadesKeyTyped
         // TODO add your handling code here:
     }//GEN-LAST:event_tblActividadesKeyTyped
+
+    private void pnlCuerpoComponentResized(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_pnlCuerpoComponentResized
+        // TODO add your handling code here:
+        if (val) {//De una sola ejecucion
+            int anchoPanel = (int) (pnlCuerpo.getWidth() / 10);
+            TableColumnModel tableColumnModel = tblActividades.getColumnModel();
+            tableColumnModel.getColumn(0).setMaxWidth((anchoPanel * 6));
+            tableColumnModel.getColumn(1).setMaxWidth((anchoPanel * 2));
+            tableColumnModel.getColumn(2).setMaxWidth((anchoPanel * 2));
+            val = false;
+        }
+    }//GEN-LAST:event_pnlCuerpoComponentResized
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void ponerTabla() {//poner las actividades del proceso seleccionado en la tabla
         for (int i = 0; i < actividades.size(); i++) {

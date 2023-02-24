@@ -16,7 +16,9 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.back;
 import helpers.crearOrdenes;
+import helpers.windowClosing;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -81,9 +83,9 @@ public class crearTF extends JFrame {
                 requisitos.addAll(storage.getRequisitosTF());
                 seleccion.addAll(storage.getUsuariosTF());
             } catch (Exception e) {
-                System.out.println("erorrrrrrrrrrrrrr: " + e);
+                JOptionPane.showMessageDialog(context, "Error: " + e);
             }
-            
+
             cmbPlantilla.setEnabled(valido);
             //   listaUsuarios.addAll(co.rellenar(cmbPlantilla, cmbResponsable, storage.getPlantillasTF(), valido, storage.getListaUsuarios(), 1));
             //  ponerRv();
@@ -177,7 +179,12 @@ public class crearTF extends JFrame {
         cmbResponsable = new javax.swing.JComboBox<>();
         cmbPlantilla = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("CheckList Final");
 
@@ -200,7 +207,7 @@ public class crearTF extends JFrame {
 
         pnlDer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -224,7 +231,7 @@ public class crearTF extends JFrame {
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -412,6 +419,7 @@ public class crearTF extends JFrame {
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             this.setCursor(new Cursor(DEFAULT_CURSOR));
         }
         //actualizar seleccion
@@ -422,10 +430,12 @@ public class crearTF extends JFrame {
         //   new info().setXY(this.getX(), this.getY());
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
-        new info().setXY(this.getX(), this.getY());
-        new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        this.dispose();
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            this.dispose();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
@@ -451,6 +461,11 @@ public class crearTF extends JFrame {
 
         }
     }//GEN-LAST:event_cmbPlantillaActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     private void limpiarTabla() {
         co.limpiarTabla(modelo);

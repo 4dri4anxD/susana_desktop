@@ -1,5 +1,6 @@
 package interfaces;
 
+import alerts.alert;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -15,23 +16,13 @@ import java.awt.Cursor;
 import static java.awt.Frame.DEFAULT_CURSOR;
 import static java.awt.Frame.TEXT_CURSOR;
 import static java.awt.Frame.WAIT_CURSOR;
-import java.awt.Image;
 import java.awt.event.KeyEvent;
 import java.io.IOException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import obtenerDatos.users;
 import seguridad.encriptado;
-import java.io.InputStream;
-import java.net.MalformedURLException;
-import java.net.URL;
-import java.net.URLConnection;
-import java.util.Scanner;
-
 /*
 1-llamar al proceso como ps su nombre y un numero, ej. proceso1
 2-Agregar variable que diga si esta duplicado y cuantas veces
@@ -50,8 +41,7 @@ asi cuando finalice, se suma el tiempo transcurrido + la fecha de termino-fecha 
 reworks debe reiniciar todo esto
 
 
-*/
-
+ */
 public class login extends confiLogin {//frame con el login de la aplicacion
 
     //declaracion de variables globales
@@ -59,18 +49,18 @@ public class login extends confiLogin {//frame con el login de la aplicacion
     private String idioma;//idioma de la interfaz
     private DatabaseReference con;
     private boolean ing;
+   // private alert alerta;
+    private login context;
 
     public login(DatabaseReference con) {
         initComponents();
-
+      //  alerta = new alert();
         iniciarDiseno();//decorar componentes de este frame
-
+        context=this;
         ing = true;
 
-  
         //estilizacion de la ventana
-     //   new configuracionLogin(this);
-
+        //   new configuracionLogin(this);
         idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
         if (idioma.equals("English")) {
             ingles();//cambia la interfaz a ingles
@@ -81,8 +71,8 @@ public class login extends confiLogin {//frame con el login de la aplicacion
             try {
                 this.con = new Connect().getCon();
             } catch (IOException ex) {
-                System.out.println("Ex: "+ex);
-                Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
+                System.out.println("Ex: " + ex);
+                //  Logger.getLogger(login.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else {
             this.con = con;
@@ -118,7 +108,6 @@ public class login extends confiLogin {//frame con el login de la aplicacion
         txtUser.requestFocus();
     }
 
- 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -351,10 +340,11 @@ public class login extends confiLogin {//frame con el login de la aplicacion
                                         txtUser.setCursor(new Cursor(TEXT_CURSOR));
                                         txtPass.setCursor(new Cursor(TEXT_CURSOR));
                                         if (idioma.equals("English")) {
-                                            JOptionPane.showMessageDialog(a, "Wrong data");
+                                            JOptionPane.showMessageDialog(context, "Wrong data");
+                                          //  alerta.show("Warning", "Wrong data", idioma, false);
                                         } else {
-
-                                            JOptionPane.showMessageDialog(a, "Datos incorrectos");
+                                            JOptionPane.showMessageDialog(context, "Datos incorrectos");
+                                           // alerta.show("Advertencia", "Datos incorrectos", idioma, false);
                                         }
                                     }
                                 } catch (Exception e) {
@@ -363,7 +353,6 @@ public class login extends confiLogin {//frame con el login de la aplicacion
                                     a.setCursor(new Cursor(DEFAULT_CURSOR));
                                     txtUser.setCursor(new Cursor(TEXT_CURSOR));
                                     txtPass.setCursor(new Cursor(TEXT_CURSOR));
-                                    System.out.println("Error: " + e);
                                 }
                             }
                         } else {//si no existe el usuario en la bd
@@ -372,9 +361,11 @@ public class login extends confiLogin {//frame con el login de la aplicacion
                             txtUser.setCursor(new Cursor(TEXT_CURSOR));
                             txtPass.setCursor(new Cursor(TEXT_CURSOR));
                             if (idioma.equals("English")) {
-                                JOptionPane.showMessageDialog(a, "Wrong data");
+                                JOptionPane.showMessageDialog(context, "Wrong data");
+                               // alerta.show("Warning", "Wrong data", idioma, false);;
                             } else {
-                                JOptionPane.showMessageDialog(a, "Datos incorrectos");
+                                JOptionPane.showMessageDialog(context, "Datos incorrectos");
+                               // alerta.show("Advertencia", "Datos incorrectos", idioma, false);
                             }
                         }
                     }
@@ -399,10 +390,11 @@ public class login extends confiLogin {//frame con el login de la aplicacion
             }
         } else {//si no se llenen todos los campos
             if (idioma.equals("English")) {
-                JOptionPane.showMessageDialog(this, "Fill out all fields");
+                JOptionPane.showMessageDialog(context, "Fill out all fields");
+              //  alerta.show("Warning", "Fill out all fields", idioma, false);
             } else {
-
-                JOptionPane.showMessageDialog(this, "Llene todos los campos");
+                JOptionPane.showMessageDialog(context, "Llene todos los campos");
+              //  alerta.show("Advertencia", "Llene todos los campos", idioma, false);
             }
         }
     }
@@ -430,7 +422,6 @@ public class login extends confiLogin {//frame con el login de la aplicacion
         txtPass.setForeground(Color.LIGHT_GRAY);
         txtUser.setForeground(Color.LIGHT_GRAY);
     }
-
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

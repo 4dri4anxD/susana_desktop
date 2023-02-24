@@ -10,6 +10,8 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.back;
+import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -81,7 +83,7 @@ public class vistaPlantillas extends JFrame {
             }
 
         }
-    
+
     }
 
     private void iniciarVariables() {
@@ -123,7 +125,7 @@ public class vistaPlantillas extends JFrame {
         final JTextField text = new JTextField();
         TableCellEditor s = new DefaultCellEditor(text);
         tablaPermisos.setCellEditor(s);
-        
+
     }
 
     public void ponerImg(JButton b, String ruta) {
@@ -155,7 +157,12 @@ public class vistaPlantillas extends JFrame {
         scrool = new javax.swing.JScrollPane();
         tablaPermisos = new javax.swing.JTable();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("Menu usuarios");
 
@@ -398,8 +405,9 @@ public class vistaPlantillas extends JFrame {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-
-        cambio();
+        if (new back().backConf(idioma, this)) {
+            cambio();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
@@ -424,7 +432,7 @@ public class vistaPlantillas extends JFrame {
             //  boolean val = true;
             //   actualizarIndices();//actualizar datos.procesosPlantilla
             if (!txtNombre.getText().equals(tN)) {//si hay algo en los campos de texto diferente al hint
-                if (!txtNombre.getText().contains("{")||!txtNombre.getText().contains("}")||!txtNombre.getText().contains(";")) {
+                if (!txtNombre.getText().contains("{") || !txtNombre.getText().contains("}") || !txtNombre.getText().contains(";")) {
                     String tableName = getTableName();
                     if (plantilla != null) {//update
                         //Eliminar e insertar
@@ -436,6 +444,7 @@ public class vistaPlantillas extends JFrame {
                             });
                             insert(true);
                         } catch (Exception e) {
+                            JOptionPane.showMessageDialog(context, "Error: " + e);
                             //  Context context = getApplicationContext();
                             // Toast toast = Toast.makeText(context, "Notifica el siguiente error20: " + e, Toast.LENGTH_SHORT);
                             // toast.show();
@@ -443,7 +452,7 @@ public class vistaPlantillas extends JFrame {
                     } else {//insert
                         leerC(tableName);
                     }
-                }else{
+                } else {
                     //caracteres invalidos
                 }
             } else {
@@ -606,7 +615,7 @@ public class vistaPlantillas extends JFrame {
             } catch (Exception e) {
                 // System.out.println("ex: "+e);
             }
-            new requisitos( idioma, tablaPermisos.getSelectedRow(), procesoSel, req, actireq, this, null,0).setVisible(true);
+            new requisitos(idioma, tablaPermisos.getSelectedRow(), procesoSel, req, actireq, this, null, 0).setVisible(true);
             //   }
         } catch (Exception e) {
             if (idioma.equals("English")) {
@@ -627,6 +636,11 @@ public class vistaPlantillas extends JFrame {
             comprobarTabla();
         }
     }//GEN-LAST:event_scroolKeyPressed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     private String getTableName() {
         String plantilla = "";
@@ -713,19 +727,21 @@ public class vistaPlantillas extends JFrame {
                                     //llenarTabla
 
                                 } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(context, "Error: " + e);
                                     // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 if (idioma.equals("english")) {
-                                    //  Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
+                                    JOptionPane.showMessageDialog(context, "An error has ocurred while reading data base");
                                 } else {
-                                    // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
+                                    JOptionPane.showMessageDialog(context, "Ha ocurrido un error al leer la base de datos");
                                 }
                             }
                         }
 
                         @Override
                         public void onCancelled(DatabaseError error) {
+                            JOptionPane.showMessageDialog(context, "Error: " + error);
                             //Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -745,26 +761,23 @@ public class vistaPlantillas extends JFrame {
                                         actireq.put(dato.getAccesorio(), dato.getRequisito());
                                         modelo.addRow(new Object[]{dato.getAccesorio()});
                                     }
-                                    //poner rv
-                                    //  LinearLayoutManager layoutManager = new LinearLayoutManager(getApplicationContext());
-                                    // rvVCC.setLayoutManager(layoutManager);
 
-                                    //mAdapter = new adapterVCC(ubicacion, requisito, vistaCheckListsPlantillas.this, priv, nomU, idioma, vistaCheckListsPlantillas.this, txtId.getText().toString(), tipo, rendimiento, requisitoR, 1, iu);
-                                    //rvVCC.setAdapter(mAdapter);
                                 } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(context, "Error: " + e);
                                     // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 if (idioma.equals("english")) {
-                                    // Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
+                                    JOptionPane.showMessageDialog(context, "An error has ocurred while reading data base");
                                 } else {
-                                    // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
+                                    JOptionPane.showMessageDialog(context, "Ha ocurrido un error al leer la base de datos");
                                 }
                             }
                         }
 
                         @Override
                         public void onCancelled(DatabaseError error) {
+                            JOptionPane.showMessageDialog(context, "Error: " + error);
                             // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -785,18 +798,21 @@ public class vistaPlantillas extends JFrame {
                                         modelo.addRow(new Object[]{dato.getActividad()});
                                     }
                                 } catch (Exception e) {
+                                    JOptionPane.showMessageDialog(context, "Error: " + e);
                                     // Toast.makeText(getApplicationContext(), "Notifica el siguiente error1: " + e, Toast.LENGTH_LONG).show();
                                 }
                             } else {
                                 if (idioma.equals("english")) {
-                                    // Toast.makeText(getApplicationContext(), "An error has ocurred while reading data base", Toast.LENGTH_SHORT).show();
+                                    JOptionPane.showMessageDialog(context, "An error has ocurred while reading data base");
                                 } else {
-                                    // Toast.makeText(getApplicationContext(), "Ha ocurrido un error al leer la base de datos", Toast.LENGTH_SHORT).show();
+                                    JOptionPane.showMessageDialog(context, "Ha ocurrido un error al leer la base de datos");
                                 }
                             }
                         }
+
                         @Override
                         public void onCancelled(DatabaseError error) {
+                            JOptionPane.showMessageDialog(context, "Error: " + error);
                             // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                         }
                     });
@@ -804,9 +820,8 @@ public class vistaPlantillas extends JFrame {
             }
 
         } catch (Exception e) {
-            //  Context context = getApplicationContext();
-            // Toast toast = Toast.makeText(context, "Notifica el siguiente error1:" + e, Toast.LENGTH_SHORT);
-            // toast.show();
+            JOptionPane.showMessageDialog(context, "Error: " + e);
+
         }
     }
 
@@ -819,20 +834,21 @@ public class vistaPlantillas extends JFrame {
                     if (!snapshot.exists()) {
                         insert(false);
                     } else {
-                        //  btnGuardar.setEnabled(true);
-                        // mostrarTexto("El ID de plantilla ya existe ", "Template's ID already exists");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "Template's ID already exists");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "Ya existe el ID de la plantilla");
+                        }
                     }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    //  Toast.makeText(getApplicationContext(), "Error: " + error, Toast.LENGTH_SHORT).show();
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                 }
             });
         } catch (Exception e) {
-            // Context context = getApplicationContext();
-            // Toast toast = Toast.makeText(context, "Notifica el siguiente error1:" + e, Toast.LENGTH_SHORT);
-            //  toast.show();
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
     }
 
@@ -876,17 +892,15 @@ public class vistaPlantillas extends JFrame {
                     }
                     break;
             }
-            if (update) {
-                //  mostrarTexto("Plantilla actualizada exitosamente", "Template updated succesfully");
+            if (idioma.equals("english")) {
+                JOptionPane.showMessageDialog(context, "Template saved succesfully");
             } else {
-                // mostrarTexto("Plantilla creada exitosamente", "Template created succesfully");
+                JOptionPane.showMessageDialog(context, "Plantilla almacenada existosamente");
             }
             cambio();
 
         } catch (Exception e) {
-            // Context context = getApplicationContext();
-            //  Toast toast = Toast.makeText(context, "Notifica el siguiente error20: " + e, Toast.LENGTH_SHORT);
-            //  toast.show();
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
 
     }

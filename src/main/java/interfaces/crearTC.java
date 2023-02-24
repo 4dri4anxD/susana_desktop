@@ -7,10 +7,12 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.back;
 import helpers.crearOrdenes;
 import helpers.crearOrdenes.CallBackActividades;
 import helpers.crearOrdenes.CallBackPlantillas;
 import helpers.crearOrdenes.CallBackUsuarios;
+import helpers.windowClosing;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -77,7 +79,8 @@ public class crearTC extends JFrame {
                     }
                 }
             } catch (Exception e) {
-                System.out.println("erorrrrrrrrrrrrrr: " + e);
+                JOptionPane.showMessageDialog(context, "Error: " + e);
+                // System.out.println("erorrrrrrrrrrrrrr: " + e);
             }
             cmbPlantilla.setEnabled(valido);
         } else {//insert
@@ -173,7 +176,12 @@ public class crearTC extends JFrame {
         cmbResponsable = new javax.swing.JComboBox<>();
         cmbPlantilla = new javax.swing.JComboBox<>();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         lblTitulo.setText("CheckList de Calidad");
 
@@ -196,14 +204,14 @@ public class crearTC extends JFrame {
 
         pnlDer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnAddComment.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAddComment.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAddComment.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddCommentActionPerformed(evt);
@@ -231,7 +239,7 @@ public class crearTC extends JFrame {
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -424,6 +432,7 @@ public class crearTC extends JFrame {
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
+            System.out.println("Error: " + e);
             this.setCursor(new Cursor(DEFAULT_CURSOR));
         }
         //actualizar seleccion
@@ -434,10 +443,12 @@ public class crearTC extends JFrame {
         //   new info().setXY(this.getX(), this.getY());
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
-        new info().setXY(this.getX(), this.getY());
-        new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
-        this.setCursor(new Cursor(WAIT_CURSOR));
-        this.dispose();
+        if (new back().backConf(idioma, this)) {
+            new info().setXY(this.getX(), this.getY());
+            new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
+            this.setCursor(new Cursor(WAIT_CURSOR));
+            this.dispose();
+        }
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void tblActividadesMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblActividadesMouseClicked
@@ -481,6 +492,11 @@ public class crearTC extends JFrame {
             getActividades(cmbPlantilla.getSelectedItem().toString());
         }
     }//GEN-LAST:event_cmbPlantillaActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
+    }//GEN-LAST:event_formWindowClosing
 
     public void setComentarios(LinkedHashMap<String, ArrayList<String>> comentarios) {
         this.comentarios = comentarios;

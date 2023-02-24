@@ -12,7 +12,8 @@ public class colores {//clase con variables con distintos colores utilizados por
             grisSel = new Color(80, 80, 80),
             grisSel1 = new Color(120, 120, 120),
             focus = new Color(146, 189, 252),
-            grisBlanco = new Color(223, 223, 223);
+            grisBlanco = new Color(223, 223, 223),
+            grisTenue = new Color(245, 246, 245);
 
 
     public static Color getGris() {
