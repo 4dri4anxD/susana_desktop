@@ -12,6 +12,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.crearOrdenes;
 import helpers.windowClosing;
 import java.awt.Color;
@@ -52,6 +53,7 @@ public class crearTS extends JFrame {
 
     public crearTS(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
+ 
         new configuracionVentana(this);
         //Igualar parametros
         this.con = con;
@@ -569,7 +571,7 @@ public class crearTS extends JFrame {
                 storage.setMensajeTS(mensajeAdj);
                 storage.setProductoTS(txtProducto.getText());
                 //volver
-                new info().setXY(this.getX(), this.getY());
+                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
                 this.dispose();
             } else {
@@ -591,7 +593,7 @@ public class crearTS extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();

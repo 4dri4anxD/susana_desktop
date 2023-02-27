@@ -11,6 +11,7 @@ import disenos.disenos;
 import disenos.enableActivityTable;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Cursor;
 import static java.awt.Frame.WAIT_CURSOR;
@@ -47,10 +48,11 @@ public class CheckListTC extends JFrame {
     private ArrayList<Boolean> aprobado, revsol, habilitar;
     private CheckListTC context;
     private boolean val;
-    // private alert alerta;
 
+    // private alert alerta;
     public CheckListTC(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {//LinkedHashMap<String, List<String>> hm, ArrayList<String> codProceso,ArrayList<String> procesos
         initComponents();
+
         //inicializacion de variables
         new configuracionVentana(this);
         //   modelo = (DefaultTableModel) tblActividades.getModel();
@@ -87,6 +89,11 @@ public class CheckListTC extends JFrame {
         ponerTabla();
         mostrar();
 
+        if (modo == 1) {
+            btnAdd.setVisible(false);
+
+        }
+
     }
 
     private void procesosTabla() {
@@ -95,10 +102,14 @@ public class CheckListTC extends JFrame {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 if (columnIndex == 1 || columnIndex == 2) {
-                    if (habilitar.get(rowIndex)) {
-                        return true;
+                    if (modo == 1) {
+                        return false;
+                    } else {
+                        if (habilitar.get(rowIndex)) {
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
                 } else {
                     return false;
                 }
@@ -131,12 +142,27 @@ public class CheckListTC extends JFrame {
                             cuerpo = "Escriba un comentario";
                         }
                         String mensaje = mensajes.get(row);
-                        String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
-                        if (resp != null) {
-                            if (!resp.equals("")) {
-                                mensajes.set(row, resp);
+                        if (modo == 1) {
+                            if (mensaje.equals("")) {
+                                if (idioma.equals("english")) {
+                                    JOptionPane.showMessageDialog(context, "There's no comments written by workers");
+                                } else {
+                                    JOptionPane.showMessageDialog(context, "No hay comentarios hechos por el trabajador");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(context, mensaje);
+                            }
+
+                        } else {
+                            String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                            if (resp != null) {
+                                if (!resp.equals("")) {
+                                    mensajes.set(row, resp);
+                                }
                             }
                         }
+
                     }
 
                 }
@@ -275,7 +301,7 @@ public class CheckListTC extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
             .addGroup(pnlDerLayout.createSequentialGroup()
@@ -420,7 +446,8 @@ public class CheckListTC extends JFrame {
         storage.setRevsolTC(revsol);
         storage.setAprobadoTC(aprobado);
         storage.setMensajeTC(mensajes);
-        new info().setXY(this.getX(), this.getY());
+        // new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
         this.dispose();
@@ -429,7 +456,8 @@ public class CheckListTC extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            //  new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();
@@ -453,18 +481,28 @@ public class CheckListTC extends JFrame {
         // TODO add your handling code here:
         //Abre nueva ventana
         try {
-            new info().setXY(this.getX(), this.getY());
-            if (comentarios.get(actividades.get(tblActividades.getSelectedRow())).size() == 0) {
-                //no hay
+           // new info().setXY(this.getX(), this.getY());
+           new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            if (tblActividades.getSelectedRow() == -1) {
+                if (idioma.equals("english")) {
+                    JOptionPane.showMessageDialog(context, "Select an activity");
+                } else {
+                    JOptionPane.showMessageDialog(context, "Seleccione una actividad");
+                }
             } else {
-                new addComentarios(user, priv, idioma, 5, actividades.get(tblActividades.getSelectedRow()), comentarios, null).setVisible(true);
+                if (comentarios.get(actividades.get(tblActividades.getSelectedRow())).size() == 0) {
+                    //no hay
+                } else {
+                    new addComentarios(user, priv, idioma, 5, actividades.get(tblActividades.getSelectedRow()), comentarios, null).setVisible(true);
+                }
             }
+
         } catch (Exception e) {
-            if (idioma.equals("English")) {
-                JOptionPane.showMessageDialog(context, "Select an activity");
+            if (idioma.equals("english")) {
+                JOptionPane.showMessageDialog(context, "There's no comments about this activity");
                 // alerta.show("Warning", "Select an activity", idioma, false);
             } else {
-                JOptionPane.showMessageDialog(context, "Seleccione una actividad");
+                JOptionPane.showMessageDialog(context, "No hay comentarios acerca de esta actividad");
                 //  alerta.show("Advertencia", "Seleccione una actividad", idioma, false);
             }
         }

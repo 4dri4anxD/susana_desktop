@@ -12,6 +12,7 @@ import disenos.customTabbedUI;
 import disenos.disenoTabla;
 import disenos.disenos;
 import disenos.readRecordTableBackground;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -33,14 +34,11 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import obtenerDatos.ordenes;
-import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 
 public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
@@ -76,9 +74,9 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
         this.user = user;
         context = this;
         this.idioma = idioma;
-       // modelo = (DefaultTableModel) tablaUsers.getModel();
+        // modelo = (DefaultTableModel) tablaUsers.getModel();
 
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
@@ -94,7 +92,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
     }
 
     public void attach() {//se agrega el otro tab
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             pnlOpc.setTitleAt(0, "Drones");
             pnlOpc.addTab("Users", usAct.returnPanel());
         } else {
@@ -230,7 +228,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
             }
         });
 
-        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -268,35 +266,35 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
             }
         });
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
             }
         });
 
-        btnVerReg.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnVerReg.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnVerReg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerRegActionPerformed(evt);
             }
         });
 
-        btnElReg.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnElReg.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnElReg.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnElRegActionPerformed(evt);
             }
         });
 
-        btnVerUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnVerUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnVerUsers.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnVerUsersActionPerformed(evt);
@@ -339,7 +337,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
             }
         });
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -491,7 +489,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
     private void txtBuscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarFocusLost
         // TODO add your handling code here:
         if (txtBuscar.getText().equals("")) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 txtBuscar.setText("Search");
             } else {
                 txtBuscar.setText("Buscar");
@@ -505,12 +503,14 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
         // TODO add your handling code here:
         try {
             int cod = Integer.parseInt(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString());
-            new info().setXY(this.getX(), this.getY());
+//            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             //DatabaseReference con, String user, int priv, String idioma, int serie, int inter
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, cod, 3).setVisible(true);
             this.dispose();
         } catch (Exception e) {
-            new info().setXY(this.getX(), this.getY());
+           // new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, 0, 1).setVisible(true);
             this.dispose();
         }
@@ -518,7 +518,8 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+      //  new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -579,28 +580,28 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
         try {
             modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString();
             String texto1, texto2, o1, o2;
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 texto1 = "Are you sure you want to delete the selected work?";
                 texto2 = "Confirm Action";
-                o1 = "Yes";
-                o2 = "No";
+                o1 = "No";
+                o2 = "Yes";
             } else {
                 texto1 = "¿Seguro que quiere eliminar el trabajo seleccionado?";
                 texto2 = "Confirmar Acción";
-                o1 = "Si";
-                o2 = "No";
+                o1 = "No";
+                o2 = "Si";
             }
 
             Object[] options = {o1, o2};
             if (JOptionPane.showOptionDialog(this, texto1, texto2,
                     JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                    null, options, options[0]) == 0) {
+                    null, options, options[0]) == 1) {
                 try {
 
                     eliminar(Integer.parseInt(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString()), tablaUsers.getSelectedRow());
                 } catch (Exception e) {
 
-                    if (idioma.equals("English")) {
+                    if (idioma.equals("english")) {
                         JOptionPane.showMessageDialog(context, "Select a work to delete");
                     } else {
                         JOptionPane.showMessageDialog(context, "Seleccione un trabajo a eliminar");
@@ -608,7 +609,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                 }
             }
         } catch (Exception e) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Select a work to delete");
             } else {
                 JOptionPane.showMessageDialog(context, "Seleccione un trabajo a eliminar");
@@ -621,21 +622,21 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
         // TODO add your handling code here:
         //eliminar registro
         String texto1, texto2, o1, o2;
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             texto1 = "Are you sure youn want to delete the record?\nWorks older than 90 days will be deleted";
             texto2 = "Confirm Action";
-            o1 = "Yes";
-            o2 = "No";
+            o1 = "No";
+            o2 = "Yes";
         } else {
             texto1 = "¿Esta seguro de querer eliminar el registro?\n" + "Se eliminaran trabajos mayores a 90 dias";
             texto2 = "Confirmar Acción";
-            o1 = "Si";
-            o2 = "No";
+            o1 = "No";
+            o2 = "Si";
         }
         Object[] options = {o1, o2};
         if (JOptionPane.showOptionDialog(this, texto1, texto2,
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]) == 0) {
+                null, options, options[0]) == 1) {
             try {
                 eliminarReg();
             } catch (Exception e) {
@@ -661,7 +662,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                 new verUsuarios(idioma, a, cod, pnlOpc.getSelectedIndex()).setVisible(true);
             }
         } catch (Exception e) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Select an order");
             } else {
                 JOptionPane.showMessageDialog(context, "Seleccione una orden");
@@ -744,7 +745,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        new windowClosing(idioma,this);
+        new windowClosing(idioma, this);
     }//GEN-LAST:event_formWindowClosing
 
     private void eliminarReg() {//elimina el registro de trabajos
@@ -789,7 +790,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                                     }
                                 }
                             } catch (Exception es) {
-                                JOptionPane.showMessageDialog(context, "Error: "+es);
+                                JOptionPane.showMessageDialog(context, "Error: " + es);
                                 // Toast.makeText(getApplicationContext(), "Notifica el siguiente error4: " + es, Toast.LENGTH_LONG).show();
                             }
                         }
@@ -811,7 +812,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                                 // Toast toast = Toast.makeText(getApplicationContext(), "There's nothing in record", Toast.LENGTH_SHORT);
                                 // toast.show();
                             } else {
-                                JOptionPane.showMessageDialog(context,"No existe registro alguno");
+                                JOptionPane.showMessageDialog(context, "No existe registro alguno");
                                 // Toast toast = Toast.makeText(getApplicationContext(), "No existe registro alguno", Toast.LENGTH_SHORT);
                                 // toast.show();
                             }
@@ -822,13 +823,13 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                     JOptionPane.showMessageDialog(context,"Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // Toast.makeText(getApplicationContext(), "De " + error, Toast.LENGTH_SHORT).show();
                 }
             });
 
         } catch (Exception e) {
-             JOptionPane.showMessageDialog(context,"Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             // Context context = getApplicationContext();
             // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             // toast.show();
@@ -848,7 +849,7 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                     fecha.remove(position);
                     progreso.remove(position);
                     dron.remove(position);
-                    if (idioma.equals("English")) {
+                    if (idioma.equals("english")) {
                         JOptionPane.showMessageDialog(context, "Work deleted");
                     } else {
                         JOptionPane.showMessageDialog(context, "Trabajo eliminado");
@@ -897,12 +898,12 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                         llenarTabla();
 
                     } else {
-                        if(idioma.equals("english")){
-                            JOptionPane.showMessageDialog(context,"There are no orders");
-                        }else{
-                            JOptionPane.showMessageDialog(context,"No existen ordenes");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "There are no orders");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "No existen ordenes");
                         }
-                         
+
                         //No hay trabajos agregados aun
                         //  new showToast(context.getString(R.string.noTrabajosCompletosSpn), context.getString(R.string.noTrabajosCompletosEng), idioma, context);
                     }
@@ -910,12 +911,12 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context,"Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //new showToast(context.getString(R.string.lblErrorWhileReadingDBSpn) + error, context.getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, context);
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context,"Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             // new showToast(context.getString(R.string.lblErrorWhileReadingDBSpn) + e, context.getString(R.string.lblErrorWhileReadingDBEng) + e, idioma, context);
         }
     }
@@ -959,10 +960,10 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                         borrarTabla();
                         llenarTabla();
                     } else {
-                        if(idioma.equals("english")){
-                            JOptionPane.showMessageDialog(context,"No results were found");
-                        }else{
-                            JOptionPane.showMessageDialog(context,"No se encontraron resutlados");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "No results were found");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "No se encontraron resutlados");
                         }
                         //No hay trabajos agregados aun
                         //   new showToast(context.getString(R.string.noTrabajosEncontradosSpn), context.getString(R.string.noTrabajosEncontradosEng), idioma, context);
@@ -971,12 +972,12 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context,"Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //  new showToast(context.getString(R.string.lblErrorWhileReadingDBSpn) + error, context.getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, context);
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context,"Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             // new showToast(context.getString(R.string.lblErrorWhileReadingDBSpn) + e, context.getString(R.string.lblErrorWhileReadingDBEng) + e, idioma, context);
         }
     }
@@ -1044,23 +1045,23 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
                         borrarTabla();
                         llenarTabla();
                     } else {
-                        if(idioma.equals("english")){
-                             JOptionPane.showMessageDialog(context,"There are no orders");
-                        }else{
-                             JOptionPane.showMessageDialog(context,"No existen ordenes aun");
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "There are no orders");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "No existen ordenes aun");
                         }
-                       }
+                    }
                 }
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                     JOptionPane.showMessageDialog(context,"Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //  new showToast(context.getString(R.string.lblErrorWhileReadingDBSpn) + error, context.getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, context);
 
                 }
             });
         } catch (Exception e) {
-             JOptionPane.showMessageDialog(context,"Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             //   new showToast(context.getString(R.string.lblErrorWhileReadingDBSpn) + e, context.getString(R.string.lblErrorWhileReadingDBEng) + e, idioma, context);
         }
     }

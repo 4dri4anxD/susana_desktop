@@ -5,6 +5,7 @@ import configuracion.info;
 import disenos.colores;
 import disenos.disenos;
 import disenos.ventanas.configuracionVentana;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -290,7 +291,7 @@ public class menuCheckList extends JFrame {
 
     private void btnCalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalidadActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 1).setVisible(true);
         this.dispose();
@@ -314,7 +315,7 @@ public class menuCheckList extends JFrame {
 
     private void btnEnvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnvioActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 3).setVisible(true);
         this.dispose();
@@ -334,7 +335,7 @@ public class menuCheckList extends JFrame {
 
     private void btnPruebasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPruebasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 2).setVisible(true);
         this.dispose();
@@ -354,7 +355,7 @@ public class menuCheckList extends JFrame {
 
     private void btnFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 4).setVisible(true);
         this.dispose();
@@ -366,14 +367,14 @@ public class menuCheckList extends JFrame {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
-       // TODO add your handling code here:
-        new windowClosing(idioma,this);
+        // TODO add your handling code here:
+        new windowClosing(idioma, this);
     }//GEN-LAST:event_formWindowClosing
 
     private void mostrar() {

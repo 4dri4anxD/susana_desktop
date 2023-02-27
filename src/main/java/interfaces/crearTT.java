@@ -26,6 +26,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import configuracion.info;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import javax.swing.JOptionPane;
 
@@ -505,7 +506,7 @@ public class crearTT extends JFrame {
             storage.setRequisitosTT(requisitos);
             storage.setRequisitosTT1(requisitos1);
 
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
@@ -521,7 +522,7 @@ public class crearTT extends JFrame {
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();
@@ -634,7 +635,7 @@ public class crearTT extends JFrame {
 
     private void mostrar() {
         if (idioma.equals("english")) {
-            lblTitulo.setText("Final CheckList");
+            lblTitulo.setText("Testing CheckList");
             JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);
@@ -658,7 +659,7 @@ public class crearTT extends JFrame {
                 lblSerie.setText("" + storage.getSerie());
             }
         } else {
-            lblTitulo.setText("CheckList Final");
+            lblTitulo.setText("CheckList de pruebas");
             JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);

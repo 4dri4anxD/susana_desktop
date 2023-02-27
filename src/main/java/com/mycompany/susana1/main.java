@@ -1,24 +1,24 @@
 package com.mycompany.susana1;
 
-import alerts.alert;
 import interfaces.login;
+//cambiar el llamado a clases como info de new info() a una variable solamente, igual con disenos
+//El info width y height no estan funcionando, lo pone maximizado (ya funciona)
 
-//revisar linea 137 de la clase tblUsersActividades
-//Cambair resolucion de imagenes
-//Hacer prueba general, especial enfasis en el apartado de trabjar en la orden 66666 pq el checklistTT me da de progreso 0
 
+//Generar nueva aplicacion movil (build)
+
+//Cambiar resolucion de imagenes (inkscape, filters->color->brilliance->inverted apply, ver que resolucion se necesita)
 
 //quitar textos y agregarlos al jsonxdd
-//ver si en los checkListTF,C,S,T se puede pintar de color la celda del JCheckBox
-//busquedas en plantillas indiferentes de minusculas o mayusculas
-//Ver si funciona bien en ingles
-//estilizar alertas
-//Comporbar que el usuario existe en la bd al cambiar de interfaz
-//Ajustar a pantalla completa las ventanas en laptops (ya mas o menos)
+
 //Poner la nueva ventana del tamaño de la anterior
-//Revisar estilizacion de ventanas, iconos y todo esp
-//Cambiar textos por lo que hay en strings
-//librerias para abrir el archivo json y encriptarlo (que?xd)
+
+//En vistaCompletarOrden, en checkListTC y todos, ver tamano de la barra lateral derecha cuando un admin entra a ver alguna actividad
+//se esconden los botones y cambia el ancho de ese panel
+
+//librerias para abrir el archivo json y encriptarlo
+
+
 /* 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;

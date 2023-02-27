@@ -6,6 +6,7 @@ import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
 import helpers.back;
+import helpers.checkUsers;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.ArrayList;
@@ -16,6 +17,9 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 public class requisitos extends configEXTRAS {//clase para establecer los requisitos de cada proceso (se manda a llamar desde vistaPlantillas)
 
@@ -30,6 +34,7 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
     public requisitos(String idioma, int pos, String actividad, int requisito, LinkedHashMap<String, Integer> actireq,
             vistaPlantillas vista, vistaPlantillasTT testing, int val) {//constructor
         initComponents();
+       
         //poner icono
         //inicializacion de variables
         this.vista = vista;
@@ -47,6 +52,7 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
         iniciarDiseno();
         llenarArray();
         ponerInfo();
+        mostrar();
 
     }
 
@@ -147,10 +153,9 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
         pnlCabecera.setLayout(pnlCabeceraLayout);
         pnlCabeceraLayout.setHorizontalGroup(
             pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(pnlCabeceraLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCabeceraLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addContainerGap())
+                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         pnlCabeceraLayout.setVerticalGroup(
             pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -325,7 +330,7 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
             testing.setRequisito(actividad, req, val);//se guarda el valor del requisito
         }
 
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(-1,-1, 0,0);
         this.setCursor(new Cursor(WAIT_CURSOR));
         this.dispose();
     }//GEN-LAST:event_btnAddActionPerformed
@@ -333,7 +338,7 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(-1,-1,0,0);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();
         }
@@ -359,6 +364,25 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
             }
         }
 
+    }
+
+    private void mostrar() {
+        lblTitulo.setText(actividad);
+        if (idioma.equals("english")) {
+            
+            JTableHeader tableHeader = tablaPermisos.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Required");
+            tableHeader.repaint();
+        } else {
+            
+            JTableHeader tableHeader = tablaPermisos.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Requerido");
+            tableHeader.repaint();
+        }
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

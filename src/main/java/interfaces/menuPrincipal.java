@@ -7,6 +7,7 @@ import configuracion.info;
 import disenos.colores;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -32,6 +33,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     public menuPrincipal(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
+       
         new configuracionVentana(this);
         context = this;
         //   alerta=new alert();
@@ -44,7 +46,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         iniciarDiseno();
         idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
 
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
@@ -94,7 +96,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones, modificando su tamano
         ImageIcon imagen = new ImageIcon(ruta);
-        int an = (int) (ancho / 2);
+        int an = (int) (ancho / 3);
         Image imgEscalada = imagen.getImage().getScaledInstance(an,
                 alto / 2, Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
@@ -333,7 +335,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         //  alerta.show("Warning", "Select an activity", idioma, true);
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         new login(con).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
@@ -386,7 +388,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsersActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuUsuarios(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -394,7 +396,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnPlantillasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlantillasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         new menuCheckList(con, user, priv, idioma).setVisible(true);
         //  new menuPlantillas(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -402,9 +404,9 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnActActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         String texto1, texto2, o1, o2, o3;
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             texto1 = "What do you want to do?";
             texto2 = "Select Action";
             o1 = "Add/Edit work";
@@ -474,7 +476,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnChatActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChatActionPerformed
         // TODO add your handling code here:
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             JOptionPane.showMessageDialog(context, "Not available");
             // alerta.show("Warning", "Not available", idioma, false);
         } else {

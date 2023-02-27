@@ -10,6 +10,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import disenos.readRecordTableBackground;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -334,7 +335,7 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
     private void txtBuscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarFocusLost
         // TODO add your handling code here:
         if (txtBuscar.getText().equals("")) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 txtBuscar.setText("Search");
             } else {
                 txtBuscar.setText("Buscar");
@@ -346,7 +347,7 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -355,7 +356,7 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
         try {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             //leer serie de la tabla
             int serie = Integer.parseInt(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString());
             String plantilla = modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString();
@@ -365,7 +366,7 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();
         } catch (Exception e) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Select a drone to see its details");
             } else {
                 JOptionPane.showMessageDialog(context, "Selecciona un dron para ver sus detalles");
@@ -412,7 +413,7 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        new windowClosing(idioma,this);
+        new windowClosing(idioma, this);
     }//GEN-LAST:event_formWindowClosing
 
     private void llenarTabla() {
@@ -688,13 +689,13 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getApplicationContext());
                 }
             });
 
         } catch (Exception e) {
-           JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             //  e.printStackTrace();
         }
     }

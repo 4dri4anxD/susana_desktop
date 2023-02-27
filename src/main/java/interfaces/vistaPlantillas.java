@@ -11,6 +11,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Component;
@@ -170,10 +171,10 @@ public class vistaPlantillas extends JFrame {
         pnlCabecera.setLayout(pnlCabeceraLayout);
         pnlCabeceraLayout.setHorizontalGroup(
             pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCabeceraLayout.createSequentialGroup()
+            .addGroup(pnlCabeceraLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap())
         );
         pnlCabeceraLayout.setVerticalGroup(
             pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,7 +429,7 @@ public class vistaPlantillas extends JFrame {
             }
         }
         if (actireq.size() > 0) {//si existe algun proceso
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             //  boolean val = true;
             //   actualizarIndices();//actualizar datos.procesosPlantilla
             if (!txtNombre.getText().equals(tN)) {//si hay algo en los campos de texto diferente al hint
@@ -460,7 +461,7 @@ public class vistaPlantillas extends JFrame {
                     txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
                 }
 
-                if (idioma.equals("English")) {
+                if (idioma.equals("english")) {
                     JOptionPane.showMessageDialog(context, "Fill out all fields");
                 } else {
                     JOptionPane.showMessageDialog(context, "Llene todos los campos");
@@ -471,7 +472,7 @@ public class vistaPlantillas extends JFrame {
                 txtNombre.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
             }
             tablaPermisos.setBorder(BorderFactory.createLineBorder(Color.RED, 3));
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Template must have at least one proccess and\nat least an activity assigned to each proccess");
             } else {
                 JOptionPane.showMessageDialog(context, "Debe haber al menos un proceso y\nal menos una actividad asignada por proceso");
@@ -505,7 +506,7 @@ public class vistaPlantillas extends JFrame {
             ListSelectionModel modelo1 = tablaPermisos.getSelectionModel();
             modelo1.setSelectionInterval(rowNumber, rowNumber);
             String texto1, texto2, o1, o2;
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 texto1 = "Are you sure you want to delete the selected proccess?";
                 texto2 = "Confirm Action";
                 o1 = "Yes";
@@ -524,7 +525,7 @@ public class vistaPlantillas extends JFrame {
                     actireq.remove(modelo.getValueAt(rowNumber, 0).toString());
                     modelo.removeRow(rowNumber);
                 } catch (NullPointerException e) {
-                    if (idioma.equals("English")) {
+                    if (idioma.equals("english")) {
                         JOptionPane.showMessageDialog(context, "Select a proccess to delete");
                     } else {
                         JOptionPane.showMessageDialog(context, "Seleccione un proceso para eliminar");
@@ -601,7 +602,7 @@ public class vistaPlantillas extends JFrame {
         try {
             //  if (comprobarTabla()) {
             comprobarTabla();
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             String procesoSel = modelo.getValueAt(tablaPermisos.getSelectedRow(), 0).toString();
             for (int i = 0; i < modelo.getRowCount(); i++) {
                 if (!actireq.containsKey(modelo.getValueAt(i, 0).toString())) {
@@ -618,7 +619,7 @@ public class vistaPlantillas extends JFrame {
             new requisitos(idioma, tablaPermisos.getSelectedRow(), procesoSel, req, actireq, this, null, 0).setVisible(true);
             //   }
         } catch (Exception e) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Select a process to see its required processes");
             } else {
                 JOptionPane.showMessageDialog(context, "Selecciona un proceso para ver sus procesos requeridos");
@@ -861,7 +862,7 @@ public class vistaPlantillas extends JFrame {
                     plantillasCalidad datoCalidad;
                     for (String actividad : act) {
                         datoCalidad = new plantillasCalidad(actividad, actireq.get(actividad));
-                        con.child("plantillasCalidad").child(txtNombre.getText().toString()).child("" + i).setValue(datoCalidad, new DatabaseReference.CompletionListener() {
+                        con.child("plantillasCalidad").child(txtNombre.getText().toLowerCase()).child("" + i).setValue(datoCalidad, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError de, DatabaseReference dr) {
                             }
@@ -872,7 +873,7 @@ public class vistaPlantillas extends JFrame {
                 case 3://Shipment
                     for (String actividad : act) {
                         plantillasShipment datoShipment = new plantillasShipment(actividad, actireq.get(actividad));
-                        con.child("plantillasShipment").child(txtNombre.getText().toString()).child("" + i).setValue(datoShipment, new DatabaseReference.CompletionListener() {
+                        con.child("plantillasShipment").child(txtNombre.getText().toLowerCase()).child("" + i).setValue(datoShipment, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError de, DatabaseReference dr) {
                             }
@@ -883,7 +884,7 @@ public class vistaPlantillas extends JFrame {
                 case 4:
                     for (String actividad : act) {
                         plantillasFinal datoFinal = new plantillasFinal(actividad, actireq.get(actividad));
-                        con.child("plantillasFinal").child(txtNombre.getText().toString()).child("" + i).setValue(datoFinal, new DatabaseReference.CompletionListener() {
+                        con.child("plantillasFinal").child(txtNombre.getText().toLowerCase()).child("" + i).setValue(datoFinal, new DatabaseReference.CompletionListener() {
                             @Override
                             public void onComplete(DatabaseError de, DatabaseReference dr) {
                             }
@@ -906,7 +907,7 @@ public class vistaPlantillas extends JFrame {
     }
 
     private void cambio() {
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, check).setVisible(true);
         this.dispose();

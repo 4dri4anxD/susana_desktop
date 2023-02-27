@@ -11,6 +11,7 @@ import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
 import helpers.back;
+import helpers.checkUsers;
 import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -58,7 +59,7 @@ public class addComentarios extends configEXTRAS {
         }
 
         //poner la interfaz en el idioma seleccionado
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
@@ -284,7 +285,7 @@ public class addComentarios extends configEXTRAS {
         }
         comentarios.put(proceso, comments);
         creartc.setComentarios(comentarios);
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(-1,-1, 0,0);
         this.setCursor(new Cursor(WAIT_CURSOR));
         this.dispose();//cerrar esta ventanas para volver a vistaPlantillas 
     }//GEN-LAST:event_btnAddActionPerformed
@@ -302,7 +303,7 @@ public class addComentarios extends configEXTRAS {
         // TODO add your handling code here:
         //boton atras
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(-1,-1, 0,0);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();
         }
@@ -312,7 +313,7 @@ public class addComentarios extends configEXTRAS {
         // TODO add your handling code here:
         if (evt.getButton() == 3) {//si se da click derecho sobre un fila, quiere decir que se pretende eliminar dicha fila
             String texto1, texto2, o1, o2;
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 texto1 = "Are you sure you want to delete the selected item?";
                 texto2 = "Confirm Action";
                 o1 = "Yes";
@@ -332,7 +333,7 @@ public class addComentarios extends configEXTRAS {
                     // eliminados.add(modelo.getValueAt(tablaPermisos.getSelectedRow(), 0).toString());//agregar el contenido de la fila a los eliminados
                     modelo.removeRow(tablaPermisos.getSelectedRow());//eliminar fila
                 } catch (NullPointerException e) {
-                    if (idioma.equals("English")) {
+                    if (idioma.equals("english")) {
                         JOptionPane.showMessageDialog(this, "Select an item to delete");
                     } else {
                         JOptionPane.showMessageDialog(this, "Seleccione un objeto para eliminar");

@@ -25,6 +25,9 @@ import org.json.simple.JSONObject;
 import java.util.Map;
 import javax.swing.JLabel;
 import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.JTableHeader;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 
 public class tblUsersActividades extends JFrame {//clase para poner la lista de usuarios trabajando en diferentes drones en la clase de menuActividades
 
@@ -45,13 +48,15 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
         this.con = con;
         user_drone = new LinkedHashMap();
         this.context = this;
+        json = new leerJSON();
         new disenoTabla().cabecera(tablaExtras);
         modelo = (DefaultTableModel) tablaExtras.getModel();
         DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
         centerRenderer.setHorizontalAlignment(JLabel.CENTER);
-        tablaExtras.getColumnModel().getColumn(0).setCellRenderer( centerRenderer );
-       // tablaExtras.setDefaultRenderer(String.class, centerRenderer);
+        tablaExtras.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        // tablaExtras.setDefaultRenderer(String.class, centerRenderer);
         leer();
+        mostrar();
     }
 
     private ArrayList<String> fillUsuario(JSONObject allData, String primera, String segunda, String tercera, ArrayList<String> usuarios) {
@@ -76,8 +81,7 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
 
         try {
             // HashMap<String, ArrayList<String>> hm = new HashMap<>();
-            Query query = null;
-            query = con.child(json.getString("trabajosTable")).orderByChild(json.getString("trabajosTableProgreso")).endAt(99);
+            Query query = con.child(json.getString("trabajosTable")).orderByChild(json.getString("trabajosTableProgreso")).endAt(99);
             query.addListenerForSingleValueEvent(new ValueEventListener() {
                 @Override
                 public void onDataChange(DataSnapshot snapshot) {
@@ -107,7 +111,7 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
                                     user_drone.put(usuario, ordenes1);
                                 }
                             }
-                           
+
                         }
 
                         ArrayList<String> a = new ArrayList<String>(user_drone.keySet());
@@ -116,9 +120,9 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
                             modelo.addRow(new Object[]{a.get(i)});
                         }
                     } else {
-                        if(idioma.equals("english")){
+                        if (idioma.equals("english")) {
                             JOptionPane.showMessageDialog(context, "There are no orders");
-                        }else{
+                        } else {
                             JOptionPane.showMessageDialog(context, "No existen ordenes");
                         }
                         //No hay trabajos agregados aun
@@ -128,20 +132,18 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //   new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + error, getString(R.string.lblErrorWhileReadingDBEng) + error, idioma, getContext());
 
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             // new showToast(getString(R.string.lblErrorWhileReadingDBSpn) + e, getString(R.string.lblErrorWhileReadingDBEng) + e, idioma, getContext());
         }
 
-     
     }
 
-   
     public JPanel returnPanel() {
         return pnlCuerpo;
     }
@@ -157,6 +159,23 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
     public JTable returnTabla() {
         return tablaExtras;
     }
+
+    private void mostrar() {
+        if (idioma.equals("english")) {
+            JTableHeader tableHeader = tablaExtras.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Names");
+            tableHeader.repaint();
+        } else {
+            JTableHeader tableHeader = tablaExtras.getTableHeader();
+            TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+            TableColumn tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Nombres");
+            tableHeader.repaint();
+        }
+    }
+
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -218,7 +237,7 @@ public class tblUsersActividades extends JFrame {//clase para poner la lista de 
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        new windowClosing(idioma,this);
+        new windowClosing(idioma, this);
     }//GEN-LAST:event_formWindowClosing
 
 

@@ -10,6 +10,7 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -375,7 +376,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
     private void txtBuscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarFocusLost
         // TODO add your handling code here:
         if (txtBuscar.getText().equals("")) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 txtBuscar.setText("Search");
             } else {
                 txtBuscar.setText("Buscar");
@@ -390,7 +391,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         try {
             int sel = tablaUsers.getSelectedRow();
             if (sel == -1) {
-                new info().setXY(this.getX(), this.getY());
+                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 if (check == 2) {
                     new vistaPlantillasTT(con, user, priv, idioma, null, check).setVisible(true);
                 } else {
@@ -398,7 +399,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                 }
                 this.dispose();
             } else {
-                new info().setXY(this.getX(), this.getY());
+                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 if (check == 2) {
                     new vistaPlantillasTT(con, user, priv, idioma, modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(),
                             check).setVisible(true);
@@ -416,7 +417,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuCheckList(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -426,7 +427,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         // TODO add your handling code here:
         //pedir confirmacion 
         String texto1, texto2, o1, o2;
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             texto1 = "Are you sure you want to delete the selected template?";
             texto2 = "Confirm Action";
             o1 = "Yes";
@@ -446,7 +447,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                 // String plantilla = modelo.getValueAt(tablaUsers.getSelectedRow(), 1).toString();
                 eliminar(id, tablaUsers.getSelectedRow());
             } catch (NullPointerException e) {
-                if (idioma.equals("English")) {
+                if (idioma.equals("english")) {
                     JOptionPane.showMessageDialog(context, "Select a template to delete");
                 } else {
                     JOptionPane.showMessageDialog(context, "Seleccione una plantilla para eliminar");
@@ -457,13 +458,13 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
 
     private void btnBuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarActionPerformed
         // TODO add your handling code here:
-        buscar(txtBuscar.getText());
+        buscar(txtBuscar.getText().toLowerCase());
     }//GEN-LAST:event_btnBuscarActionPerformed
 
     private void txtBuscarKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyPressed
         // TODO add your handling code here:
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {//si se presiona el enter con el focus en el campo de usuario
-            buscar(txtBuscar.getText());
+            buscar(txtBuscar.getText().toLowerCase());
         }
     }//GEN-LAST:event_txtBuscarKeyPressed
 
@@ -542,7 +543,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
                 @Override
                 public void onComplete(DatabaseError de, DatabaseReference dr) {
                     modelo.removeRow(position);
-                    if (idioma.equals("English")) {
+                    if (idioma.equals("english")) {
                         JOptionPane.showMessageDialog(context, "Template deleted");
                     } else {
                         JOptionPane.showMessageDialog(context, "Plantilla eliminada");

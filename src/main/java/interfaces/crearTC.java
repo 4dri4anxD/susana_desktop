@@ -8,6 +8,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.crearOrdenes;
 import helpers.crearOrdenes.CallBackActividades;
 import helpers.crearOrdenes.CallBackPlantillas;
@@ -428,7 +429,7 @@ public class crearTC extends JFrame {
             storage.setComentariosTC(comentarios);
             storage.setRequisitosTC(requisitos);
             //volver
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
@@ -444,7 +445,7 @@ public class crearTC extends JFrame {
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();
@@ -469,14 +470,14 @@ public class crearTC extends JFrame {
         //Abre nueva ventana
         try {
             String activi = modelo.getValueAt(tblActividades.getSelectedRow(), 0).toString();
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             //guardar listaUsuarios
             for (int i = 0; i < modelo.getRowCount(); i++) {
                 seleccion.set(i, modelo.getValueAt(i, 1).toString());
             }
             new addComentarios(user, priv, idioma, 1, activi, comentarios, this).setVisible(true);
         } catch (Exception e) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Select an activity");
             } else {
                 JOptionPane.showMessageDialog(context, "Seleccione una actividad");

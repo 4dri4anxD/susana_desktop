@@ -9,7 +9,7 @@ public class windowClosing {
 
     public windowClosing(String idioma, JFrame jf) {
         String texto1, texto2, o1, o2;
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             texto1 = "Are you sure you want to exit?";
             texto2 = "Confirm action";
             o2 = "Yes";

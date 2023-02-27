@@ -6,6 +6,7 @@ import configuracion.info;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -60,7 +61,7 @@ public class menuChat extends JFrame {//no esta en uso
         modelo.addElement(k);
 
         idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
@@ -368,7 +369,7 @@ public class menuChat extends JFrame {//no esta en uso
     private void txtBuscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarFocusLost
         // TODO add your handling code here:
         if (txtBuscar.getText().equals("")) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 txtBuscar.setText("Search");
             } else {
                 txtBuscar.setText("Buscar");
@@ -380,12 +381,12 @@ public class menuChat extends JFrame {//no esta en uso
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();

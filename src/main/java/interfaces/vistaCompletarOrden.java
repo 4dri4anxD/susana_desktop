@@ -12,6 +12,7 @@ import disenos.colores;
 import disenos.disenos;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -66,10 +67,10 @@ public class vistaCompletarOrden extends JFrame {
 
         if (storage.getUbicacionTC() == null) {
             storage.inicializarTodo();
-            System.out.println("Inicialice");
+          //  System.out.println("Inicialice");
         }
         if (storage.getUbicacionTC().size() == 0) {
-            System.out.println("lEI");
+          //  System.out.println("lEI");
             readFromSerial();
         } else {
             calcularPorcentajeTC(storage.getAprobadoTC(), storage.getRevsolTC());
@@ -84,6 +85,9 @@ public class vistaCompletarOrden extends JFrame {
             //  lblPEnvios.setText(storage.getPorcentajeTS() + "%");
             pbFinal.setValue((int) storage.getPorcentajeTF());
             //  lblPFinal.setText(storage.getPorcentajeTF() + "%");
+        }
+        if(modo==1){
+            btnAdd.setVisible(false);
         }
 
         iniciarDiseno();
@@ -868,7 +872,8 @@ public class vistaCompletarOrden extends JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void atras() {
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+       // new info().setXY(this.getX(), this.getY());
         storage.inicializarTodo();
         this.setCursor(new Cursor(WAIT_CURSOR));
         new MenuCompletarOrden(con, user, priv, idioma, modo).setVisible(true);
@@ -876,7 +881,8 @@ public class vistaCompletarOrden extends JFrame {
     }
 
     private void cambio(int interfaz) {
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+      //  new info().setXY(this.getX(), this.getY());
         this.setCursor(new Cursor(WAIT_CURSOR));
         switch (interfaz) {
             case 1:
@@ -1202,7 +1208,9 @@ public class vistaCompletarOrden extends JFrame {
             storage.setRequisitosTT1(requi1);
             pbTesting.setValue(Integer.parseInt(check.get("porcentaje").toString()));
         } catch (Exception e) {
-            System.out.println("erroooooooooooooooooooooooooooo2r: " + e);
+            System.out.println("erroooooooooooooooooooooooooooo5r: " + e);
+           //System.out.println("erroooooooooooooooooooooooooooo2r: " + e.);e
+           e.printStackTrace();
         }
     }
 
@@ -1225,8 +1233,8 @@ public class vistaCompletarOrden extends JFrame {
                 usuarios.add(us);
                 //   if (us.toLowerCase().equals(nomU.toLowerCase())) {
                 //solo las del usuario
-                System.out.println("Actividad: " + jsonTC.get(act).toString());
-                System.out.println("act: " + act);
+            //    System.out.println("Actividad: " + jsonTC.get(act).toString());
+             //   System.out.println("act: " + act);
                 activid.add(jsonTC.get(act).toString());
                 mensaje.add(jsonTC.get(mensaj).toString());
                 revsol.add(Boolean.parseBoolean(jsonTC.get(rev).toString()));
@@ -1246,7 +1254,7 @@ public class vistaCompletarOrden extends JFrame {
 
                 //  }
             }
-            System.out.println("Activid: " + activid);
+         //   System.out.println("Activid: " + activid);
             storage.setUsuariosTC(usuarios);
             storage.setUbicacionTC(activid);
             storage.setPorcentajeTC(Double.parseDouble(check.get("porcentaje").toString()));
@@ -1314,9 +1322,9 @@ public class vistaCompletarOrden extends JFrame {
                 usuarios.add(us);
                 //  if (us.toLowerCase().equals(nomU.toLowerCase())) {
                 actividad.add(jsonTC.get(act).toString());
-                System.out.println("Completado: " + jsonTC.get(completado));
+            //    System.out.println("Completado: " + jsonTC.get(completado));
                 complet.add(Integer.parseInt(jsonTC.get(completado).toString()));
-                System.out.println("Requisito: " + jsonTC.get(requisito));
+            //    System.out.println("Requisito: " + jsonTC.get(requisito));
                 requi.add(Integer.parseInt(jsonTC.get(requisito).toString()));
                 comentar.add(jsonTC.get(comentario).toString());
                 //  }

@@ -9,6 +9,7 @@ import disenos.disenos;
 import disenos.enableActivityTable;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -75,6 +76,9 @@ public class CheckListTS extends JFrame {
         iniciarDiseno();
         ponerTabla();
         mostrar();
+        if (modo == 1) {
+            btnAdd.setVisible(false);
+        }
 
     }
 
@@ -84,10 +88,14 @@ public class CheckListTS extends JFrame {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 if (columnIndex == 1 || columnIndex == 2) {
-                    if (habilitar.get(rowIndex)) {
-                        return true;
+                    if (modo == 1) {
+                        return false;
+                    } else {
+                        if (habilitar.get(rowIndex)) {
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
                 } else {
                     return false;
                 }
@@ -120,12 +128,28 @@ public class CheckListTS extends JFrame {
                             cuerpo = "Escriba un comentario";
                         }
                         String mensaje = mensajes.get(row);
-                        String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
-                        if (resp != null) {
-                            if (!resp.equals("")) {
-                                mensajes.set(row, resp);
+
+                        if (modo == 1) {
+                            if (mensaje.equals("")) {
+                                if (idioma.equals("english")) {
+                                    JOptionPane.showMessageDialog(context, "There's no comments written by workers");
+                                } else {
+                                    JOptionPane.showMessageDialog(context, "No hay comentarios hechos por el trabajador");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(context, mensaje);
+                            }
+
+                        } else {
+                            String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                            if (resp != null) {
+                                if (!resp.equals("")) {
+                                    mensajes.set(row, resp);
+                                }
                             }
                         }
+
                     }
 
                 }
@@ -424,12 +448,13 @@ public class CheckListTS extends JFrame {
         if (valido) {
             storage.setComentarioTS(mensajes);
             storage.setCompletadoTS(completado);
-            new info().setXY(this.getX(), this.getY());
+            //  new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();
         } else {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Select only one column at " + actividad);
             } else {
                 JOptionPane.showMessageDialog(context, "Seleccione una sola columna en la actividad " + actividad);
@@ -445,7 +470,7 @@ public class CheckListTS extends JFrame {
             if (!mensaje.equals("")) {
                 JOptionPane.showMessageDialog(context, storage.getMensajeTS());
             } else {
-                if (idioma.equals("English")) {
+                if (idioma.equals("english")) {
                     JOptionPane.showMessageDialog(context, "There's no message");
                 } else {
                     JOptionPane.showMessageDialog(context, "No hay ningun mensaje");
@@ -453,7 +478,7 @@ public class CheckListTS extends JFrame {
             }
 
         } catch (Exception e) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Select an activity");
             } else {
                 JOptionPane.showMessageDialog(context, "Seleccione una actividad");
@@ -464,7 +489,8 @@ public class CheckListTS extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+//            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();

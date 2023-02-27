@@ -9,6 +9,7 @@ import disenos.disenos;
 import disenos.enableActivityTable;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -91,6 +92,10 @@ public class CheckListTT extends JFrame {
         ponerTabla();
         mostrar();
 
+        if (modo == 1) {
+            btnAdd.setVisible(false);
+        }
+
     }
 
     private void procesosTabla() {
@@ -99,10 +104,14 @@ public class CheckListTT extends JFrame {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 if (columnIndex == 1 || columnIndex == 2) {
-                    if (habilitar.get(rowIndex)) {
-                        return true;
+                    if (modo == 1) {
+                        return false;
+                    } else {
+                        if (habilitar.get(rowIndex)) {
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
                 } else {
                     return false;
                 }
@@ -135,12 +144,27 @@ public class CheckListTT extends JFrame {
                             cuerpo = "Escriba un comentario";
                         }
                         String mensaje = mensajes.get(row);
-                        String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
-                        if (resp != null) {
-                            if (!resp.equals("")) {
-                                mensajes.set(row, resp);
+                        if (modo == 1) {
+                            if (mensaje.equals("")) {
+                                if (idioma.equals("english")) {
+                                    JOptionPane.showMessageDialog(context, "There's no comments written by workers");
+                                } else {
+                                    JOptionPane.showMessageDialog(context, "No hay comentarios hechos por el trabajador");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(context, mensaje);
+                            }
+
+                        } else {
+                            String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                            if (resp != null) {
+                                if (!resp.equals("")) {
+                                    mensajes.set(row, resp);
+                                }
                             }
                         }
+
                     }
 
                 }
@@ -222,12 +246,27 @@ public class CheckListTT extends JFrame {
                             cuerpo = "Escriba un comentario";
                         }
                         String mensaje = mensajes1.get(row);
-                        String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
-                        if (resp != null) {
-                            if (!resp.equals("")) {
-                                mensajes1.set(row, resp);
+                        if (modo == 1) {
+                            if (mensaje.equals("")) {
+                                if (idioma.equals("english")) {
+                                    JOptionPane.showMessageDialog(context, "There's no comments written by workers");
+                                } else {
+                                    JOptionPane.showMessageDialog(context, "No hay comentarios hechos por el trabajador");
+                                }
+
+                            } else {
+                                JOptionPane.showMessageDialog(context, mensaje);
+                            }
+
+                        } else {
+                            String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                            if (resp != null) {
+                                if (!resp.equals("")) {
+                                    mensajes1.set(row, resp);
+                                }
                             }
                         }
+
                     }
 
                 }
@@ -557,7 +596,8 @@ public class CheckListTT extends JFrame {
         storage.setPonderacionTT(ponderacion);
         storage.setComentarioTT1(mensajes1);
 
-        new info().setXY(this.getX(), this.getY());
+        //  new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
         this.dispose();
@@ -566,7 +606,8 @@ public class CheckListTT extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+//            new info().setXY(this.getX(), this.getY());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();
@@ -644,12 +685,28 @@ public class CheckListTT extends JFrame {
             tableColumn = tableColumnModel.getColumn(2);
             tableColumn.setHeaderValue("Aprovement");
             tableHeader.repaint();
+
+            tableHeader = tblRendimiento.getTableHeader();
+            tableColumnModel = tableHeader.getColumnModel();
+            tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Flight performance");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("Consideration");
+            tableHeader.repaint();
         } else {
             lblTitulo.setText("Revision de pruebas");
             JTableHeader tableHeader = tblActividades.getTableHeader();
             TableColumnModel tableColumnModel = tableHeader.getColumnModel();
             TableColumn tableColumn = tableColumnModel.getColumn(0);
             tableColumn.setHeaderValue("Actividades");
+            tableHeader.repaint();
+
+            tableHeader = tblRendimiento.getTableHeader();
+            tableColumnModel = tableHeader.getColumnModel();
+            tableColumn = tableColumnModel.getColumn(0);
+            tableColumn.setHeaderValue("Rendimiento en vuelo");
+            tableColumn = tableColumnModel.getColumn(1);
+            tableColumn.setHeaderValue("Ponderacion");
             tableHeader.repaint();
         }
     }

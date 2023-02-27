@@ -2,9 +2,11 @@ package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
+import configuracion.xmlManagment;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Cursor;
 import static java.awt.Frame.WAIT_CURSOR;
@@ -14,6 +16,8 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
@@ -24,6 +28,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
     private DatabaseReference con;
     private String user, idioma;
     private int priv;
+    private DefaultTableModel modelo;
 
     public opciones(DatabaseReference con, String user, int priv, String idioma) {//constructores
         initComponents();
@@ -31,13 +36,15 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         //poner icono
 
         //inicializacion de variables
+        modelo = (DefaultTableModel) tablaOptions.getModel();
         this.con = con;
         this.user = user;
         this.priv = priv;
         this.idioma = idioma;
+        btnAdd.setVisible(false);
 
         iniciarDiseno();
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
@@ -163,14 +170,26 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
 
         tablaOptions.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {"Idioma"},
-                {"Cambiar foto"}
+                {"Idioma"}
             },
             new String [] {
                 "Usuarios"
             }
-        ));
+        ) {
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
         tablaOptions.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        tablaOptions.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tablaOptionsMouseClicked(evt);
+            }
+        });
         jScrollPane1.setViewportView(tablaOptions);
 
         javax.swing.GroupLayout pnlCuerpoLayout = new javax.swing.GroupLayout(pnlCuerpo);
@@ -223,7 +242,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -231,13 +250,58 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        new windowClosing(idioma,this);
+        new windowClosing(idioma, this);
     }//GEN-LAST:event_formWindowClosing
+
+    private void tablaOptionsMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tablaOptionsMouseClicked
+        // TODO add your handling code here:
+        try {
+            int fila = tablaOptions.getSelectedRow();
+            System.out.println("Fila: " + fila);
+            if (fila == 0) {
+                //cambiar idioma
+                //confirmar
+                String texto1, texto2, o1, o2;
+                if (idioma.equals("english")) {
+                    texto1 = "Confirm changing the language to Spanish";
+                    texto2 = "Confirm action";
+                    o2 = "Confirm";
+                    o1 = "Cancel";
+                } else {
+                    texto1 = "Confirme que quiere cambiar el idioma a ingles";
+                    texto2 = "Confirmar Accion";
+                    o2 = "Confirmar";
+                    o1 = "Cancelar";
+                }
+
+                Object[] options = {o1, o2};
+                if (JOptionPane.showOptionDialog(this, texto1, texto2,
+                        JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
+                        null, options, options[0]) == 1) {
+                    new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+                    this.setCursor(new Cursor(WAIT_CURSOR));
+                    //cambiar idioma, escribir xml
+                    if (idioma.equals("english")) {
+                        new xmlManagment().modificarId("español");
+                        new menuPrincipal(con, user, priv, "español").setVisible(true);
+                    } else {
+                        new xmlManagment().modificarId("english");
+                        new menuPrincipal(con, user, priv, "english").setVisible(true);
+                    }
+
+                    this.dispose();
+
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Exception: " + e);
+        }
+    }//GEN-LAST:event_tablaOptionsMouseClicked
 
     private void ingles() {//poner la interfaz en ingles
         lblTitulo.setText("Configuration");
@@ -246,10 +310,19 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         TableColumn tableColumn = tableColumnModel.getColumn(0);
         tableColumn.setHeaderValue("Options");
         tableHeader.repaint();
+        modelo.removeRow(0);
+        modelo.addRow(new Object[]{"Language"});
     }
 
     private void esp() {//poner la interfaz en espanol
         lblTitulo.setText("Configuracion");
+        JTableHeader tableHeader = tablaOptions.getTableHeader();
+        TableColumnModel tableColumnModel = tableHeader.getColumnModel();
+        TableColumn tableColumn = tableColumnModel.getColumn(0);
+        tableColumn.setHeaderValue("Opciones");
+        tableHeader.repaint();
+        modelo.removeRow(0);
+        modelo.addRow(new Object[]{"Idioma"});
     }
 
 

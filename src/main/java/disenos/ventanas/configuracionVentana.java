@@ -16,11 +16,12 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 public class configuracionVentana {//clase para definir ciertas propiedades para algunos frame de la aplicacion
     //declaracion de variables globales
+
     JFrame v;
     private final String RUTA_IMAGEN = "img/image.png";
 
     public configuracionVentana(JFrame v) {
-        this.v=v;
+        this.v = v;
         setLocation();
         maxV();//esto esta presente en cada JFrame tambien, porque sabra porque no se hereda el alto y ancho de la ventana, entonces, se tiene que llamar en el constructor de cada JFrame
         ponerDimensionMinima();
@@ -36,15 +37,20 @@ public class configuracionVentana {//clase para definir ciertas propiedades para
     }
 
     public final void maxV() {// maximiza la ventana
-       // GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
-      //  v.setMaximizedBounds(env.getMaximumWindowBounds());
-     //   v.setExtendedState(v.getExtendedState() | v.MAXIMIZED_BOTH);
-       // v.setExtendedState(MAXIMIZED_BOTH);
-       GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
-       Rectangle bounds=env.getMaximumWindowBounds();
-       v.setBounds(bounds);
-       
-       
+        // GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
+        //  v.setMaximizedBounds(env.getMaximumWindowBounds());
+        //   v.setExtendedState(v.getExtendedState() | v.MAXIMIZED_BOTH);
+        // v.setExtendedState(MAXIMIZED_BOTH);
+     //   System.out.println("Width: "+info.width);
+      //  System.out.println("Heighrt: "+info.height);
+        if (info.width == 0 || info.height == 0) {
+             GraphicsEnvironment env= GraphicsEnvironment.getLocalGraphicsEnvironment();
+             Rectangle bounds=env.getMaximumWindowBounds();
+             v.setBounds(info.x, info.y,bounds.width, bounds.height);
+        } else {
+            v.setBounds(info.x, info.y, info.width, info.height);
+        }
+
     }
 
     private void ponerDimensionMinima() {//establece una dimension minima para la ventana

@@ -10,6 +10,7 @@ import configuracion.info;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -58,7 +59,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         this.user = user;
         this.idioma = idioma;
 
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
@@ -66,7 +67,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         iniciarDiseno();
         leer();
         //se deshabilita el boton de eliminar pq no se eliminan las fotos
-        btnEliminar.setEnabled(false);
+        //  btnEliminar.setEnabled(false);
     }
 
     public void iniciarDiseno() {//decora los componentes del frame
@@ -178,7 +179,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -215,14 +216,14 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
@@ -256,7 +257,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -363,7 +364,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
     private void txtBuscarFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtBuscarFocusLost
         // TODO add your handling code here:
         if (txtBuscar.getText().equals("")) {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 txtBuscar.setText("Search");
             } else {
                 txtBuscar.setText("Buscar");
@@ -375,7 +376,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -386,11 +387,11 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         try {
             int sel = tablaUsers.getSelectedRow();
             if (sel == -1) {//si no se tiene seleccionado ninguna fila, se entiende que se va a agregar un nuevo usuario
-                new info().setXY(this.getX(), this.getY());
+                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 new vistaUsuarios(con, user, priv, idioma, "").setVisible(true);
                 this.dispose();
             } else {//si se selecciono alguna fila, se va a entrar a modificar
-                new info().setXY(this.getX(), this.getY());
+                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 new vistaUsuarios(con, user, priv, idioma, tablaUsers.getValueAt(sel, 0).toString()).setVisible(true);
                 this.dispose();
             }
@@ -402,33 +403,42 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
         // TODO add your handling code here:
         String texto1, texto2, o1, o2;
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             texto1 = "Are you sure you want to delete the selected user?";
             texto2 = "Confirm Action";
-            o1 = "Yes";
-            o2 = "No";
+            o1 = "No";
+            o2 = "Yes";
         } else {
             texto1 = "¿Seguro que quiere eliminar al usuario seleccionado?";
             texto2 = "Confirmar Acción";
-            o1 = "Si";
-            o2 = "No";
+            o1 = "No";
+            o2 = "Si";
         }
         Object[] options = {o1, o2};
         if (JOptionPane.showOptionDialog(this, texto1, texto2,
                 JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE,
-                null, options, options[0]) == 0) {
+                null, options, options[0]) == 1) {
             try {
                 if (!modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString().equals("admin")) {
-                    delete(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(), tablaUsers.getSelectedRow());
+                    if (!modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString().equals(user)) {
+                        delete(modelo.getValueAt(tablaUsers.getSelectedRow(), 0).toString(), tablaUsers.getSelectedRow());
+                    } else {
+                        if (idioma.equals("english")) {
+                            JOptionPane.showMessageDialog(context, "You cannot delete yourself");
+                        } else {
+                            JOptionPane.showMessageDialog(context, "No se puede eliminar a si mismo");
+                        }
+                    }
+
                 } else {
-                    if (idioma.equals("English")) {
+                    if (idioma.equals("english")) {
                         JOptionPane.showMessageDialog(context, "SuperUser cannot be deleted");
                     } else {
                         JOptionPane.showMessageDialog(context, "El superusuario no puede ser eliminado");
                     }
                 }
             } catch (NullPointerException e) {
-                if (idioma.equals("English")) {
+                if (idioma.equals("english")) {
                     JOptionPane.showMessageDialog(context, "Select a user to delete");
                 } else {
                     JOptionPane.showMessageDialog(context, "Seleccione un usuario para eliminar");
@@ -488,7 +498,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        new windowClosing(idioma,this);
+        new windowClosing(idioma, this);
     }//GEN-LAST:event_formWindowClosing
 
     private void buscar() {//buscar por nombre de usuario
@@ -516,7 +526,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                             }
                         }
                     } else {
-                        if (idioma.equals("English")) {
+                        if (idioma.equals("english")) {
                             JOptionPane.showMessageDialog(context, "No results were found");
                         } else {
                             JOptionPane.showMessageDialog(context, "No se encontraron resultados");
@@ -593,36 +603,36 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
     }
 
     private void changeUser(JSONObject allData, String primera, String responsable, String segunda, String tercera, String usuario, String serie) {
-        try {
-            HashMap check = (HashMap) allData.get(primera);
-            String respo = check.get(responsable).toString();
-            if (respo.equals(usuario)) {
+        //  try {
+        HashMap check = (HashMap) allData.get(primera);
+        String respo = check.get(responsable).toString();
+        if (respo.equals(usuario)) {
+            con.child("Trabajos")
+                    .child(serie).child(primera).child(responsable).setValue("dummy", new DatabaseReference.CompletionListener() {
+                @Override
+                public void onComplete(DatabaseError de, DatabaseReference dr) {
+                }
+            });
+        }
+        ArrayList actividades = (ArrayList) check.get(segunda);
+        for (int i = 0; i < actividades.size(); i++) {
+            HashMap jsonTC = (HashMap) actividades.get(i);
+            String us = jsonTC.get(tercera).toString();
+            if (us.equals(usuario)) {
+                //cambiar este usuario por otro, ya sea superuser o dummy
                 con.child("Trabajos")
-                        .child(serie).child(primera).child(responsable).setValue("dummy", new DatabaseReference.CompletionListener() {
+                        .child(serie).child(primera).child(segunda)
+                        .child("" + i).child(tercera).setValue("dummy", new DatabaseReference.CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError de, DatabaseReference dr) {
                     }
                 });
             }
-            ArrayList actividades = (ArrayList) check.get(segunda);
-            for (int i = 0; i < actividades.size(); i++) {
-                HashMap jsonTC = (HashMap) actividades.get(i);
-                String us = jsonTC.get(tercera).toString();
-                if (us.equals(usuario)) {
-                    //cambiar este usuario por otro, ya sea superuser o dummy
-                    con.child("Trabajos")
-                            .child(serie).child(primera).child(segunda)
-                            .child("" + i).child(tercera).setValue("dummy", new DatabaseReference.CompletionListener() {
-                        @Override
-                        public void onComplete(DatabaseError de, DatabaseReference dr) {
-                        }
-                    });
-                }
-            }
-        } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: " + e);
-            // System.out.println("Error: " + e);
         }
+        //   } catch (Exception e) {
+        // JOptionPane.showMessageDialog(context, "Error1: " + e);
+        // System.out.println("Error: " + e);
+        //  }
     }
 
     private void delete(String usuario, int pos) {
@@ -665,7 +675,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                                         "usuario", usuario, childSnapshot.getKey());
 
                             } catch (Exception e) {
-                                JOptionPane.showMessageDialog(context, "Error: " + e);
+                                //  JOptionPane.showMessageDialog(context, "Error1: " + e);
                             }
                         }
                         try {
@@ -688,7 +698,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                                                 //  notifyDataSetChanged();
                                                 //  val = false;
                                             } catch (Exception e) {
-                                                JOptionPane.showMessageDialog(context, "Error: " + e);
+                                                //   JOptionPane.showMessageDialog(context, "Error: " + e);
                                             }
                                         }
                                     }
@@ -710,11 +720,11 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             ////  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             // toast.show();
         }
@@ -733,7 +743,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
                                     }
                                 });
                             } catch (Exception e) {
-                                JOptionPane.showMessageDialog(context, "Error: "+e);
+                                //  JOptionPane.showMessageDialog(context, "Error: "+e);
                             }
                         }
                     }
@@ -741,13 +751,13 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
 
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             ////  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             //  toast.show();
         }
@@ -812,12 +822,12 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     //  Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             //  toast.show();
         }
@@ -852,12 +862,12 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             //Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             // toast.show();
         }
@@ -888,12 +898,12 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             //  //Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             //  toast.show();
         }
@@ -930,18 +940,18 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                     @Override
                     public void onCancelled(DatabaseError error) {
-                        JOptionPane.showMessageDialog(context, "Error: "+error);
+                        JOptionPane.showMessageDialog(context, "Error: " + error);
                         //   Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                     }
                 });
             } catch (Exception e) {
-                JOptionPane.showMessageDialog(context, "Error: "+e);
+                JOptionPane.showMessageDialog(context, "Error: " + e);
 
                 // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
                 //  toast.show();
             }
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
         }
         //  EliminarFotos(chat);
     }
@@ -996,12 +1006,12 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             // Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             // toast.show();
         }
@@ -1025,12 +1035,12 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
                 @Override
                 public void onCancelled(DatabaseError error) {
-                    JOptionPane.showMessageDialog(context, "Error: "+error);
+                    JOptionPane.showMessageDialog(context, "Error: " + error);
                     // Toast.makeText(context, "Notifica el siguiente error: " + error, Toast.LENGTH_SHORT).show();
                 }
             });
         } catch (Exception e) {
-            JOptionPane.showMessageDialog(context, "Error: "+e);
+            JOptionPane.showMessageDialog(context, "Error: " + e);
             //  Toast toast = Toast.makeText(context, "Notifica el siguiente error:" + e, Toast.LENGTH_SHORT);
             //  toast.show();
         }

@@ -12,6 +12,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Cursor;
@@ -58,7 +59,7 @@ public class vistaUsuarios extends JFrame {
         this.nombre = nombre;
         iniciarDiseno();
         context = this;
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             esp();//cambia la interfaz a espanol
@@ -162,7 +163,7 @@ public class vistaUsuarios extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -186,7 +187,7 @@ public class vistaUsuarios extends JFrame {
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -246,7 +247,7 @@ public class vistaUsuarios extends JFrame {
         ));
         jScrollPane1.setViewportView(tablaPermisos);
 
-        btnVer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
+        btnVer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnVer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnVerMouseClicked(evt);
@@ -361,7 +362,7 @@ public class vistaUsuarios extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new menuUsuarios(con, user, priv, idioma).setVisible(true);
             this.dispose();
@@ -518,7 +519,7 @@ public class vistaUsuarios extends JFrame {
                             con.child("usuarios").child(id).setValue(user, new CompletionListener() {
                                 @Override
                                 public void onComplete(DatabaseError de, DatabaseReference dr) {
-                                    if (idioma.equals("English")) {
+                                    if (idioma.equals("english")) {
                                         JOptionPane.showMessageDialog(context, "User edited");
                                     } else {
                                         JOptionPane.showMessageDialog(context, "Usuario modificado");
@@ -542,7 +543,7 @@ public class vistaUsuarios extends JFrame {
     }
 
     private void cambiar() {
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuUsuarios(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -583,7 +584,7 @@ public class vistaUsuarios extends JFrame {
                 con.child("usuarios").push().setValue(user, new CompletionListener() {
                     @Override
                     public void onComplete(DatabaseError de, DatabaseReference dr) {
-                        if (idioma.equals("English")) {
+                        if (idioma.equals("english")) {
                             JOptionPane.showMessageDialog(context, "User added");
                         } else {
                             JOptionPane.showMessageDialog(context, "Usuario agregado");
@@ -596,7 +597,7 @@ public class vistaUsuarios extends JFrame {
             }
 
         } else {
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Fill out all fields");
             } else {
                 JOptionPane.showMessageDialog(context, "Llene todos los campos");
@@ -618,7 +619,7 @@ public class vistaUsuarios extends JFrame {
         JTableHeader tableHeader = tablaPermisos.getTableHeader();
         TableColumnModel tableColumnModel = tableHeader.getColumnModel();
         TableColumn tableColumn = tableColumnModel.getColumn(0);
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             switch (sel) {
                 case 0:
                     info.add("Assign activities to workers");
@@ -722,14 +723,14 @@ public class vistaUsuarios extends JFrame {
                                 TableColumn tableColumn = tableColumnModel.getColumn(0);
                                 switch (priv1) {
                                     case 1://superuser
-                                        if (idioma.equals("English")) {
+                                        if (idioma.equals("english")) {
                                             cmbTipos.addItem("Superuser");
                                         } else {
                                             cmbTipos.addItem("Superusuario");
                                         }
                                         cmbTipos.setSelectedIndex(4);
                                         tipo = 4;
-                                        if (idioma.equals("English")) {
+                                        if (idioma.equals("english")) {
                                             tableColumn.setHeaderValue("Super user can");
                                         } else {
                                             tableColumn.setHeaderValue("El superusuario puede");
@@ -738,7 +739,7 @@ public class vistaUsuarios extends JFrame {
                                     case 2://administrador
                                         cmbTipos.setSelectedIndex(0);
                                         tipo = 0;
-                                        if (idioma.equals("English")) {
+                                        if (idioma.equals("english")) {
                                             tableColumn.setHeaderValue("An administator can");
                                         } else {
                                             tableColumn.setHeaderValue("Un administrador puede");
@@ -747,7 +748,7 @@ public class vistaUsuarios extends JFrame {
                                     case 3://supervisor
                                         cmbTipos.setSelectedIndex(1);
                                         tipo = 1;
-                                        if (idioma.equals("English")) {
+                                        if (idioma.equals("english")) {
                                             tableColumn.setHeaderValue("A supervisor can");
                                         } else {
                                             tableColumn.setHeaderValue("Un supervisor puede puede");
@@ -756,7 +757,7 @@ public class vistaUsuarios extends JFrame {
                                     case 4://trabajador
                                         cmbTipos.setSelectedIndex(3);
                                         tipo = 3;
-                                        if (idioma.equals("English")) {
+                                        if (idioma.equals("english")) {
                                             tableColumn.setHeaderValue("A worker can");
                                         } else {
                                             tableColumn.setHeaderValue("Un trabajador puede");
@@ -765,7 +766,7 @@ public class vistaUsuarios extends JFrame {
                                     case 5://vendedor
                                         cmbTipos.setSelectedIndex(2);
                                         tipo = 2;
-                                        if (idioma.equals("English")) {
+                                        if (idioma.equals("english")) {
                                             tableColumn.setHeaderValue("A seller can");
                                         } else {
                                             tableColumn.setHeaderValue("Un vendedor puede");

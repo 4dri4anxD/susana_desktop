@@ -17,6 +17,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.crearOrdenes;
 import helpers.windowClosing;
 import java.awt.Cursor;
@@ -54,6 +55,7 @@ public class crearTF extends JFrame {
 
     public crearTF(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
+        
         new configuracionVentana(this);
 
         this.valido = valido;
@@ -415,7 +417,7 @@ public class crearTF extends JFrame {
             storage.setActividadesTF(actividades);
             storage.setRequisitosTF(requisitos);
             //volver
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.dispose();
         } catch (Exception e) {
@@ -431,7 +433,7 @@ public class crearTF extends JFrame {
         // this.setCursor(new Cursor(WAIT_CURSOR));
         //  this.dispose();
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();

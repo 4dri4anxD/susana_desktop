@@ -11,6 +11,7 @@ import configuracion.xmlManagment;
 import configuracion.info;
 import disenos.ventanas.confiLogin;
 import disenos.disenos;
+import helpers.checkUsers;
 import java.awt.Color;
 import java.awt.Cursor;
 import static java.awt.Frame.DEFAULT_CURSOR;
@@ -23,6 +24,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import obtenerDatos.users;
 import seguridad.encriptado;
+
 /*
 1-llamar al proceso como ps su nombre y un numero, ej. proceso1
 2-Agregar variable que diga si esta duplicado y cuantas veces
@@ -49,20 +51,20 @@ public class login extends confiLogin {//frame con el login de la aplicacion
     private String idioma;//idioma de la interfaz
     private DatabaseReference con;
     private boolean ing;
-   // private alert alerta;
+    // private alert alerta;
     private login context;
 
     public login(DatabaseReference con) {
         initComponents();
-      //  alerta = new alert();
+        //  alerta = new alert();
         iniciarDiseno();//decorar componentes de este frame
-        context=this;
+        context = this;
         ing = true;
 
         //estilizacion de la ventana
         //   new configuracionLogin(this);
         idioma = new xmlManagment().leerId();//se lee el idioma de la aplicacion, si es la primer vez que se ejecuta el codigo, crea el documento config.xml y le asigna espanol por defecto
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
         } else {
             Esp();//cambia la interfaz a espanol
@@ -291,7 +293,7 @@ public class login extends confiLogin {//frame con el login de la aplicacion
     private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
         // TODO add your handling code here:
         if (ing) {//ing es utilizado para asrgurar de que no se haga spam presionando el boton de ingresar
-            new info().setXY(this.getX(), this.getY());
+            new info().setXY(0, 0, 0, 0);
             ingresar();
         }
         ing = false;
@@ -302,7 +304,7 @@ public class login extends confiLogin {//frame con el login de la aplicacion
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {//si se presiona el enter con el focus en el campo de usuario
             if (ing) {
-                new info().setXY(this.getX(), this.getY());
+                new info().setXY(0, 0, 0, 0);
                 ingresar();
             }
             ing = false;
@@ -333,18 +335,20 @@ public class login extends confiLogin {//frame con el login de la aplicacion
                                     pass = new encriptado().decrypt(log.getPass());//desencripta la contrasena obtenida
                                     int priv = log.getPriv();
                                     if (txtPass.getText().toString().equals(pass)) {//si las contrasenas coinciden inicia sesion
+                                        new info().setPass(log.getPass());
+                                        new checkUsers().comprobarExistencia(con, txtUser.getText(), idioma, context);
                                         adelante(priv);
                                     } else {//si no
                                         ing = true;//habilita que se pueda presionar de nuevo el boton de ingresar
                                         a.setCursor(new Cursor(DEFAULT_CURSOR));
                                         txtUser.setCursor(new Cursor(TEXT_CURSOR));
                                         txtPass.setCursor(new Cursor(TEXT_CURSOR));
-                                        if (idioma.equals("English")) {
+                                        if (idioma.equals("english")) {
                                             JOptionPane.showMessageDialog(context, "Wrong data");
-                                          //  alerta.show("Warning", "Wrong data", idioma, false);
+                                            //  alerta.show("Warning", "Wrong data", idioma, false);
                                         } else {
                                             JOptionPane.showMessageDialog(context, "Datos incorrectos");
-                                           // alerta.show("Advertencia", "Datos incorrectos", idioma, false);
+                                            // alerta.show("Advertencia", "Datos incorrectos", idioma, false);
                                         }
                                     }
                                 } catch (Exception e) {
@@ -360,12 +364,12 @@ public class login extends confiLogin {//frame con el login de la aplicacion
                             a.setCursor(new Cursor(DEFAULT_CURSOR));
                             txtUser.setCursor(new Cursor(TEXT_CURSOR));
                             txtPass.setCursor(new Cursor(TEXT_CURSOR));
-                            if (idioma.equals("English")) {
+                            if (idioma.equals("english")) {
                                 JOptionPane.showMessageDialog(context, "Wrong data");
-                               // alerta.show("Warning", "Wrong data", idioma, false);;
+                                // alerta.show("Warning", "Wrong data", idioma, false);;
                             } else {
                                 JOptionPane.showMessageDialog(context, "Datos incorrectos");
-                               // alerta.show("Advertencia", "Datos incorrectos", idioma, false);
+                                // alerta.show("Advertencia", "Datos incorrectos", idioma, false);
                             }
                         }
                     }
@@ -389,12 +393,12 @@ public class login extends confiLogin {//frame con el login de la aplicacion
 
             }
         } else {//si no se llenen todos los campos
-            if (idioma.equals("English")) {
+            if (idioma.equals("english")) {
                 JOptionPane.showMessageDialog(context, "Fill out all fields");
-              //  alerta.show("Warning", "Fill out all fields", idioma, false);
+                //  alerta.show("Warning", "Fill out all fields", idioma, false);
             } else {
                 JOptionPane.showMessageDialog(context, "Llene todos los campos");
-              //  alerta.show("Advertencia", "Llene todos los campos", idioma, false);
+                //  alerta.show("Advertencia", "Llene todos los campos", idioma, false);
             }
         }
     }

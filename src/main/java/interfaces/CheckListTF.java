@@ -9,6 +9,7 @@ import disenos.disenos;
 import disenos.enableActivityTable;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
+import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
 import java.awt.Component;
@@ -89,6 +90,10 @@ public class CheckListTF extends JFrame {
         iniciarDiseno();
         ponerTabla();
         mostrar();
+        if (modo == 1) {
+            btnAdd.setVisible(false);
+         
+        }
 
     }
 
@@ -98,10 +103,14 @@ public class CheckListTF extends JFrame {
             @Override
             public boolean isCellEditable(int rowIndex, int columnIndex) {
                 if (columnIndex == 1) {
-                    if (habilitar.get(rowIndex)) {
-                        return true;
+                    if (modo == 1) {
+                        return false;
+                    } else {
+                        if (habilitar.get(rowIndex)) {
+                            return true;
+                        }
+                        return false;
                     }
-                    return false;
                 } else {
                     return false;
                 }
@@ -134,12 +143,28 @@ public class CheckListTF extends JFrame {
                             cuerpo = "Escriba un comentario";
                         }
                         String mensaje = mensajes.get(row);
-                        String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
-                        if (resp != null) {
-                            if (!resp.equals("")) {
-                                mensajes.set(row, resp);
+                        
+                        if (modo == 1) {
+                            if(mensaje.equals("")){
+                                if(idioma.equals("english")){
+                                    JOptionPane.showMessageDialog(context, "There's no comments written by workers");
+                                }else{
+                                    JOptionPane.showMessageDialog(context, "No hay comentarios hechos por el trabajador");
+                                }
+                                
+                            }else{
+                                JOptionPane.showMessageDialog(context, mensaje);
+                            }
+                            
+                        } else {
+                            String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
+                            if (resp != null) {
+                                if (!resp.equals("")) {
+                                    mensajes.set(row, resp);
+                                }
                             }
                         }
+                        
                     }
 
                 }
@@ -266,7 +291,7 @@ public class CheckListTF extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addContainerGap(17, Short.MAX_VALUE)
                 .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(23, 23, 23))
         );
@@ -403,7 +428,8 @@ public class CheckListTF extends JFrame {
         }
         storage.setComentarioTF(mensajes);
         storage.setCompletadoTF(completado);
-        new info().setXY(this.getX(), this.getY());
+      //  new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
         this.dispose();
@@ -413,7 +439,8 @@ public class CheckListTF extends JFrame {
         // TODO add your handling code here:
         //   System.out.println("Wi: "+pnlCuerpo.getWidth());
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY());
+          //  new info().setXY(this.getX(), this.getY());
+            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();

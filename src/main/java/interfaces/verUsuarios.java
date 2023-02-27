@@ -5,6 +5,7 @@ import configuracion.info;
 import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
+import helpers.checkUsers;
 import java.awt.Cursor;
 import java.awt.Image;
 import java.util.List;
@@ -29,7 +30,7 @@ public class verUsuarios extends configEXTRAS {
    
     public verUsuarios(String idioma, List<String> usuarios, String serie, int interfaz) {
         initComponents();
-        
+     
 
         
         this.idioma = idioma;
@@ -40,7 +41,7 @@ public class verUsuarios extends configEXTRAS {
         iniciarDiseno();
         llenarTabla();
 
-        if (idioma.equals("English")) {
+        if (idioma.equals("english")) {
             ingles();
         } else {
             esp();
@@ -214,7 +215,7 @@ public class verUsuarios extends configEXTRAS {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY());
+        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         // new menuPlantillas(con,user,priv,idioma).setVisible(true);
         this.dispose();
