@@ -6,6 +6,7 @@ import disenos.StretchIcon;
 import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import java.awt.Cursor;
@@ -33,12 +34,15 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
     private final vistaPlantillasTT testing;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public requisitos(String idioma, int pos, String actividad, int requisito, LinkedHashMap<String, Integer> actireq,
             vistaPlantillas vista, vistaPlantillasTT testing, int val) {//constructor
         initComponents();
         info=new info();
         disenos=new disenos();
+        
+        icon=new putIcon();
        
         //poner icono
         //inicializacion de variables
@@ -120,21 +124,14 @@ public class requisitos extends configEXTRAS {//clase para establecer los requis
         disenos.fondo(pnlIzq, 1);
 
         disenos.titulo(lblTitulo, 2);
-
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAtras, "img/atras2.png");
+        
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
         new disenoTabla().cabecera(tablaPermisos);
     }
 
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-      /*  ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

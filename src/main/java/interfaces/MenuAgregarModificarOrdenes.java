@@ -12,6 +12,7 @@ import disenos.ventanas.configuracionVentana;
 import disenos.customTabbedUI;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import disenos.readRecordTableBackground;
 import helpers.checkUsers;
 import helpers.windowClosing;
@@ -60,12 +61,14 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
     private leerJSON json;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public MenuAgregarModificarOrdenes(DatabaseReference con, String user, int priv, String idioma) {
         initComponents();
         new configuracionVentana(this);
         //inicializacion de variables
         disenos=new disenos();
+        icon=new putIcon();
         info=new info();
         json = new leerJSON();
         drone_user = new HashMap();
@@ -143,14 +146,17 @@ public class MenuAgregarModificarOrdenes extends JFrame {//insert/update creo
         disenos.fondo(pnlIzq, 1);
 
         new disenos().titulo(lblTitulo, 2);
+        
+        icon.setIcon(btnEliminar, "img/trash2.png");
+        icon.setIcon(btnAdd, "img/edit1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        icon.setIcon(btnBuscar, "img/buscar1.png");
+        icon.setIcon(btnElReg, "img/delLog.png");
+        icon.setIcon(btnVerReg, "img/verLog.png");
+        icon.setIcon(btnVerUsers, "img/ojo.png");
+        
 
-        ponerImg(btnEliminar, "img/trash2.png");
-        ponerImg(btnAdd, "img/edit1.png");
-        ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnBuscar, "img/buscar1.png");
-        ponerImg(btnElReg, "img/delLog.png");
-        ponerImg(btnVerReg, "img/verLog.png");
-        ponerImg(btnVerUsers, "img/ojo.png");
+  
 
         tablaUsers.requestFocus();
         txtBuscar.setForeground(Color.LIGHT_GRAY);

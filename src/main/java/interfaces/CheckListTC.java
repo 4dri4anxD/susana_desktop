@@ -10,6 +10,7 @@ import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
 import disenos.enableActivityTable;
+import disenos.putIcon;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
 import helpers.checkUsers;
@@ -50,6 +51,7 @@ public class CheckListTC extends JFrame {
     private CheckListTC context;
     private boolean val;
     private info info;
+    private putIcon icon;
 
     // private alert alerta;
     public CheckListTC(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {//LinkedHashMap<String, List<String>> hm, ArrayList<String> codProceso,ArrayList<String> procesos
@@ -60,6 +62,7 @@ public class CheckListTC extends JFrame {
         //   modelo = (DefaultTableModel) tblActividades.getModel();
         // alerta=new alert();
         info=new info();
+        icon=new putIcon();
         context = this;
         this.idioma = idioma;
         this.modo = modo;
@@ -227,22 +230,16 @@ public class CheckListTC extends JFrame {
         disenos.fondo(pnlIzq, 1);
 
         disenos.titulo(lblTitulo, 2);
+        
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        icon.setIcon(btnCheckComment, "img/adj1.png");
+        
 
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnCheckComment, "img/adj1.png");
 
         new disenoTabla().cabecera(tblActividades);
     }
 
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

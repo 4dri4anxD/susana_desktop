@@ -8,6 +8,7 @@ import disenos.StretchIcon;
 import disenos.colores;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
@@ -32,14 +33,16 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
     private menuPrincipal context;
     private disenos disenos;
     private info info;
+    private putIcon icon;
     //  private alert alerta;
 
     public menuPrincipal(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
-       
+
         new configuracionVentana(this);
-        info=new info();
-        disenos=new disenos();
+        info = new info();
+        icon=new putIcon();
+        disenos = new disenos();
         context = this;
         //   alerta=new alert();
         //inicializacion de variables
@@ -92,8 +95,9 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         ponerImg(btnChat, "img/dialogo1.png");
         ponerImg(btnPlantillas, "img/portapapeles1.png");
         ponerImg(btnUsers, "img/grupo2.png");
-        ponerImg1(btnOpciones, "img/conf2.png");
-        ponerImg1(btnAtras, "img/atras2.png");
+        
+        icon.setIcon1(btnOpciones, "img/conf2.png");
+        icon.setIcon1(btnAtras, "img/atras2.png");
 
         btnOpciones.setOpaque(true);
         btnAtras.setOpaque(true);
@@ -108,17 +112,9 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         b.setIcon(icono);
         b.setIconTextGap(20);
 
-    } 
-
-    public void ponerImg1(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-      /*  ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-
     }
+
+   
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -153,7 +149,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         lblBienvenida.setText("Hola de nuevo,");
 
         btnAtras.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -161,7 +157,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         });
 
         btnOpciones.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnOpciones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOpciones.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnOpciones.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOpcionesActionPerformed(evt);
@@ -209,7 +205,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         btnAct.setText("Actividades");
         btnAct.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
         btnAct.setContentAreaFilled(false);
-        btnAct.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAct.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAct.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnAct.setIconTextGap(10);
         btnAct.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -230,7 +226,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
         btnChat.setText("Chat");
         btnChat.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnChat.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnChat.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnChat.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnChat.setIconTextGap(10);
         btnChat.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -254,7 +250,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
         btnUsers.setText("Usuarios");
         btnUsers.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnUsers.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnUsers.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnUsers.setIconTextGap(10);
         btnUsers.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -275,7 +271,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
         btnPlantillas.setText("Plantillas");
         btnPlantillas.setBorder(new javax.swing.border.SoftBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        btnPlantillas.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnPlantillas.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnPlantillas.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnPlantillas.setIconTextGap(10);
         btnPlantillas.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
@@ -410,6 +406,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnActActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActActionPerformed
         // TODO add your handling code here:
+        System.out.println("Aqui: ");
         info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         String texto1, texto2, o1, o2, o3;
         if (idioma.equals("english")) {
@@ -477,6 +474,8 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
                 new MenuCompletarOrden(con, user, priv, idioma, 2).setVisible(true); //ver trabajos
                 this.dispose();
                 break;
+            default:
+                System.out.println("Aca: "+priv);
         }
     }//GEN-LAST:event_btnActActionPerformed
 
@@ -497,7 +496,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
         // TODO add your handling code here:
-        new windowClosing(idioma,this);
+        new windowClosing(idioma, this);
     }//GEN-LAST:event_formWindowClosing
 
     private void permisos() {

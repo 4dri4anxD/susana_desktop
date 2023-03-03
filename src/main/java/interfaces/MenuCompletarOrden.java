@@ -10,6 +10,7 @@ import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import disenos.readRecordTableBackground;
 import helpers.checkUsers;
 import helpers.windowClosing;
@@ -48,6 +49,7 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
     private boolean reg;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public MenuCompletarOrden(DatabaseReference con, String user, int priv, String idioma, int modo) {//constructor
         initComponents();
@@ -58,6 +60,7 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
         this.priv = priv;
         this.user = user;
         this.idioma = idioma;
+        icon=new putIcon();
         this.modo = modo;
         plantilla = new ArrayList();
         fecha = new ArrayList();
@@ -100,10 +103,11 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
         disenos.titulo(lblTitulo, 2);
 
-        ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnBuscar, "img/buscar1.png");
-        ponerImg(btnAdd, "img/edit1.png");
-        ponerImg(btnReg, "img/verLog.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        icon.setIcon(btnBuscar, "img/buscar1.png");
+        icon.setIcon(btnAdd, "img/edit1.png");
+        icon.setIcon(btnReg, "img/verLog.png");
+        
 
         tablaUsers.requestFocus();
         txtBuscar.setForeground(Color.LIGHT_GRAY);
@@ -112,14 +116,6 @@ public class MenuCompletarOrden extends JFrame {//clase para los trabajadores pa
 
     }
 
-    public void ponerImg(JButton b, String ruta) {//ponerle imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono); */
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

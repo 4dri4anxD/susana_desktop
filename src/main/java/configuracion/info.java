@@ -3,7 +3,7 @@ package configuracion;
 public class info {//clase que solo contieen variables con informacion que muchas partes de la aplicacion requieren
 
     public static final String RUTA_IMAGEN = "img/image.png";//ruta de la imagen del icono
-    public static final String VERSION = "SUSANA DESKTOP V-1.0.1";//version de la aplicacion
+    public static final String VERSION = "SUSANA DESKTOP PRUEBA V-2.0.0";//version de la aplicacion
     public static int x, width;//valor en x donde se encuentra el frame
     public static int y, height;//valor en y donde se encuentra el frame
     public static String pass = "";

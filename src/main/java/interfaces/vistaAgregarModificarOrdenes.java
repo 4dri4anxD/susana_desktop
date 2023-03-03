@@ -12,6 +12,7 @@ import datos.temporalStorage;
 import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import helpers.windowClosing;
@@ -62,12 +63,14 @@ public class vistaAgregarModificarOrdenes extends JFrame {
     private leerJSON json;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public vistaAgregarModificarOrdenes(DatabaseReference con, String user, int priv, String idioma, int serie, int inter) {
         initComponents();
         new configuracionVentana(this);
         info=new info();
         disenos=new disenos();
+        icon=new putIcon();
 
         storage = new temporalStorage();
         json = new leerJSON();
@@ -206,8 +209,11 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         disenos.titulo(lblTF, 6);
         disenos.titulo(lblRF, 6);
 
-        ponerImg(btnAdd, "img/guardar1.png");
-        ponerImg(btnAtras, "img/atras2.png");
+        
+        icon.setIcon(btnAdd, "img/guardar1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
+        
 
         txtSerie.requestFocus();
 
@@ -219,15 +225,6 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         //  }
     }
 
-    public void ponerImg(JButton b, String ruta) {
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

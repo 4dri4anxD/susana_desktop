@@ -11,6 +11,7 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
@@ -40,6 +41,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
     private JFrame context;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public menuPlantillas(DatabaseReference con, String user, int priv, String idioma, int check) {//constructor
         initComponents();
@@ -48,6 +50,7 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         //inicializacion de variables
         disenos=new disenos();
         info= new info();
+        icon=new putIcon();
         context = this;
         modelo = (DefaultTableModel) tablaUsers.getModel();
         this.con = con;
@@ -92,26 +95,19 @@ public class menuPlantillas extends JFrame {//clase que muestra todas las planti
         disenos.fondo(pnlIzq, 1);
 
         disenos.titulo(lblTitulo, 2);
+        
+        icon.setIcon(btnAdd, "img/edit1.png");
+        icon.setIcon(btnEliminar, "img/trash2.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        icon.setIcon(btnBuscar, "img/buscar1.png");
+       
 
-        ponerImg(btnEliminar, "img/trash2.png");
-        ponerImg(btnAdd, "img/edit1.png");
-        ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnBuscar, "img/buscar1.png");
         tablaUsers.requestFocus();
         txtBuscar.setForeground(Color.LIGHT_GRAY);
 
         new disenoTabla().cabecera(tablaUsers);
     }
 
-    public void ponerImg(JButton b, String ruta) {//le pone una imagen a los botones
-        b.setIcon(new StretchIcon(ruta));
-      /*  ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -11,6 +11,7 @@ import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Color;
@@ -47,13 +48,14 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
     private DefaultTableModel modelo;//modelo de la tabla
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public menuUsuarios(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
         new configuracionVentana(this);
         //poner icono
-        info=new info();
-        disenos=new disenos();
+        info = new info();
+        disenos = new disenos();
         //inicializacion de variables
         context = this;
         modelo = (DefaultTableModel) tablaUsers.getModel();
@@ -62,6 +64,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         this.priv = priv;
         this.user = user;
         this.idioma = idioma;
+        icon = new putIcon();
 
         if (idioma.equals("english")) {
             ingles();//cambia la interfaz a ingles
@@ -92,25 +95,18 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         disenos.fondo(pnlIzq, 1);
 
         disenos.titulo(lblTitulo, 2);
+        
+        icon.setIcon(btnEliminar, "img/trash2.png");
+        icon.setIcon(btnAdd, "img/edit1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        icon.setIcon(btnBuscar, "img/buscar1.png");
+        
 
-        ponerImg(btnEliminar, "img/trash2.png");
-        ponerImg(btnAdd, "img/edit1.png");
-        ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnBuscar, "img/buscar1.png");
 
         tablaUsers.requestFocus();
         txtBuscar.setForeground(Color.LIGHT_GRAY);
 
         new disenoTabla().cabecera(tablaUsers);
-    }
-
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono); */
     }
 
     @SuppressWarnings("unchecked")

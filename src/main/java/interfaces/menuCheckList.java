@@ -5,6 +5,7 @@ import configuracion.info;
 import disenos.StretchIcon;
 import disenos.colores;
 import disenos.disenos;
+import disenos.putIcon;
 import disenos.ventanas.configuracionVentana;
 import helpers.checkUsers;
 import helpers.windowClosing;
@@ -31,6 +32,7 @@ public class menuCheckList extends JFrame {
     private JFrame context;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public menuCheckList(DatabaseReference con, String user, int priv, String idioma) {
         initComponents();
@@ -42,6 +44,7 @@ public class menuCheckList extends JFrame {
         info=new info();
         disenos=new disenos();
         context = this;
+        icon=new putIcon();
         iniciarDiseno();
 
         mostrar();
@@ -73,7 +76,9 @@ public class menuCheckList extends JFrame {
         ponerImg(btnEnvio, "img/shipment.png");
         ponerImg(btnPruebas, "img/testing.png");
         ponerImg(btnFinal, "img/fin.png");
-        ponerImg1(btnAtras, "img/atras2.png");
+        
+        icon.setIcon1(btnAtras, "img/atras2.png");
+        
 
         btnAtras.setOpaque(true);
     }
@@ -86,16 +91,6 @@ public class menuCheckList extends JFrame {
         Icon icono = new ImageIcon(imgEscalada);
         b.setIcon(icono);
         b.setIconTextGap(20);
-
-    }
-
-    public void ponerImg1(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-      /*  ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
 
     }
 

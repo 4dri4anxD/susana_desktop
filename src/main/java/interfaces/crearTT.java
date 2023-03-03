@@ -26,6 +26,7 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 import configuracion.info;
 import disenos.StretchIcon;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import helpers.windowClosing;
@@ -45,6 +46,7 @@ public class crearTT extends JFrame {
     private crearOrdenes co;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public crearTT(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
@@ -53,6 +55,8 @@ public class crearTT extends JFrame {
         this.serie = serie;
         this.con = con;
         this.user = user;
+        this.priv=priv;
+        icon=new putIcon();
         this.idioma = idioma;
         info=new info();
         disenos=new disenos();
@@ -144,9 +148,10 @@ public class crearTT extends JFrame {
         disenos.selector(cmbPlantilla);
         disenos.selector(cmbPiloto);
         disenos.titulo(lblTitulo, 2);
-
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAtras, "img/atras2.png");
+        
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
         new disenoTabla().cabecera(tblActividades);
         tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
@@ -154,14 +159,6 @@ public class crearTT extends JFrame {
         tblRendimiento.setDefaultRenderer(Object.class, new centerTextInTable());
     }
 
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-        /*ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-    }
 
     /**
      * This method is called from within the constructor to initialize the form.

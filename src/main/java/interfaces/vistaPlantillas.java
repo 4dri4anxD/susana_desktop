@@ -11,6 +11,7 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import helpers.windowClosing;
@@ -53,6 +54,7 @@ public class vistaPlantillas extends JFrame {
     private LinkedHashMap<String, Integer> actireq;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public vistaPlantillas(DatabaseReference con, String user, int priv, String idioma, String plantilla, int check) {
         initComponents();
@@ -66,6 +68,7 @@ public class vistaPlantillas extends JFrame {
         this.plantilla = plantilla;
         this.idioma = idioma;
         context = this;
+        icon=new putIcon();
 
         iniciarVariables();
         iniciarDiseno();
@@ -119,11 +122,12 @@ public class vistaPlantillas extends JFrame {
 
         disenos.titulo(lblTitulo, 2);
         disenos.titulo(lblNombre, 6);
-
-        ponerImg(btnAdd, "img/guardar1.png");
-        ponerImg(btnAddProceso, "img/agregarProceso.png");
-        ponerImg(btnAsignarPre, "img/checklist.png");
-        ponerImg(btnAtras, "img/atras2.png");
+        
+        icon.setIcon(btnAdd, "img/guardar1.png");
+        icon.setIcon(btnAddProceso, "img/agregarProceso.png");
+        icon.setIcon(btnAsignarPre, "img/checklist.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
         new disenoTabla().cabecera(tablaPermisos);
 
@@ -134,15 +138,6 @@ public class vistaPlantillas extends JFrame {
 
     }
 
-    public void ponerImg(JButton b, String ruta) {
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

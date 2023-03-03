@@ -8,6 +8,7 @@ import disenos.colores;
 import disenos.disenoTabla;
 import disenos.disenos;
 import disenos.enableActivityTable;
+import disenos.putIcon;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
 import helpers.checkUsers;
@@ -57,12 +58,13 @@ public class CheckListTF extends JFrame {
     private CheckListTF context;
     private boolean val;
     private info info;
+    private putIcon icon;
 
     public CheckListTF(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {
         initComponents();
         new configuracionVentana(this);
         modelo = (DefaultTableModel) tblActividades.getModel();
-
+        icon=new putIcon();
         context = this;
         this.idioma = idioma;
         this.modo = modo;
@@ -226,21 +228,15 @@ public class CheckListTF extends JFrame {
         disenos.fondo(pnlIzq, 1);
 
         disenos.titulo(lblTitulo, 2);
+        
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAtras, "img/atras2.png");
 
         new disenoTabla().cabecera(tblActividades);
     }
 
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        /*  ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-        b.setIcon(new StretchIcon(ruta));
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

@@ -12,6 +12,7 @@ import disenos.colores;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import helpers.windowClosing;
@@ -47,11 +48,13 @@ public class vistaUsuarios extends JFrame {
     private boolean valido;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public vistaUsuarios(DatabaseReference con, String user, int priv, String idioma, String nombre) {
         initComponents();
         new configuracionVentana(this);
         info=new info();
+        icon= new putIcon();
         disenos=new disenos();
         carga = 0;
         this.con = con;
@@ -101,24 +104,17 @@ public class vistaUsuarios extends JFrame {
         disenos.titulo(lblPermisos, 6);
 
         disenos.selector(cmbTipos);
+        
+        icon.setIcon(btnAdd, "img/guardar1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        icon.setIcon(btnVer, "img/ojo.png");
+        
 
-        ponerImg(btnAdd, "img/guardar1.png");
-        ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnVer, "img/ojo.png");
         txtUser.requestFocus();
 
         new disenoTabla().cabecera(tablaPermisos);
     }
 
-    public void ponerImg(JButton b, String ruta) {
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

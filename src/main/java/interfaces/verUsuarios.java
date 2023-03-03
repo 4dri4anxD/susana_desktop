@@ -6,6 +6,7 @@ import disenos.StretchIcon;
 import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.checkUsers;
 import java.awt.Cursor;
 import java.awt.Image;
@@ -29,12 +30,14 @@ public class verUsuarios extends configEXTRAS {
     private int interfaz;
     private info info;
     private disenos disenos;
+    private putIcon icon;
 
    
     public verUsuarios(String idioma, List<String> usuarios, String serie, int interfaz) {
         initComponents();
         disenos=new disenos();
         info=new info();
+        icon=new putIcon();
      
 
         
@@ -64,20 +67,11 @@ public class verUsuarios extends configEXTRAS {
         disenos.fondo(pnlIzq, 1);
 
         disenos.titulo(lblTitulo, 2);
-
-        ponerImg(btnAtras, "img/atras2.png");
+        
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
         new disenoTabla().cabecera(tablaPermisos);
-    }
-
-    public void ponerImg(JButton b, String ruta) {
-        b.setIcon(new StretchIcon(ruta));
-      /*  ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-
     }
 
   

@@ -307,7 +307,7 @@ public class StretchIcon extends ImageIcon {
     }
 
     ImageObserver io = getImageObserver();
-    g.drawImage(image, x, y, w, h, io == null ? c : io);
+g.drawImage(image, x, y, w, h, io == null ? c : io);
   }
 
   /**

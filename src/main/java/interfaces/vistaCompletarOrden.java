@@ -11,6 +11,7 @@ import datos.temporalStorage;
 import disenos.StretchIcon;
 import disenos.colores;
 import disenos.disenos;
+import disenos.putIcon;
 import disenos.ventanas.configuracionVentana;
 import helpers.back;
 import helpers.checkUsers;
@@ -50,6 +51,7 @@ public class vistaCompletarOrden extends JFrame {
     private final leerJSON json;
     private final disenos disenos;
     private info info;
+    private putIcon icon;
 
     public vistaCompletarOrden(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {
         initComponents();
@@ -58,6 +60,7 @@ public class vistaCompletarOrden extends JFrame {
         this.disenos = new disenos();
         storage = new temporalStorage();
         json = new leerJSON();
+        icon=new putIcon();
         this.con = con;
         this.modo = modo;
         this.user = user;
@@ -152,19 +155,13 @@ public class vistaCompletarOrden extends JFrame {
         disenos.titulo(lblTS, 6);
         disenos.titulo(lblCF, 6);
         disenos.titulo(lblTF, 6);
+        
+        icon.setIcon(btnAdd, "img/guardar1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
-        ponerImg(btnAdd, "img/guardar1.png");
-        ponerImg(btnAtras, "img/atras2.png");
     }
 
-    public void ponerImg(JButton b, String ruta) {
-     /*   ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
-     b.setIcon(new StretchIcon(ruta));
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

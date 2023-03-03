@@ -11,6 +11,7 @@ import disenos.StretchIcon;
 import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import java.awt.Component;
@@ -38,6 +39,7 @@ public class addComentarios extends configEXTRAS {
     private LinkedHashMap<String, ArrayList<String>> comentarios;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public addComentarios(String user, int priv, String idioma, int interfaz, String proceso, LinkedHashMap<String, ArrayList<String>> comentarios,
             crearTC creartc) {
@@ -46,6 +48,7 @@ public class addComentarios extends configEXTRAS {
         modelo = (DefaultTableModel) tablaPermisos.getModel();
         this.comentarios = comentarios;
         info=new info();
+        icon=new putIcon();
         disenos=new disenos();
         this.user = user;
         this.priv = priv;
@@ -86,21 +89,15 @@ public class addComentarios extends configEXTRAS {
 
         disenos.titulo(lblTitulo, 2);
 
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAdd1, "img/agregarProceso.png");
-        ponerImg(btnAtras, "img/atras2.png");
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAdd1, "img/agregarProceso.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
+
 
         new disenoTabla().cabecera(tablaPermisos);
     }
 
-    public void ponerImg(JButton b, String ruta) {//les pone una imagen a los botones
-        b.setIcon(new StretchIcon(ruta));
-      /*  ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono); */
-    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents

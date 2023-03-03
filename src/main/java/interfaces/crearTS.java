@@ -12,6 +12,7 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import helpers.crearOrdenes;
@@ -53,6 +54,7 @@ public class crearTS extends JFrame {
     private crearOrdenes co;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public crearTS(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
@@ -67,6 +69,7 @@ public class crearTS extends JFrame {
         this.serie = serie;
         disenos=new disenos();
         info=new info();
+        icon=new putIcon();
 
         iniciarVariables();
         iniciarDiseno();
@@ -161,10 +164,12 @@ public class crearTS extends JFrame {
         disenos.titulo(lblTitulo, 2);
 
         chkAirTag.setFont(new Font("Lato", Font.BOLD, 20));
+        
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        icon.setIcon(btnMsj, "img/adj1.png");
+        
 
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAtras, "img/atras2.png");
-        ponerImg(btnMsj, "img/adj1.png");
         ponerImgChk(chkAirTag, "img/unchecked.png", "img/checked.jpg");
 
         new disenoTabla().cabecera(tblActividades);
@@ -174,14 +179,6 @@ public class crearTS extends JFrame {
         // System.out.println("Chk desues: "+chkAirTag.isSelected());
     }
 
-    private void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono); */
-       b.setIcon(new StretchIcon(ruta));
-    }
 
     private void ponerImgChk(JCheckBox b, String ruta, String ruta2) {//poner imagenes a los botones
         int w = 7, h = 2;

@@ -8,6 +8,7 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import helpers.crearOrdenes;
@@ -46,25 +47,27 @@ public class crearTC extends JFrame {
     private crearOrdenes co;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public crearTC(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
         new configuracionVentana(this);
-        info=new info();
-        disenos=new disenos();
+        info = new info();
+        disenos = new disenos();
+        icon = new putIcon();
         cargado = false;
         co = new crearOrdenes();
         storage = new temporalStorage();
         seleccion = new ArrayList();
         context = this;
         modelo = (DefaultTableModel) tblActividades.getModel();
-        
 
         this.valido = valido;
         this.serie = serie;
         this.con = con;
         this.user = user;
         this.idioma = idioma;
+        this.priv=priv;
         this.actividades = new ArrayList<>();
         this.requisitos = new ArrayList<>();
         this.listaUsuarios = new ArrayList<>();
@@ -140,20 +143,11 @@ public class crearTC extends JFrame {
         disenos.selector(cmbPlantilla);
         disenos.titulo(lblTitulo, 2);
 
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAddComment, "img/agregarProceso.png");
-        ponerImg(btnAtras, "img/atras2.png");
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAddComment, "img/agregarProceso.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
 
         new disenoTabla().cabecera(tblActividades);
-    }
-
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-     /*   ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono); */
     }
 
     /**

@@ -17,6 +17,7 @@ import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.back;
 import helpers.checkUsers;
 import helpers.crearOrdenes;
@@ -55,6 +56,7 @@ public class crearTF extends JFrame {
     private crearOrdenes co;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public crearTF(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
@@ -66,7 +68,9 @@ public class crearTF extends JFrame {
         this.con = con;
         this.user = user;
         this.idioma = idioma;
+        this.priv=priv;
         info=new info();
+        icon=new putIcon();
         disenos=new disenos();
 
         iniciarVariables();
@@ -143,21 +147,13 @@ public class crearTF extends JFrame {
         disenos.selector(cmbResponsable);
         disenos.selector(cmbPlantilla);
         disenos.titulo(lblTitulo, 2);
-
-        ponerImg(btnAdd, "img/check1.png");
-        ponerImg(btnAtras, "img/atras2.png");
+        
+        icon.setIcon(btnAdd, "img/check1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
         new disenoTabla().cabecera(tblActividades);
         tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
-    }
-
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
     }
 
     /**

@@ -7,6 +7,7 @@ import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
+import disenos.putIcon;
 import helpers.checkUsers;
 import helpers.windowClosing;
 import java.awt.Cursor;
@@ -32,6 +33,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
     private DefaultTableModel modelo;
     private disenos disenos;
     private info info;
+    private putIcon icon;
 
     public opciones(DatabaseReference con, String user, int priv, String idioma) {//constructores
         initComponents();
@@ -39,6 +41,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         //poner icono
         info=new info();
         disenos=new disenos();
+        icon=new putIcon();
 
         //inicializacion de variables
         modelo = (DefaultTableModel) tablaOptions.getModel();
@@ -69,20 +72,13 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         disenos.fondo(pnlIzq, 1);
 
         disenos.titulo(lblTitulo, 2);
+        
+        icon.setIcon(btnAdd, "img/guardar1.png");
+        icon.setIcon(btnAtras, "img/atras2.png");
+        
 
-        ponerImg(btnAdd, "img/guardar1.png");
-        ponerImg(btnAtras, "img/atras2.png");
 
         new disenoTabla().cabecera(tablaOptions);
-    }
-
-    public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        b.setIcon(new StretchIcon(ruta));
-       /* ImageIcon imagen = new ImageIcon(ruta);
-        Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
-                b.getHeight(), Image.SCALE_SMOOTH);
-        Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);*/
     }
 
     @SuppressWarnings("unchecked")
