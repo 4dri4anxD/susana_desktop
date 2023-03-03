@@ -7,6 +7,7 @@ package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -35,6 +36,8 @@ public class addComentarios extends configEXTRAS {
     private DefaultTableModel modelo;
     private crearTC creartc;
     private LinkedHashMap<String, ArrayList<String>> comentarios;
+    private disenos disenos;
+    private info info;
 
     public addComentarios(String user, int priv, String idioma, int interfaz, String proceso, LinkedHashMap<String, ArrayList<String>> comentarios,
             crearTC creartc) {
@@ -42,7 +45,8 @@ public class addComentarios extends configEXTRAS {
         this.creartc = creartc;
         modelo = (DefaultTableModel) tablaPermisos.getModel();
         this.comentarios = comentarios;
-
+        info=new info();
+        disenos=new disenos();
         this.user = user;
         this.priv = priv;
         this.idioma = idioma;
@@ -70,17 +74,17 @@ public class addComentarios extends configEXTRAS {
 
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnAdd1, 3);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnAdd1, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().titulo(lblTitulo, 2);
+        disenos.titulo(lblTitulo, 2);
 
         ponerImg(btnAdd, "img/check1.png");
         ponerImg(btnAdd1, "img/agregarProceso.png");
@@ -90,11 +94,12 @@ public class addComentarios extends configEXTRAS {
     }
 
     public void ponerImg(JButton b, String ruta) {//les pone una imagen a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+      /*  ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono); */
     }
 
     @SuppressWarnings("unchecked")
@@ -134,14 +139,14 @@ public class addComentarios extends configEXTRAS {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnAdd1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd1.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAdd1ActionPerformed(evt);
@@ -153,23 +158,23 @@ public class addComentarios extends configEXTRAS {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAdd1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23))
+                    .addComponent(btnAdd1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd1, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd1, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -181,15 +186,15 @@ public class addComentarios extends configEXTRAS {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -217,7 +222,7 @@ public class addComentarios extends configEXTRAS {
         pnlCuerpo.setLayout(pnlCuerpoLayout);
         pnlCuerpoLayout.setHorizontalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 469, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 444, Short.MAX_VALUE)
         );
         pnlCuerpoLayout.setVerticalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -285,7 +290,7 @@ public class addComentarios extends configEXTRAS {
         }
         comentarios.put(proceso, comments);
         creartc.setComentarios(comentarios);
-        new info().setXY(-1,-1, 0,0);
+        info.setXY(-1,-1, 0,0);
         this.setCursor(new Cursor(WAIT_CURSOR));
         this.dispose();//cerrar esta ventanas para volver a vistaPlantillas 
     }//GEN-LAST:event_btnAddActionPerformed
@@ -303,7 +308,7 @@ public class addComentarios extends configEXTRAS {
         // TODO add your handling code here:
         //boton atras
         if (new back().backConf(idioma, this)) {
-            new info().setXY(-1,-1, 0,0);
+            info.setXY(-1,-1, 0,0);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();
         }

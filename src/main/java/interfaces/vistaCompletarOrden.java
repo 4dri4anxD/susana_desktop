@@ -8,6 +8,7 @@ import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import datos.leerJSON;
 import datos.temporalStorage;
+import disenos.StretchIcon;
 import disenos.colores;
 import disenos.disenos;
 import disenos.ventanas.configuracionVentana;
@@ -48,10 +49,12 @@ public class vistaCompletarOrden extends JFrame {
     private final temporalStorage storage;
     private final leerJSON json;
     private final disenos disenos;
+    private info info;
 
     public vistaCompletarOrden(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {
         initComponents();
         new configuracionVentana(this);
+        info=new info();
         this.disenos = new disenos();
         storage = new temporalStorage();
         json = new leerJSON();
@@ -155,11 +158,12 @@ public class vistaCompletarOrden extends JFrame {
     }
 
     public void ponerImg(JButton b, String ruta) {
-        ImageIcon imagen = new ImageIcon(ruta);
+     /*   ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
+     b.setIcon(new StretchIcon(ruta));
     }
 
     @SuppressWarnings("unchecked")
@@ -228,7 +232,7 @@ public class vistaCompletarOrden extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -240,19 +244,19 @@ public class vistaCompletarOrden extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -264,15 +268,15 @@ public class vistaCompletarOrden extends JFrame {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(22, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -365,6 +369,7 @@ public class vistaCompletarOrden extends JFrame {
         gridBagConstraints.weighty = 1.0;
         pnlCalidad.add(lblCC, gridBagConstraints);
 
+        pnlTC.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         pnlTC.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 pnlTCMouseClicked(evt);
@@ -681,7 +686,7 @@ public class vistaCompletarOrden extends JFrame {
             .addGroup(pnlFondoLayout.createSequentialGroup()
                 .addComponent(pnlIzq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 818, Short.MAX_VALUE)
+                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 783, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlDer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -872,7 +877,7 @@ public class vistaCompletarOrden extends JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void atras() {
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
        // new info().setXY(this.getX(), this.getY());
         storage.inicializarTodo();
         this.setCursor(new Cursor(WAIT_CURSOR));
@@ -881,7 +886,7 @@ public class vistaCompletarOrden extends JFrame {
     }
 
     private void cambio(int interfaz) {
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
       //  new info().setXY(this.getX(), this.getY());
         this.setCursor(new Cursor(WAIT_CURSOR));
         switch (interfaz) {

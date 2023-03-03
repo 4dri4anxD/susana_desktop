@@ -99,7 +99,7 @@
         <Container class="javax.swing.JPanel" name="pnlDer">
           <Properties>
             <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-              <Color id="Cursor Por defecto"/>
+              <Color id="Default Cursor"/>
             </Property>
           </Properties>
 
@@ -107,9 +107,9 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="27" max="32767" attributes="0"/>
-                      <Component id="btnAdd" min="-2" pref="70" max="-2" attributes="0"/>
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace pref="20" max="32767" attributes="0"/>
+                      <Component id="btnAdd" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -117,7 +117,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnAdd" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnAdd" min="-2" pref="100" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -127,7 +127,7 @@
             <Component class="javax.swing.JButton" name="btnAdd">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor Por defecto"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -142,9 +142,9 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                      <Component id="btnAtras" min="-2" pref="70" max="-2" attributes="0"/>
-                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                      <Component id="btnAtras" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace pref="20" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -152,7 +152,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnAtras" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnAtras" min="-2" pref="100" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -162,7 +162,7 @@
             <Component class="javax.swing.JButton" name="btnAtras">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor Por defecto"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -176,7 +176,7 @@
           <Layout>
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Component id="jScrollPane1" alignment="0" pref="491" max="32767" attributes="0"/>
+                  <Component id="jScrollPane1" alignment="0" pref="436" max="32767" attributes="0"/>
                   <Component id="pnlArriba" alignment="0" max="32767" attributes="0"/>
               </Group>
             </DimensionLayout>

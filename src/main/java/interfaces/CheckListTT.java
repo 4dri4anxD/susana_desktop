@@ -3,6 +3,7 @@ package interfaces;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
 import datos.temporalStorage;
+import disenos.StretchIcon;
 import disenos.colores;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -43,6 +44,7 @@ public class CheckListTT extends JFrame {
     private ArrayList<String> actividades, mensajes, mensajes1, rendimiento, ponderacion;
     private ArrayList<Boolean> realizado, aprobacion, habilitar, habilitar1;
     private boolean val;
+    private info info;
 
     private CheckListTT context;
 
@@ -58,6 +60,7 @@ public class CheckListTT extends JFrame {
         this.user = user;
         this.con = con;
         this.priv = priv;
+        info=new info();
 
         val = true;
         habilitar1 = new ArrayList();
@@ -334,11 +337,12 @@ public class CheckListTT extends JFrame {
     }
 
     public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+       /* ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono); */
     }
 
     @SuppressWarnings("unchecked")
@@ -385,7 +389,7 @@ public class CheckListTT extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -397,19 +401,19 @@ public class CheckListTT extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -421,15 +425,15 @@ public class CheckListTT extends JFrame {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -551,7 +555,7 @@ public class CheckListTT extends JFrame {
             .addGroup(pnlFondoLayout.createSequentialGroup()
                 .addComponent(pnlIzq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 794, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlDer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -597,7 +601,7 @@ public class CheckListTT extends JFrame {
         storage.setComentarioTT1(mensajes1);
 
         //  new info().setXY(this.getX(), this.getY());
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
         this.dispose();
@@ -606,7 +610,7 @@ public class CheckListTT extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
 //            new info().setXY(this.getX(), this.getY());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);

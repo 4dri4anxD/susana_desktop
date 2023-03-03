@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseReference.CompletionListener;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -44,12 +45,15 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
     private String user, idioma;
     private JFrame context;
     private DefaultTableModel modelo;//modelo de la tabla
+    private disenos disenos;
+    private info info;
 
     public menuUsuarios(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
         new configuracionVentana(this);
         //poner icono
-
+        info=new info();
+        disenos=new disenos();
         //inicializacion de variables
         context = this;
         modelo = (DefaultTableModel) tablaUsers.getModel();
@@ -74,20 +78,20 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
         txtBuscar.setHorizontalAlignment(JLabel.CENTER);
 
-        new disenos().botones(btnEliminar, 3);
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnAtras, 3);
-        new disenos().botones(btnBuscar, 1);
+        disenos.botones(btnEliminar, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnAtras, 3);
+        disenos.botones(btnBuscar, 1);
 
-        new disenos().textoL(txtBuscar);
+        disenos.textoL(txtBuscar);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().titulo(lblTitulo, 2);
+        disenos.titulo(lblTitulo, 2);
 
         ponerImg(btnEliminar, "img/trash2.png");
         ponerImg(btnAdd, "img/edit1.png");
@@ -101,11 +105,12 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
     }
 
     public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+       /* ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono); */
     }
 
     @SuppressWarnings("unchecked")
@@ -179,7 +184,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnBuscar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnBuscarActionPerformed(evt);
@@ -192,21 +197,23 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCabeceraLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 412, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(18, 18, 18)
-                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
         pnlCabeceraLayout.setVerticalGroup(
             pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlCabeceraLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addComponent(txtBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 42, Short.MAX_VALUE)
-                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addGroup(pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(pnlCabeceraLayout.createSequentialGroup()
+                        .addGap(21, 21, 21)
+                        .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(btnBuscar, javax.swing.GroupLayout.DEFAULT_SIZE, 82, Short.MAX_VALUE)
+                    .addComponent(lblTitulo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
         );
 
@@ -216,14 +223,14 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
             }
         });
 
-        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnEliminar.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnEliminar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnEliminarActionPerformed(evt);
@@ -235,19 +242,19 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                    .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 70, Short.MAX_VALUE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                .addGap(23, 23, 23))
+                    .addComponent(btnEliminar, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.DEFAULT_SIZE, 100, Short.MAX_VALUE))
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -257,7 +264,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
             }
         });
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -269,15 +276,15 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -308,11 +315,11 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         pnlCuerpo.setLayout(pnlCuerpoLayout);
         pnlCuerpoLayout.setHorizontalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 575, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
         );
         pnlCuerpoLayout.setVerticalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 712, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 700, Short.MAX_VALUE)
         );
 
         javax.swing.GroupLayout pnlFondoLayout = new javax.swing.GroupLayout(pnlFondo);
@@ -376,7 +383,7 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -387,11 +394,11 @@ public class menuUsuarios extends JFrame {//clase que muestra a los usuarios en 
         try {
             int sel = tablaUsers.getSelectedRow();
             if (sel == -1) {//si no se tiene seleccionado ninguna fila, se entiende que se va a agregar un nuevo usuario
-                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+                info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 new vistaUsuarios(con, user, priv, idioma, "").setVisible(true);
                 this.dispose();
             } else {//si se selecciono alguna fila, se va a entrar a modificar
-                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+                info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 new vistaUsuarios(con, user, priv, idioma, tablaUsers.getValueAt(sel, 0).toString()).setVisible(true);
                 this.dispose();
             }

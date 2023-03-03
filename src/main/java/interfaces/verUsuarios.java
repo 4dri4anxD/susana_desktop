@@ -2,6 +2,7 @@
 package interfaces;
 
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.ventanas.configEXTRAS;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -26,10 +27,14 @@ public class verUsuarios extends configEXTRAS {
     private List<String> usuarios;
     private DefaultTableModel modelo;
     private int interfaz;
+    private info info;
+    private disenos disenos;
 
    
     public verUsuarios(String idioma, List<String> usuarios, String serie, int interfaz) {
         initComponents();
+        disenos=new disenos();
+        info=new info();
      
 
         
@@ -50,15 +55,15 @@ public class verUsuarios extends configEXTRAS {
 
     private void iniciarDiseno() {
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().titulo(lblTitulo, 2);
+        disenos.titulo(lblTitulo, 2);
 
         ponerImg(btnAtras, "img/atras2.png");
 
@@ -66,11 +71,12 @@ public class verUsuarios extends configEXTRAS {
     }
 
     public void ponerImg(JButton b, String ruta) {
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+      /*  ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
 
     }
 
@@ -121,7 +127,7 @@ public class verUsuarios extends configEXTRAS {
             .addGap(0, 662, Short.MAX_VALUE)
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -133,15 +139,15 @@ public class verUsuarios extends configEXTRAS {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -169,7 +175,7 @@ public class verUsuarios extends configEXTRAS {
         pnlCuerpo.setLayout(pnlCuerpoLayout);
         pnlCuerpoLayout.setHorizontalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 572, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 544, Short.MAX_VALUE)
         );
         pnlCuerpoLayout.setVerticalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -215,7 +221,7 @@ public class verUsuarios extends configEXTRAS {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         // new menuPlantillas(con,user,priv,idioma).setVisible(true);
         this.dispose();

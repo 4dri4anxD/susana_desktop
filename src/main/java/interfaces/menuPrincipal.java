@@ -4,6 +4,7 @@ import alerts.alert;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.xmlManagment;
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.colores;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
@@ -29,12 +30,16 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
     private String user, idioma;
     private int priv;
     private menuPrincipal context;
+    private disenos disenos;
+    private info info;
     //  private alert alerta;
 
     public menuPrincipal(DatabaseReference con, String user, int priv, String idioma) {//constructor
         initComponents();
        
         new configuracionVentana(this);
+        info=new info();
+        disenos=new disenos();
         context = this;
         //   alerta=new alert();
         //inicializacion de variables
@@ -65,20 +70,20 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         lblBienvenida.setHorizontalAlignment(JLabel.LEFT);
         lblTitulo.setHorizontalAlignment(JLabel.CENTER);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 1);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlTitulo, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 1);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlTitulo, 1);
 
-        new disenos().titulo(lblBienvenida, 5);
-        new disenos().titulo(lblTitulo, 2);
+        disenos.titulo(lblBienvenida, 5);
+        disenos.titulo(lblTitulo, 2);
 
-        new disenos().botones(btnUsers, 4);
-        new disenos().botones(btnAct, 3);
-        new disenos().botones(btnPlantillas, 3);
-        new disenos().botones(btnChat, 4);
-        new disenos().botones(btnOpciones, 1);
-        new disenos().botones(btnAtras, 1);
+        disenos.botones(btnUsers, 4);
+        disenos.botones(btnAct, 3);
+        disenos.botones(btnPlantillas, 3);
+        disenos.botones(btnChat, 4);
+        disenos.botones(btnOpciones, 1);
+        disenos.botones(btnAtras, 1);
 
         alto = btnAct.getHeight();
         ancho = btnAct.getWidth();
@@ -103,14 +108,15 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
         b.setIcon(icono);
         b.setIconTextGap(20);
 
-    }
+    } 
 
     public void ponerImg1(JButton b, String ruta) {//poner imagenes a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+      /*  ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
 
     }
 
@@ -335,7 +341,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         //  alerta.show("Warning", "Select an activity", idioma, true);
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         new login(con).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed
@@ -388,7 +394,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnUsersActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUsersActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuUsuarios(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -396,7 +402,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnPlantillasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPlantillasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         new menuCheckList(con, user, priv, idioma).setVisible(true);
         //  new menuPlantillas(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -404,7 +410,7 @@ public class menuPrincipal extends JFrame {//clase que contiene el menu principa
 
     private void btnActActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnActActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         String texto1, texto2, o1, o2, o3;
         if (idioma.equals("english")) {
             texto1 = "What do you want to do?";

@@ -2,6 +2,7 @@ package interfaces;
 
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.colores;
 import disenos.disenos;
 import disenos.ventanas.configuracionVentana;
@@ -28,6 +29,8 @@ public class menuCheckList extends JFrame {
     private Color colorSel, color1, color2;
     private String user, idioma;
     private JFrame context;
+    private disenos disenos;
+    private info info;
 
     public menuCheckList(DatabaseReference con, String user, int priv, String idioma) {
         initComponents();
@@ -36,6 +39,8 @@ public class menuCheckList extends JFrame {
         this.priv = priv;
         this.user = user;
         this.idioma = idioma;
+        info=new info();
+        disenos=new disenos();
         context = this;
         iniciarDiseno();
 
@@ -49,17 +54,17 @@ public class menuCheckList extends JFrame {
 
         lblTitulo.setHorizontalAlignment(JLabel.CENTER);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 1);
-        new disenos().fondo(pnlCabecera, 3);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 1);
+        disenos.fondo(pnlCabecera, 3);
 
-        new disenos().titulo(lblTitulo, 5);
+        disenos.titulo(lblTitulo, 5);
 
-        new disenos().botones(btnFinal, 3);
-        new disenos().botones(btnCalidad, 3);
-        new disenos().botones(btnEnvio, 4);
-        new disenos().botones(btnPruebas, 4);
-        new disenos().botones(btnAtras, 1);
+        disenos.botones(btnFinal, 3);
+        disenos.botones(btnCalidad, 3);
+        disenos.botones(btnEnvio, 4);
+        disenos.botones(btnPruebas, 4);
+        disenos.botones(btnAtras, 1);
 
         ancho = (int) btnCalidad.getWidth() / 2;
         alto = (int) btnCalidad.getHeight() / 2;
@@ -76,7 +81,6 @@ public class menuCheckList extends JFrame {
     public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones, modificando su tamano
 
         ImageIcon imagen = new ImageIcon(ruta);
-
         Image imgEscalada = imagen.getImage().getScaledInstance(ancho,
                 alto, Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
@@ -86,11 +90,12 @@ public class menuCheckList extends JFrame {
     }
 
     public void ponerImg1(JButton b, String ruta) {//poner imagenes a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+      /*  ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
 
     }
 
@@ -291,7 +296,7 @@ public class menuCheckList extends JFrame {
 
     private void btnCalidadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCalidadActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 1).setVisible(true);
         this.dispose();
@@ -315,7 +320,7 @@ public class menuCheckList extends JFrame {
 
     private void btnEnvioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnvioActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 3).setVisible(true);
         this.dispose();
@@ -335,7 +340,7 @@ public class menuCheckList extends JFrame {
 
     private void btnPruebasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPruebasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 2).setVisible(true);
         this.dispose();
@@ -355,7 +360,7 @@ public class menuCheckList extends JFrame {
 
     private void btnFinalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFinalActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, 4).setVisible(true);
         this.dispose();
@@ -367,7 +372,7 @@ public class menuCheckList extends JFrame {
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
     }//GEN-LAST:event_btnAtrasActionPerformed

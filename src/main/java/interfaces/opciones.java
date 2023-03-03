@@ -3,6 +3,7 @@ package interfaces;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
 import configuracion.xmlManagment;
+import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -29,11 +30,15 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
     private String user, idioma;
     private int priv;
     private DefaultTableModel modelo;
+    private disenos disenos;
+    private info info;
 
     public opciones(DatabaseReference con, String user, int priv, String idioma) {//constructores
         initComponents();
         new configuracionVentana(this);
         //poner icono
+        info=new info();
+        disenos=new disenos();
 
         //inicializacion de variables
         modelo = (DefaultTableModel) tablaOptions.getModel();
@@ -54,16 +59,16 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
     public void iniciarDiseno() {//decora los componentes del frame
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().titulo(lblTitulo, 2);
+        disenos.titulo(lblTitulo, 2);
 
         ponerImg(btnAdd, "img/guardar1.png");
         ponerImg(btnAtras, "img/atras2.png");
@@ -72,11 +77,12 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
     }
 
     public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+       /* ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
     }
 
     @SuppressWarnings("unchecked")
@@ -132,15 +138,15 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -156,15 +162,15 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -196,7 +202,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
         pnlCuerpo.setLayout(pnlCuerpoLayout);
         pnlCuerpoLayout.setHorizontalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 627, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 587, Short.MAX_VALUE)
         );
         pnlCuerpoLayout.setVerticalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -242,7 +248,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
 
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPrincipal(con, user, priv, idioma).setVisible(true);
         this.dispose();
@@ -250,7 +256,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
 
     private void btnAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAddActionPerformed
         // TODO add your handling code here:
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
@@ -283,7 +289,7 @@ public class opciones extends JFrame {//clase para cambiar el idioma o cambiar f
                 if (JOptionPane.showOptionDialog(this, texto1, texto2,
                         JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                         null, options, options[0]) == 1) {
-                    new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+                    info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                     this.setCursor(new Cursor(WAIT_CURSOR));
                     //cambiar idioma, escribir xml
                     if (idioma.equals("english")) {

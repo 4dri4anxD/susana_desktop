@@ -3,7 +3,9 @@ package disenos;
 import com.toedter.calendar.JDateChooser;
 import com.toedter.calendar.JTextFieldDateEditor;
 import java.awt.Color;
+import java.awt.Cursor;
 import java.awt.Font;
+import static java.awt.Frame.HAND_CURSOR;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import javax.swing.BorderFactory;
@@ -173,15 +175,18 @@ public class disenos {//clase que sirve para establecer el diseno de algunos com
         boton.setBorderPainted(false);
         boton.setContentAreaFilled(false);
         boton.setFocusPainted(false);
+        boton.setCursor(new Cursor(HAND_CURSOR));
         if (tipo == 1) {
             boton.setFont(new Font("Lato", Font.PLAIN, 18));
             boton.setBackground(colores.getAzul());
+          //  boton.setSize(200, 200);
         } else if (tipo == 2) {
             boton.setFont(new Font("Lato", Font.BOLD, 20));
             boton.setBackground(colores.getGris());
         } else if (tipo == 3) {
             boton.setFont(new Font("Lato", Font.BOLD, 16));
             boton.setBackground(colores.getGris());
+           // boton.setSize(200, 200);
         } else if (tipo == 4) {
             boton.setFont(new Font("Lato", Font.BOLD, 16));
             boton.setBackground(colores.getGris2());
@@ -190,6 +195,7 @@ public class disenos {//clase que sirve para establecer el diseno de algunos com
             boton.setBackground(colores.blanco);
         }
         boton.setForeground(colores.getBlanco());
+        
 
         boton.setOpaque(true);
     }

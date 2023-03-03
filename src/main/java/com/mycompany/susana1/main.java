@@ -7,8 +7,6 @@ import interfaces.login;
 
 //Generar nueva aplicacion movil (build)
 
-//Cambiar resolucion de imagenes (inkscape, filters->color->brilliance->inverted apply, ver que resolucion se necesita)
-
 //quitar textos y agregarlos al jsonxdd
 
 //Poner la nueva ventana del tamaño de la anterior

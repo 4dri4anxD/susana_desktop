@@ -6,6 +6,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
@@ -51,10 +52,14 @@ public class vistaPlantillasTT extends JFrame {
     private JFrame context;//para los JOptionPane
     private String tN;//variables que guardan un hint para las cajas de texto
     private LinkedHashMap<String, Integer> actireq, rendireq;
+    private disenos disenos;
+    private info info;
 
     public vistaPlantillasTT(DatabaseReference con, String user, int priv, String idioma, String plantilla, int check) {
         initComponents();
         new configuracionVentana(this);
+        info=new info();
+        disenos=new disenos();
         this.check = check;
         this.con = con;
         this.user = user;
@@ -100,22 +105,22 @@ public class vistaPlantillasTT extends JFrame {
         tblActividades.setDefaultRenderer(Object.class, new centerTextInTable());
         tblRendimiento.setDefaultRenderer(Object.class, new centerTextInTable());
 
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnAsignarPre, 3);
-        new disenos().botones(btnAddProceso, 3);
-        new disenos().botones(btnAddPrueba, 3);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnAsignarPre, 3);
+        disenos.botones(btnAddProceso, 3);
+        disenos.botones(btnAddPrueba, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().textoL1(txtNombre);
+        disenos.textoL1(txtNombre);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().titulo(lblTitulo, 2);
-        new disenos().titulo(lblNombre, 6);
+        disenos.titulo(lblTitulo, 2);
+        disenos.titulo(lblNombre, 6);
 
         ponerImg(btnAdd, "img/guardar1.png");
         ponerImg(btnAddProceso, "img/agregarProceso.png");
@@ -135,11 +140,12 @@ public class vistaPlantillasTT extends JFrame {
     }
 
     public void ponerImg(JButton b, String ruta) {
-        ImageIcon imagen = new ImageIcon(ruta);
+      /*  ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
+      b.setIcon(new StretchIcon(ruta));
 
     }
 
@@ -198,7 +204,7 @@ public class vistaPlantillasTT extends JFrame {
             }
         });
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -206,14 +212,14 @@ public class vistaPlantillasTT extends JFrame {
         });
 
         btnAddProceso.setToolTipText("Agregar proceso");
-        btnAddProceso.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAddProceso.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAddProceso.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddProcesoActionPerformed(evt);
             }
         });
 
-        btnAsignarPre.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAsignarPre.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAsignarPre.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAsignarPreActionPerformed(evt);
@@ -221,7 +227,7 @@ public class vistaPlantillasTT extends JFrame {
         });
 
         btnAddPrueba.setToolTipText("Agregar proceso");
-        btnAddPrueba.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAddPrueba.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAddPrueba.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddPruebaActionPerformed(evt);
@@ -233,29 +239,29 @@ public class vistaPlantillasTT extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(btnAddProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAddPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAsignarPre, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23))
+                    .addComponent(btnAddProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAddPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAsignarPre, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAsignarPre, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAsignarPre, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAddProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddProceso, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAddPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAddPrueba, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -267,15 +273,15 @@ public class vistaPlantillasTT extends JFrame {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -426,7 +432,7 @@ public class vistaPlantillasTT extends JFrame {
             .addGroup(pnlFondoLayout.createSequentialGroup()
                 .addComponent(pnlIzq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 523, Short.MAX_VALUE)
+                .addComponent(pnlCuerpo, javax.swing.GroupLayout.PREFERRED_SIZE, 528, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlDer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -436,7 +442,7 @@ public class vistaPlantillasTT extends JFrame {
                 .addComponent(pnlCabecera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(pnlFondoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(pnlCuerpo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 643, Short.MAX_VALUE)
+                    .addComponent(pnlCuerpo, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 643, Short.MAX_VALUE)
                     .addComponent(pnlIzq, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(pnlDer, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)))
         );
@@ -486,7 +492,7 @@ public class vistaPlantillasTT extends JFrame {
             }
         }
         if (actireq.size() > 0) {//si existe algun proceso
-            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             //  boolean val = true;
             //   actualizarIndices();//actualizar datos.procesosPlantilla
             if (!txtNombre.getText().equals(tN)) {//si hay algo en los campos de texto diferente al hint
@@ -557,7 +563,7 @@ public class vistaPlantillasTT extends JFrame {
             int cont = 0;
             //  if (comprobarTabla()) {
             comprobarTabla();
-            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             String procesoSel = "";
             int proceso = 0;
             try {
@@ -936,7 +942,7 @@ public class vistaPlantillasTT extends JFrame {
     }
 
     private void cambio() {
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuPlantillas(con, user, priv, idioma, check).setVisible(true);
         this.dispose();

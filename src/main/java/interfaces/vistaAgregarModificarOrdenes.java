@@ -9,6 +9,7 @@ import configuracion.info;
 import datos.leerJSON;
 import obtenerDatos.ordenes;
 import datos.temporalStorage;
+import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenos;
 import helpers.back;
@@ -59,10 +60,14 @@ public class vistaAgregarModificarOrdenes extends JFrame {
     private boolean listo;//si ya se inicializo la interfaz
     private temporalStorage storage;
     private leerJSON json;
+    private disenos disenos;
+    private info info;
 
     public vistaAgregarModificarOrdenes(DatabaseReference con, String user, int priv, String idioma, int serie, int inter) {
         initComponents();
         new configuracionVentana(this);
+        info=new info();
+        disenos=new disenos();
 
         storage = new temporalStorage();
         json = new leerJSON();
@@ -143,63 +148,63 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         // if (ftf != null) {
         // ftf.setHorizontalAlignment(JTextField.CENTER);
         // }
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().textoL1(txtSerie);
-        new disenos().fechas(txtPlazo);
-        new disenos().textoL1(txtNombre);
-        // new disenos().spiner(txtHora);
+        disenos.textoL1(txtSerie);
+        disenos.fechas(txtPlazo);
+        disenos.textoL1(txtNombre);
+        // disenos.spiner(txtHora);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlChecks, 2);
-        new disenos().fondo(pnlCue, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlChecks, 2);
+        disenos.fondo(pnlCue, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().fondoLabel(lblCheckLists, 1);
-        new disenos().fondoLabel(lblPlantillas, 1);
-        new disenos().fondoLabel(lblResponsable, 1);
+        disenos.fondoLabel(lblCheckLists, 1);
+        disenos.fondoLabel(lblPlantillas, 1);
+        disenos.fondoLabel(lblResponsable, 1);
 
-        new disenos().fondoLabel(lblCC, 2);
-        new disenos().fondoLabel(lblTC, 2);
-        new disenos().fondoLabel(lblRC, 2);
+        disenos.fondoLabel(lblCC, 2);
+        disenos.fondoLabel(lblTC, 2);
+        disenos.fondoLabel(lblRC, 2);
 
-        new disenos().fondoLabel(lblCT, 3);
-        new disenos().fondoLabel(lblTT, 3);
-        new disenos().fondoLabel(lblRT, 3);
+        disenos.fondoLabel(lblCT, 3);
+        disenos.fondoLabel(lblTT, 3);
+        disenos.fondoLabel(lblRT, 3);
 
-        new disenos().fondoLabel(lblCS, 2);
-        new disenos().fondoLabel(lblTS, 2);
-        new disenos().fondoLabel(lblRS, 2);
+        disenos.fondoLabel(lblCS, 2);
+        disenos.fondoLabel(lblTS, 2);
+        disenos.fondoLabel(lblRS, 2);
 
-        new disenos().fondoLabel(lblCF, 3);
-        new disenos().fondoLabel(lblTF, 3);
-        new disenos().fondoLabel(lblRF, 3);
+        disenos.fondoLabel(lblCF, 3);
+        disenos.fondoLabel(lblTF, 3);
+        disenos.fondoLabel(lblRF, 3);
 
-        new disenos().titulo(lblTitulo, 2);
-        new disenos().titulo(lblSerie, 6);
-        new disenos().titulo(lblNombre, 6);
-        new disenos().titulo(lblPlazo, 6);
-        new disenos().titulo(lblPlazo, 6);
-        new disenos().titulo(lblPlazo, 6);
-        new disenos().titulo(lblCheckLists, 5);
-        new disenos().titulo(lblPlantillas, 5);
-        new disenos().titulo(lblResponsable, 5);
-        new disenos().titulo(lblCC, 6);
-        new disenos().titulo(lblTC, 6);
-        new disenos().titulo(lblRC, 6);
-        new disenos().titulo(lblCT, 6);
-        new disenos().titulo(lblTT, 6);
-        new disenos().titulo(lblRT, 6);
-        new disenos().titulo(lblCS, 6);
-        new disenos().titulo(lblTS, 6);
-        new disenos().titulo(lblRS, 6);
-        new disenos().titulo(lblCF, 6);
-        new disenos().titulo(lblTF, 6);
-        new disenos().titulo(lblRF, 6);
+        disenos.titulo(lblTitulo, 2);
+        disenos.titulo(lblSerie, 6);
+        disenos.titulo(lblNombre, 6);
+        disenos.titulo(lblPlazo, 6);
+        disenos.titulo(lblPlazo, 6);
+        disenos.titulo(lblPlazo, 6);
+        disenos.titulo(lblCheckLists, 5);
+        disenos.titulo(lblPlantillas, 5);
+        disenos.titulo(lblResponsable, 5);
+        disenos.titulo(lblCC, 6);
+        disenos.titulo(lblTC, 6);
+        disenos.titulo(lblRC, 6);
+        disenos.titulo(lblCT, 6);
+        disenos.titulo(lblTT, 6);
+        disenos.titulo(lblRT, 6);
+        disenos.titulo(lblCS, 6);
+        disenos.titulo(lblTS, 6);
+        disenos.titulo(lblRS, 6);
+        disenos.titulo(lblCF, 6);
+        disenos.titulo(lblTF, 6);
+        disenos.titulo(lblRF, 6);
 
         ponerImg(btnAdd, "img/guardar1.png");
         ponerImg(btnAtras, "img/atras2.png");
@@ -215,11 +220,12 @@ public class vistaAgregarModificarOrdenes extends JFrame {
     }
 
     public void ponerImg(JButton b, String ruta) {
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+       /* ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
 
     }
 
@@ -286,7 +292,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -298,19 +304,19 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -322,15 +328,15 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(64, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -699,7 +705,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
             .addGroup(pnlFondoLayout.createSequentialGroup()
                 .addComponent(pnlIzq, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(pnlCuerpo, javax.swing.GroupLayout.DEFAULT_SIZE, 834, Short.MAX_VALUE)
+                .addComponent(pnlCuerpo, javax.swing.GroupLayout.PREFERRED_SIZE, 839, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(pnlDer, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
         );
@@ -964,7 +970,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
     }//GEN-LAST:event_formWindowClosing
 
     private void cambio1() {
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         storage.inicializarTodo();
         this.setCursor(new Cursor(WAIT_CURSOR));
         new MenuAgregarModificarOrdenes(con, user, priv, idioma).setVisible(true);
@@ -1317,7 +1323,7 @@ public class vistaAgregarModificarOrdenes extends JFrame {
         }
 
         this.setCursor(new Cursor(WAIT_CURSOR));
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         boolean val = (serie == 0) ? true : false;
 
         switch (check) {

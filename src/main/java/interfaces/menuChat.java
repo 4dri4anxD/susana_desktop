@@ -3,6 +3,7 @@ package interfaces;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.xmlManagment;
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -110,11 +111,12 @@ public class menuChat extends JFrame {//no esta en uso
     }
 
     public void ponerImg(JButton b, String ruta) {
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+     /*   ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
 
     }
 

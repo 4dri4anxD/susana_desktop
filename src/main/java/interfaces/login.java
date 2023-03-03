@@ -53,9 +53,13 @@ public class login extends confiLogin {//frame con el login de la aplicacion
     private boolean ing;
     // private alert alerta;
     private login context;
+    private disenos disenos;
+    private info info;
 
     public login(DatabaseReference con) {
         initComponents();
+        disenos=new disenos();
+        info=new info();
         //  alerta = new alert();
         iniciarDiseno();//decorar componentes de este frame
         context = this;
@@ -94,18 +98,18 @@ public class login extends confiLogin {//frame con el login de la aplicacion
         txtUser.setHorizontalAlignment(JLabel.CENTER);
         txtPass.setHorizontalAlignment(JLabel.CENTER);
 
-        new disenos().fondo(panelFondo, 1);
-        new disenos().fondo(pnlCuerpo, 3);
+        disenos.fondo(panelFondo, 1);
+        disenos.fondo(pnlCuerpo, 3);
 
-        new disenos().titulo(lblLogin, 2);
-        new disenos().titulo(lbl1, 1);
-        new disenos().titulo(lbl2, 3);
-        new disenos().titulo(lbl3, 3);
+        disenos.titulo(lblLogin, 2);
+        disenos.titulo(lbl1, 1);
+        disenos.titulo(lbl2, 3);
+        disenos.titulo(lbl3, 3);
 
-        new disenos().botones(btnGo, 2);
+        disenos.botones(btnGo, 2);
 
-        new disenos().textoL(txtUser);
-        new disenos().textoL(txtPass);
+        disenos.textoL(txtUser);
+        disenos.textoL(txtPass);
 
         txtUser.requestFocus();
     }
@@ -293,7 +297,7 @@ public class login extends confiLogin {//frame con el login de la aplicacion
     private void btnGoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGoActionPerformed
         // TODO add your handling code here:
         if (ing) {//ing es utilizado para asrgurar de que no se haga spam presionando el boton de ingresar
-            new info().setXY(0, 0, 0, 0);
+            info.setXY(0, 0, 0, 0);
             ingresar();
         }
         ing = false;
@@ -304,7 +308,7 @@ public class login extends confiLogin {//frame con el login de la aplicacion
 
         if (evt.getKeyCode() == KeyEvent.VK_ENTER) {//si se presiona el enter con el focus en el campo de usuario
             if (ing) {
-                new info().setXY(0, 0, 0, 0);
+                info.setXY(0, 0, 0, 0);
                 ingresar();
             }
             ing = false;
@@ -335,7 +339,7 @@ public class login extends confiLogin {//frame con el login de la aplicacion
                                     pass = new encriptado().decrypt(log.getPass());//desencripta la contrasena obtenida
                                     int priv = log.getPriv();
                                     if (txtPass.getText().toString().equals(pass)) {//si las contrasenas coinciden inicia sesion
-                                        new info().setPass(log.getPass());
+                                        info.setPass(log.getPass());
                                         new checkUsers().comprobarExistencia(con, txtUser.getText(), idioma, context);
                                         adelante(priv);
                                     } else {//si no

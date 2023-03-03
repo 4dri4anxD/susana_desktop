@@ -3,6 +3,7 @@ package interfaces;
 import com.google.firebase.database.DatabaseReference;
 import configuracion.info;
 import datos.temporalStorage;
+import disenos.StretchIcon;
 import disenos.colores;
 import disenos.disenoTabla;
 import disenos.disenos;
@@ -55,6 +56,7 @@ public class CheckListTF extends JFrame {
     private ArrayList<Boolean> habilitar;
     private CheckListTF context;
     private boolean val;
+    private info info;
 
     public CheckListTF(DatabaseReference con, String user, int priv, String idioma, int serie, String plantilla, int modo) {
         initComponents();
@@ -69,6 +71,7 @@ public class CheckListTF extends JFrame {
         this.user = user;
         this.con = con;
         this.priv = priv;
+        info=new info();
 
         val = true;
 
@@ -92,7 +95,7 @@ public class CheckListTF extends JFrame {
         mostrar();
         if (modo == 1) {
             btnAdd.setVisible(false);
-         
+
         }
 
     }
@@ -143,19 +146,19 @@ public class CheckListTF extends JFrame {
                             cuerpo = "Escriba un comentario";
                         }
                         String mensaje = mensajes.get(row);
-                        
+
                         if (modo == 1) {
-                            if(mensaje.equals("")){
-                                if(idioma.equals("english")){
+                            if (mensaje.equals("")) {
+                                if (idioma.equals("english")) {
                                     JOptionPane.showMessageDialog(context, "There's no comments written by workers");
-                                }else{
+                                } else {
                                     JOptionPane.showMessageDialog(context, "No hay comentarios hechos por el trabajador");
                                 }
-                                
-                            }else{
+
+                            } else {
                                 JOptionPane.showMessageDialog(context, mensaje);
                             }
-                            
+
                         } else {
                             String resp = JOptionPane.showInputDialog(context, cuerpo, mensaje);
                             if (resp != null) {
@@ -164,7 +167,7 @@ public class CheckListTF extends JFrame {
                                 }
                             }
                         }
-                        
+
                     }
 
                 }
@@ -231,11 +234,12 @@ public class CheckListTF extends JFrame {
     }
 
     public void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+        /*  ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
+        b.setIcon(new StretchIcon(ruta));
     }
 
     @SuppressWarnings("unchecked")
@@ -279,7 +283,7 @@ public class CheckListTF extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -291,19 +295,19 @@ public class CheckListTF extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(17, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -315,15 +319,15 @@ public class CheckListTF extends JFrame {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -351,7 +355,6 @@ public class CheckListTF extends JFrame {
         });
         tblActividades.setGridColor(new java.awt.Color(0, 0, 0));
         tblActividades.setSelectionBackground(new java.awt.Color(51, 102, 255));
-        tblActividades.setSelectionForeground(new java.awt.Color(0, 0, 0));
         tblActividades.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 tblActividadesMouseClicked(evt);
@@ -372,7 +375,7 @@ public class CheckListTF extends JFrame {
         pnlCuerpo.setLayout(pnlCuerpoLayout);
         pnlCuerpoLayout.setHorizontalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 488, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 433, Short.MAX_VALUE)
         );
         pnlCuerpoLayout.setVerticalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -428,8 +431,8 @@ public class CheckListTF extends JFrame {
         }
         storage.setComentarioTF(mensajes);
         storage.setCompletadoTF(completado);
-      //  new info().setXY(this.getX(), this.getY());
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        //  new info().setXY(this.getX(), this.getY());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
         this.dispose();
@@ -439,8 +442,8 @@ public class CheckListTF extends JFrame {
         // TODO add your handling code here:
         //   System.out.println("Wi: "+pnlCuerpo.getWidth());
         if (new back().backConf(idioma, this)) {
-          //  new info().setXY(this.getX(), this.getY());
-            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            //  new info().setXY(this.getX(), this.getY());
+            info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new vistaCompletarOrden(con, user, priv, idioma, serie, plantilla, modo).setVisible(true);
             this.dispose();

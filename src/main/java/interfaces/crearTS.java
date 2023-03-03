@@ -7,6 +7,7 @@ import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
 import datos.temporalStorage;
+import disenos.StretchIcon;
 import disenos.centerTextInTable;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
@@ -50,6 +51,8 @@ public class crearTS extends JFrame {
     private final boolean valido;
     private boolean cargado;
     private crearOrdenes co;
+    private disenos disenos;
+    private info info;
 
     public crearTS(DatabaseReference con, String user, int priv, String idioma, int serie, boolean valido) {
         initComponents();
@@ -62,6 +65,8 @@ public class crearTS extends JFrame {
         this.priv = priv;
         this.idioma = idioma;
         this.serie = serie;
+        disenos=new disenos();
+        info=new info();
 
         iniciarVariables();
         iniciarDiseno();
@@ -130,30 +135,30 @@ public class crearTS extends JFrame {
     private void iniciarDiseno() {//decorar los componentes del frame
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
 
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnMsj, 3);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnMsj, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlArriba, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlArriba, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().fondoLabel(lblSerie, 1);
-        new disenos().titulo(lblSerie, 5);
-        new disenos().titulo(lblResponsable, 6);
-        new disenos().titulo(lblPlantilla, 6);
-        new disenos().titulo(lblPaquete, 6);
-        new disenos().titulo(lblProducto, 6);
-        new disenos().titulo(lblCase, 6);
-        new disenos().selector(cmbResponsable);
-        new disenos().selector(cmbPaquete);
-        new disenos().selector(cmbCase);
-        new disenos().textoL1(txtProducto);
-        new disenos().selector(cmbPlantilla);
-        new disenos().titulo(lblTitulo, 2);
+        disenos.fondoLabel(lblSerie, 1);
+        disenos.titulo(lblSerie, 5);
+        disenos.titulo(lblResponsable, 6);
+        disenos.titulo(lblPlantilla, 6);
+        disenos.titulo(lblPaquete, 6);
+        disenos.titulo(lblProducto, 6);
+        disenos.titulo(lblCase, 6);
+        disenos.selector(cmbResponsable);
+        disenos.selector(cmbPaquete);
+        disenos.selector(cmbCase);
+        disenos.textoL1(txtProducto);
+        disenos.selector(cmbPlantilla);
+        disenos.titulo(lblTitulo, 2);
 
         chkAirTag.setFont(new Font("Lato", Font.BOLD, 20));
 
@@ -170,11 +175,12 @@ public class crearTS extends JFrame {
     }
 
     private void ponerImg(JButton b, String ruta) {//poner imagenes a los botones
-        ImageIcon imagen = new ImageIcon(ruta);
+       /* ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono); */
+       b.setIcon(new StretchIcon(ruta));
     }
 
     private void ponerImgChk(JCheckBox b, String ruta, String ruta2) {//poner imagenes a los botones
@@ -273,19 +279,19 @@ public class crearTS extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
+                .addContainerGap(20, Short.MAX_VALUE)
                 .addGroup(pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(btnMsj, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(23, 23, 23))
+                    .addComponent(btnMsj, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnMsj, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnMsj, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(18, 18, 18)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -301,15 +307,15 @@ public class crearTS extends JFrame {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -504,8 +510,8 @@ public class crearTS extends JFrame {
         pnlCuerpo.setLayout(pnlCuerpoLayout);
         pnlCuerpoLayout.setHorizontalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
-            .addComponent(pnlArriba, javax.swing.GroupLayout.DEFAULT_SIZE, 441, Short.MAX_VALUE)
+            .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
+            .addComponent(pnlArriba, javax.swing.GroupLayout.DEFAULT_SIZE, 416, Short.MAX_VALUE)
         );
         pnlCuerpoLayout.setVerticalGroup(
             pnlCuerpoLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -571,7 +577,7 @@ public class crearTS extends JFrame {
                 storage.setMensajeTS(mensajeAdj);
                 storage.setProductoTS(txtProducto.getText());
                 //volver
-                new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+                info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
                 new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
                 this.dispose();
             } else {
@@ -593,7 +599,7 @@ public class crearTS extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             new vistaAgregarModificarOrdenes(con, user, priv, idioma, serie, 2).setVisible(true);
             this.setCursor(new Cursor(WAIT_CURSOR));
             this.dispose();

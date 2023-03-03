@@ -48,7 +48,7 @@
               <Group type="102" alignment="0" attributes="0">
                   <Component id="pnlIzq" min="-2" max="-2" attributes="0"/>
                   <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                  <Component id="pnlOpc" max="32767" attributes="0"/>
+                  <Component id="pnlOpc" pref="651" max="32767" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="pnlDer" min="-2" max="-2" attributes="0"/>
               </Group>
@@ -80,26 +80,31 @@
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblTitulo" min="-2" pref="500" max="-2" attributes="0"/>
-                      <EmptySpace pref="123" max="32767" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Component id="txtBuscar" min="-2" pref="250" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnBuscar" min="-2" pref="50" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnBuscar" min="-2" pref="70" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
             <DimensionLayout dim="1">
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="1" attributes="0">
-                          <Component id="lblTitulo" alignment="1" max="32767" attributes="0"/>
-                          <Group type="103" alignment="1" groupAlignment="3" attributes="0">
-                              <Component id="txtBuscar" alignment="3" pref="42" max="32767" attributes="0"/>
-                              <Component id="btnBuscar" alignment="3" max="32767" attributes="0"/>
+                  <Group type="102" attributes="0">
+                      <EmptySpace max="32767" attributes="0"/>
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                  <Component id="btnBuscar" pref="70" max="32767" attributes="0"/>
+                                  <Component id="lblTitulo" max="32767" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                          </Group>
+                          <Group type="102" alignment="1" attributes="0">
+                              <Component id="txtBuscar" min="-2" pref="41" max="-2" attributes="0"/>
+                              <EmptySpace min="-2" pref="25" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -121,7 +126,7 @@
             <Component class="javax.swing.JButton" name="btnBuscar">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Mano"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -139,15 +144,15 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
-                      <EmptySpace pref="27" max="32767" attributes="0"/>
+                      <EmptySpace pref="20" max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="btnEliminar" alignment="1" pref="70" max="32767" attributes="0"/>
-                          <Component id="btnAdd" alignment="1" max="32767" attributes="0"/>
-                          <Component id="btnVerReg" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnElReg" alignment="0" max="32767" attributes="0"/>
-                          <Component id="btnVerUsers" alignment="1" pref="70" max="32767" attributes="0"/>
+                          <Component id="btnEliminar" alignment="1" pref="100" max="32767" attributes="0"/>
+                          <Component id="btnAdd" alignment="1" pref="100" max="32767" attributes="0"/>
+                          <Component id="btnVerReg" alignment="0" pref="100" max="32767" attributes="0"/>
+                          <Component id="btnElReg" alignment="0" pref="100" max="32767" attributes="0"/>
+                          <Component id="btnVerUsers" alignment="1" pref="100" max="32767" attributes="0"/>
                       </Group>
-                      <EmptySpace min="-2" pref="23" max="-2" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -155,15 +160,15 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnVerReg" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnVerReg" min="-2" pref="80" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnElReg" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnElReg" min="-2" pref="80" max="-2" attributes="0"/>
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnVerUsers" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnVerUsers" min="-2" pref="80" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnEliminar" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnEliminar" min="-2" pref="80" max="-2" attributes="0"/>
                       <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="btnAdd" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnAdd" min="-2" pref="100" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -173,7 +178,7 @@
             <Component class="javax.swing.JButton" name="btnAdd">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Mano"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -183,7 +188,7 @@
             <Component class="javax.swing.JButton" name="btnEliminar">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Mano"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -193,7 +198,7 @@
             <Component class="javax.swing.JButton" name="btnVerReg">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Mano"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -203,7 +208,7 @@
             <Component class="javax.swing.JButton" name="btnElReg">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Mano"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -213,7 +218,7 @@
             <Component class="javax.swing.JButton" name="btnVerUsers">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Mano"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -231,9 +236,9 @@
             <DimensionLayout dim="0">
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <EmptySpace min="-2" pref="22" max="-2" attributes="0"/>
-                      <Component id="btnAtras" min="-2" pref="70" max="-2" attributes="0"/>
-                      <EmptySpace pref="28" max="32767" attributes="0"/>
+                      <EmptySpace min="-2" pref="20" max="-2" attributes="0"/>
+                      <Component id="btnAtras" min="-2" pref="100" max="-2" attributes="0"/>
+                      <EmptySpace pref="20" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -241,7 +246,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="1" attributes="0">
                       <EmptySpace max="32767" attributes="0"/>
-                      <Component id="btnAtras" min="-2" pref="70" max="-2" attributes="0"/>
+                      <Component id="btnAtras" min="-2" pref="100" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -251,7 +256,7 @@
             <Component class="javax.swing.JButton" name="btnAtras">
               <Properties>
                 <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                  <Color id="Cursor de Mano"/>
+                  <Color id="Default Cursor"/>
                 </Property>
               </Properties>
               <Events>
@@ -341,7 +346,7 @@
                           </TableColumnModel>
                         </Property>
                         <Property name="cursor" type="java.awt.Cursor" editor="org.netbeans.modules.form.editors2.CursorEditor">
-                          <Color id="Cursor Por defecto"/>
+                          <Color id="Default Cursor"/>
                         </Property>
                         <Property name="tableHeader" type="javax.swing.table.JTableHeader" editor="org.netbeans.modules.form.editors2.JTableHeaderEditor">
                           <TableHeader reorderingAllowed="true" resizingAllowed="true"/>

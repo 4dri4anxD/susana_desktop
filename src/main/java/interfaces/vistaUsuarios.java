@@ -7,6 +7,7 @@ import com.google.firebase.database.DatabaseReference.CompletionListener;
 import com.google.firebase.database.Query;
 import com.google.firebase.database.ValueEventListener;
 import configuracion.info;
+import disenos.StretchIcon;
 import disenos.colores;
 import disenos.ventanas.configuracionVentana;
 import disenos.disenoTabla;
@@ -44,11 +45,14 @@ public class vistaUsuarios extends JFrame {
     private DefaultTableModel modelo;//modelo de la tabla
     private int carga;// cont;
     private boolean valido;
+    private disenos disenos;
+    private info info;
 
     public vistaUsuarios(DatabaseReference con, String user, int priv, String idioma, String nombre) {
         initComponents();
         new configuracionVentana(this);
-
+        info=new info();
+        disenos=new disenos();
         carga = 0;
         this.con = con;
         valido = true;
@@ -78,25 +82,25 @@ public class vistaUsuarios extends JFrame {
         lblTitulo.setHorizontalAlignment(JLabel.LEFT);
         txtPass.setEchoChar('*');
         passwordChar = txtPass.getEchoChar();//obtiene el valor del echochar
-        new disenos().botones(btnVer, 3);
-        new disenos().botones(btnAdd, 3);
-        new disenos().botones(btnAtras, 3);
+        disenos.botones(btnVer, 3);
+        disenos.botones(btnAdd, 3);
+        disenos.botones(btnAtras, 3);
 
-        new disenos().textoL1(txtUser);
-        new disenos().textoL1(txtPass);
+        disenos.textoL1(txtUser);
+        disenos.textoL1(txtPass);
 
-        new disenos().fondo(pnlFondo, 2);
-        new disenos().fondo(pnlCuerpo, 2);
-        new disenos().fondo(pnlCabecera, 3);
-        new disenos().fondo(pnlDer, 1);
-        new disenos().fondo(pnlIzq, 1);
+        disenos.fondo(pnlFondo, 2);
+        disenos.fondo(pnlCuerpo, 2);
+        disenos.fondo(pnlCabecera, 3);
+        disenos.fondo(pnlDer, 1);
+        disenos.fondo(pnlIzq, 1);
 
-        new disenos().titulo(lblTitulo, 2);
-        new disenos().titulo(lblUser, 6);
-        new disenos().titulo(lblPass, 6);
-        new disenos().titulo(lblPermisos, 6);
+        disenos.titulo(lblTitulo, 2);
+        disenos.titulo(lblUser, 6);
+        disenos.titulo(lblPass, 6);
+        disenos.titulo(lblPermisos, 6);
 
-        new disenos().selector(cmbTipos);
+        disenos.selector(cmbTipos);
 
         ponerImg(btnAdd, "img/guardar1.png");
         ponerImg(btnAtras, "img/atras2.png");
@@ -107,11 +111,12 @@ public class vistaUsuarios extends JFrame {
     }
 
     public void ponerImg(JButton b, String ruta) {
-        ImageIcon imagen = new ImageIcon(ruta);
+        b.setIcon(new StretchIcon(ruta));
+       /* ImageIcon imagen = new ImageIcon(ruta);
         Image imgEscalada = imagen.getImage().getScaledInstance(b.getWidth(),
                 b.getHeight(), Image.SCALE_SMOOTH);
         Icon icono = new ImageIcon(imgEscalada);
-        b.setIcon(icono);
+        b.setIcon(icono);*/
 
     }
 
@@ -153,7 +158,7 @@ public class vistaUsuarios extends JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlCabeceraLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(lblTitulo, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(617, Short.MAX_VALUE))
+                .addContainerGap(662, Short.MAX_VALUE))
         );
         pnlCabeceraLayout.setVerticalGroup(
             pnlCabeceraLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -163,7 +168,7 @@ public class vistaUsuarios extends JFrame {
                 .addContainerGap())
         );
 
-        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAdd.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAdd.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAddActionPerformed(evt);
@@ -175,19 +180,19 @@ public class vistaUsuarios extends JFrame {
         pnlDerLayout.setHorizontalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
-                .addContainerGap(27, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(23, 23, 23))
+                .addContainerGap(20, Short.MAX_VALUE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(20, 20, 20))
         );
         pnlDerLayout.setVerticalGroup(
             pnlDerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlDerLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAdd, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
-        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAtras.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAtras.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnAtrasActionPerformed(evt);
@@ -199,15 +204,15 @@ public class vistaUsuarios extends JFrame {
         pnlIzqLayout.setHorizontalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlIzqLayout.createSequentialGroup()
-                .addGap(22, 22, 22)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(28, Short.MAX_VALUE))
+                .addGap(20, 20, 20)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(20, Short.MAX_VALUE))
         );
         pnlIzqLayout.setVerticalGroup(
             pnlIzqLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, pnlIzqLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(btnAtras, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap())
         );
 
@@ -247,7 +252,7 @@ public class vistaUsuarios extends JFrame {
         ));
         jScrollPane1.setViewportView(tablaPermisos);
 
-        btnVer.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnVer.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnVer.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseClicked(java.awt.event.MouseEvent evt) {
                 btnVerMouseClicked(evt);
@@ -362,7 +367,7 @@ public class vistaUsuarios extends JFrame {
     private void btnAtrasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAtrasActionPerformed
         // TODO add your handling code here:
         if (new back().backConf(idioma, this)) {
-            new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
             this.setCursor(new Cursor(WAIT_CURSOR));
             new menuUsuarios(con, user, priv, idioma).setVisible(true);
             this.dispose();
@@ -543,7 +548,7 @@ public class vistaUsuarios extends JFrame {
     }
 
     private void cambiar() {
-        new info().setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+        info.setXY(this.getX(), this.getY(), this.getWidth(), this.getHeight());
         this.setCursor(new Cursor(WAIT_CURSOR));
         new menuUsuarios(con, user, priv, idioma).setVisible(true);
         this.dispose();
